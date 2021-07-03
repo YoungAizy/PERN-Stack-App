@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import userUrl from '../apis/userUrl';
+import databinder from '../apis/databinder';
 import { RestaurantsContext } from '../Context API/Context'
 
 const LoginForm = ({ toggle }) => {
@@ -9,7 +9,7 @@ const LoginForm = ({ toggle }) => {
     const { setUser } = useContext(RestaurantsContext);
 
     const login = async () => {
-        const { data } = await userUrl.post(`/login`, {
+        const { data } = await databinder.post(`/auth/login`, {
             email, password, type: "login"
         });
         console.log(data);

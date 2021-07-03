@@ -3,7 +3,7 @@ import BackgroundBowl from '../assets/bowl.jpg'
 import RegistrationModal from '../components/RegistrationModal'
 import { useHistory } from 'react-router'
 import { RestaurantsContext } from '../Context API/Context'
-import userUrl from '../apis/userUrl'
+import databinder from '../apis/databinder'
 
 const SignIn = () => {
     const [email, setEmail] = useState();
@@ -14,7 +14,7 @@ const SignIn = () => {
     const history = useHistory()
 
     const login = async () => {
-        const { data } = await userUrl.post(`/login`, {
+        const { data } = await databinder.post(`/auth/login`, {
             email, password, type: "login"
         });
         console.log(data);

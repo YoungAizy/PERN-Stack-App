@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
-import userUrl from '../apis/userUrl';
+import databinder from '../apis/databinder';
 import { RestaurantsContext } from '../Context API/Context';
+
 
 function RegistrationModal(props) {
     const [name, setName] = useState();
@@ -14,7 +15,7 @@ function RegistrationModal(props) {
     }
 
     const createAccount = async () => {
-        const response = await userUrl.post(`/signup`, {
+        const response = await databinder.post(`/auth/signup`, {
             name, password, email, type: 'registration'
         });
         console.log(response);

@@ -14,7 +14,7 @@ const AddReview = ({ id }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const response = await databinder.post(`/${id}/reviews`, {
+        const response = await databinder.post(`/restaurants/${id}/reviews`, {
             name, rating, review,
         });
         console.log(response);

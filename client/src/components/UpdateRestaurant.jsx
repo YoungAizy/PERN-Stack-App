@@ -21,8 +21,7 @@ function UpdateRestaurant(props) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                let { data } = await databinder.get(`/${id}`);
-                console.log(data)
+                let { data } = await databinder.get(`/restaurants/${id}`);
                 setName(data.data.restaurant.name);
                 setLocation(data.data.restaurant.street);
                 setCity(data.data.restaurant.city);
@@ -50,7 +49,7 @@ function UpdateRestaurant(props) {
         form.append('data',
             JSON.stringify({ phone, website, name, location, price, about, user: user.name, email, city }))
         const updateResponse = await databinder.put(`/restaurants/${id}`, form);
-        console.log("Update Response", updateResponse)
+        // console.log("Update Response", updateResponse)
         setResponseStatus(updateResponse.data.status);
 
     }
@@ -59,8 +58,6 @@ function UpdateRestaurant(props) {
         const file = target.files[0];
         setPicture(file);
         const img = document.getElementById("input-img");
-        console.log("event triggered");
-        console.log(file);
         const reader = new FileReader();
         reader.onload = (e) => img.src = e.target.result;
         reader.readAsDataURL(file);
@@ -69,7 +66,6 @@ function UpdateRestaurant(props) {
     return (
         <div>
             <div className="container">
-
                 <form action="" className="mb-3">
                     <div className="form-group row mb-4">
                         <div className='col'>

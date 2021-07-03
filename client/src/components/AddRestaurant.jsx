@@ -19,18 +19,16 @@ const AddRestaurant = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("on submit entered")
         const notification = document.getElementById('popup-notification');
 
         const form = new FormData()
         if (name && location && city && price) {
-            console.log("If statement entered")
             setInvalid(false);
             form.append('image', picture);
             form.append('data',
                 JSON.stringify({ phone, website, name, location, price, about, user: user.name, email, city }))
             const response = await databinder.post("/restaurants", form);
-            console.log(response.data.data)
+
             addRestaurant(response.data.data)
             setAbout();
             setPhone();
@@ -57,8 +55,6 @@ const AddRestaurant = () => {
 
     const getPictureData = (target) => {
         const file = target.files[0];
-        console.log("event triggered");
-        console.log(file);
         const reader = new FileReader();
         reader.onload = (e) => setPicture(file);
         reader.readAsDataURL(file);

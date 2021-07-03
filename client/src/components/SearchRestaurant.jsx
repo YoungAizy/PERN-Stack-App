@@ -3,19 +3,16 @@ import React, { useState } from 'react'
 
 export default function SearchRestaurant({ onSearch, setRestaurants, setSearchResults, setStatus }) {
     const [name, setName] = useState("");
-    const [filter, setFilter] = useState();
-    const [order, setOrder] = useState();
+    const [filter, setFilter] = useState("price_range");
+    const [order, setOrder] = useState("ASC");
     const axios = require('axios')
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Submit triggered.");
-        console.log(name);
         setSearchResults(false)
         onSearch(true);
         const { data } = await axios.get(`/${name}?order_by=${filter}&order=${order}`);
         if (data) {
-            console.log(data);
             if (data.status === "success") {
                 setRestaurants(data.result);
             } else
@@ -36,7 +33,7 @@ export default function SearchRestaurant({ onSearch, setRestaurants, setSearchRe
                         <select value={filter} onChange={e => setFilter(e.target.value)} className="form-select" >
                             <option disabled >FILTER BY</option>
                             <option value="price_range">Price</option>
-                            <option value="rating">Rating</option>
+                            <option value="average_rating">Rating</option>
 
                         </select>
                     </div>

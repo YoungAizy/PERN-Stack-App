@@ -37,11 +37,8 @@ const DetailsPage = () => {
     const { id } = useParams();
     const [imgsrc, setImgSrc] = useState();
 
-    console.log(restaurants);
-
     const fetchData = async () => {
         const { data } = await databinder.get(`/restaurants/${id}`);
-        console.log(data.data);
 
         const type = data.data.restaurant.mimetype;
         const buffer = data.data.restaurant.pic && Buffer.from(data.data.restaurant.pic).toString("base64");

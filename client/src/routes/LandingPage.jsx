@@ -21,12 +21,6 @@ function LandingPage() {
             <SearchRestaurant onSearch={(status) => checkSearchState(status)} setSearchResults={setSearchResults} setRestaurants={setRestaurants} setStatus={setStatus} />
             <h2>Listed on our site</h2>
             {searchResults ? <SearchResults restaurants={restaurants} status={status} /> : <ListedRestaurants onSearch={search} setRestaurants={setRestaurants} restaurants={restaurants} />}
-            {/* <form action="" encType="multipart/form-data">
-                <label htmlFor="">Select a Pic</label>
-                <input type="file" name="" id="" accept="image/*" onChange={ e=>sendFile(e.target)}/>
-                <input type="button" value="Request" onClick={getFiles} />
-                <img src="" alt="Placeholder" id="image"/>
-            </form> */}
         </div>
     )
 }

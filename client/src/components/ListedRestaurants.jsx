@@ -15,7 +15,6 @@ function ListedRestaurants({ onSearch, restaurants, setRestaurants }) {
         const fetchData = async () => {
             try {
                 let result = await databinder.get('/restaurants');
-                console.log(result.data.data.restaurants)
                 restaurantList(result.data.data.restaurants)
             } catch (error) {
                 console.log(error);

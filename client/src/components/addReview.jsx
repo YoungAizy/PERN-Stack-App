@@ -3,7 +3,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import databinder from '../apis/databinder';
 
 const AddReview = ({ id }) => {
-    // Give us acces to our entire current URL
+    // Gives us acces to our entire current URL
     const location = useLocation(),
         history = useHistory();
 

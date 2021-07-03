@@ -18,13 +18,11 @@ function RegistrationModal(props) {
         const response = await databinder.post(`/auth/signup`, {
             name, password, email, type: 'registration'
         });
-        console.log(response);
         setServerResponse(response.data);
         if (response.data.accessToken) {
             setUser(response.data.user);
             localStorage.setItem("token", JSON.stringify(response.data.accessToken));
             localStorage.setItem("isAuthenticated", true);
-            console.log("Successfuly created a new User");
             window.location.pathname = "/dashboard";
         }
 

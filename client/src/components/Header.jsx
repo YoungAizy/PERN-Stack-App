@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-//import { Link } from 'react-router-dom';
 import Background from '../assets/bowl.jpg';
 import LoginForm from './LoginForm';
 import RegistrationModal from './RegistrationModal';
@@ -21,7 +20,6 @@ const Header = ({ isDashBoard }) => {
 
 
     const showProfile = () => {
-        console.log("show profile")
         let loginForm = document.getElementById('profile');
         loginForm.classList.toggle("profile-show");
         setProfileShown(!profileShown)

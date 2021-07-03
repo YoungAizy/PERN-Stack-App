@@ -8,7 +8,6 @@ const Home = () => {
 
     useEffect(() => {
         const screen = window.innerWidth;
-        console.log(screen);
         if (screen <= 760) {
             setMobileScreen(true);
         }

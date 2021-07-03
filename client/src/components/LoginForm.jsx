@@ -12,12 +12,10 @@ const LoginForm = ({ toggle }) => {
         const { data } = await databinder.post(`/auth/login`, {
             email, password, type: "login"
         });
-        console.log(data);
         setLoginResponse(data);
         setUser(data.user)
         localStorage.setItem("token", JSON.stringify(data.accessToken));
         if (data.accessToken) {
-            console.log("entered")
             localStorage.setItem("isAuthenticated", true);
             window.location.pathname = "/dashboard";
         }

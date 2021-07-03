@@ -20,41 +20,33 @@ export const RenderRating = ({ restaurant }) => {
 
 const RestaurantList = (props) => {
     const token = JSON.parse(localStorage.getItem("token"))
-    const { restaurants, setRestaurants, setUser, user, myrestaurants, setMyRestaurants } = useContext(RestaurantsContext);
+    const { restaurants, setRestaurants, setUser, myrestaurants, setMyRestaurants } = useContext(RestaurantsContext);
     const [content, setContent] = useState([]);
     const [openModal, setOpenModal] = useState(false);
     const [toDelete, setToDelete] = useState();
     const [toDeleteId, setToDeleteId] = useState()
     let history = useHistory();
-    console.log(user)
     useEffect(() => {
         const fetchData = async () => {
             try {
-                console.log(token)
                 if (props.myRestaurants) {
                     if (myrestaurants.length > 0) {
-                        console.log("myrestaunts if")
                         setContent(myrestaurants);
                     } else {
-                        console.log("getting myrestaurants")
-                        const { data } = await axios.get(`http://localhost:3001/api/v1/myrestaurants`, {
+                        const { data } = await axios.get(`/api/v1/myrestaurants`, {
                             headers: {
                                 authorization: token
                             }
                         });
-                        console.log(data);
                         setMyRestaurants(data.data);
                         setUser({ name: data.user.name, email: data.user.email });
                         setContent(data.data)
                     }
                 } else if (restaurants.length > 0) {
-                    console.log('else if entered')
                     setContent(restaurants)
                 }
                 else {
-                    console.log("else entered")
                     let result = await databinder.get('/restaurants');
-                    console.log(result.data);
                     setRestaurants(result.data.data.restaurants);
                     setContent(result.data.data.restaurants)
                 }
@@ -68,7 +60,7 @@ const RestaurantList = (props) => {
     }, [setRestaurants, myrestaurants])
 
     const handleDelete = async (id) => {
-        console.log('handle delete entered', id)
+        // console.log('handle delete entered', id)
         setOpenModal(false);
         await databinder.delete(`/restaurants/${id}`);
         setMyRestaurants(content.filter(x => x.id !== id))
@@ -76,7 +68,7 @@ const RestaurantList = (props) => {
 
     const showDeleteModal = (e, id, name) => {
         e.stopPropagation();
-        console.log("showDelete", id)
+        // console.log("showDelete", id)
         setToDeleteId(id);
         setToDelete(name)
         setOpenModal(true);

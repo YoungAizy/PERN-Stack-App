@@ -46,7 +46,7 @@ const RestaurantList = (props) => {
                     setContent(restaurants)
                 }
                 else {
-                    let result = await databinder.get('/restaurants');
+                    let result = await databinder.get('/restaurants?limit=10');
                     setRestaurants(result.data.data.restaurants);
                     setContent(result.data.data.restaurants)
                 }

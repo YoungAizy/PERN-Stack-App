@@ -8,6 +8,7 @@ const middleware = require('./checkCredentials');
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 const cors = require('cors');
+const path = require('path');
 
 var storage = multer.memoryStorage()
 const upload = multer({
@@ -16,6 +17,11 @@ const upload = multer({
 
 app.use(cors())
 app.use(express.json());
+
+if (process.env.NODE_ENV === "production") {
+    // serve static content 
+    app.use(express.static(path.join(__dirname, "client/build")))
+}
 
 // ****** AUTHENTICATION ROUTES ********
 
@@ -136,7 +142,8 @@ app.post("/api/v1/auth/login", middleware.middleware, (req, res) => {
 // Query all restaurants from DB and serve them 
 app.get('/api/v1/restaurants', authenticateToken, async (req, res) => {
     const result = await db.query(
-        "select * from restaurants left join (select restaurant_id, COUNT(*), TRUNC(AVG(rating),1)as average_rating from reviews group by restaurant_id ) reviews on restaurants.id=reviews.restaurant_id left join (select restaurant,mimetype,pic from images) images on restaurants.id=images.restaurant;");
+        "select * from restaurants left join (select restaurant_id, COUNT(*), TRUNC(AVG(rating),1)as average_rating from reviews group by restaurant_id ) reviews on restaurants.id=reviews.restaurant_id left join (select restaurant,mimetype,pic from images) images on restaurants.id=images.restaurant limit $1;",
+        [req.query.limit || null]);
     res.json({
         status: "success",
         results: result.rows.length,

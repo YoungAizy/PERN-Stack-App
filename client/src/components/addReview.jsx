@@ -29,7 +29,7 @@ const AddReview = ({ id }) => {
                     <div className="form-group col-4 mb-3">
                         <label htmlFor="name">Name</label>
                         <input value={name} className="form-control" type="text" id="name"
-                            onChange={e => setName(e.target.value)} />
+                            onChange={e => setName(e.target.value)} maxLength="50" />
                     </div>
                     <div className="form-group col-4 mb-2">
 

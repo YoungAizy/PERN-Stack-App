@@ -67,13 +67,13 @@ const AddRestaurant = () => {
                     <form action="" style={{ margin: ".6rem" }} >
                         <div className="row mb-3">
                             <div className="col">
-                                <input value={name} onChange={e => setName(e.target.value)} type="text" className="form-control" placeholder="Name" />
+                                <input value={name} onChange={e => setName(e.target.value)} type="text" className="form-control" placeholder="Name" maxLength="80" />
                                 {!name && <div className="text-danger">
                                     Required!
                             </div>}
                             </div>
                             <div className="col">
-                                <input value={location} onChange={e => setLocation(e.target.value)} type="text" className="form-control" placeholder="Street name and surburb" />
+                                <input value={location} onChange={e => setLocation(e.target.value)} type="text" className="form-control" placeholder="Street name and surburb" maxLength="100" />
                                 {!location && <div className="text-danger">
                                     Required!
                             </div>}

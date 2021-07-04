@@ -38,7 +38,7 @@ function RegistrationModal(props) {
                 <form action="" method="post">
                     <div >
                         <div className="form-floating form-margin">
-                            <input type="text" className="form-control" id="username" placeholder="Username" value={name || ''} onChange={e => setName(e.target.value)} />
+                            <input type="text" className="form-control" id="username" placeholder="Username" value={name || ''} onChange={e => setName(e.target.value)} maxLength="50"/>
                             <label htmlFor="username">Username</label>
                         </div>
                         <div className="form-floating form-margin">

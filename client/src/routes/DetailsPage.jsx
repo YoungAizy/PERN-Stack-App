@@ -33,7 +33,6 @@ const DetailsHeader = (props) => {
 
 const DetailsPage = () => {
     const { selected, setSelected } = useContext(RestaurantsContext);
-    const { restaurants } = useContext(RestaurantsContext);
     const { id } = useParams();
     const [imgsrc, setImgSrc] = useState();
 

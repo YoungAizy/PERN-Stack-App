@@ -202,10 +202,11 @@ app.get("/api/v1/myrestaurants", authenticateToken, async (req, res) => {
 
 app.get("/:look", async (req, res) => {
     console.log(req.query)
+    const query = req.query.order_by+" "+req.query.order;
     try {
         const name = await db.query(
-            "select * from restaurants left join (select restaurant_id, COUNT(*), TRUNC(AVG(rating),1)as average_rating from reviews group by restaurant_id ) reviews on restaurants.id=reviews.restaurant_id LEFT JOIN images ON restaurants.id=images.restaurant where restaurants.name LIKE $1 ORDER BY $2 $3;",
-            [`%${escape(req.params.look).toLowerCase()}%`, req.query.order_by, req.query.order]);
+            "select * from restaurants left join (select restaurant_id, COUNT(*), TRUNC(AVG(rating),1)as average_rating from reviews group by restaurant_id ) reviews on restaurants.id=reviews.restaurant_id LEFT JOIN images ON restaurants.id=images.restaurant where restaurants.name LIKE $1 ORDER BY $2 ;",
+            [`%${escape(req.params.look).toLowerCase()}%`, query]);
 
         if (name.rowCount > 0) {
             res.json({

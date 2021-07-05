@@ -20,10 +20,8 @@ const AddRestaurant = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const notification = document.getElementById('popup-notification');
-        console.log("triggered");
         const form = new FormData()
         if (name && location && city && price) {
-            console.log("sending data");
             setInvalid(false);
             form.append('image', picture);
             form.append('data',

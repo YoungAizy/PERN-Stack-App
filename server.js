@@ -139,11 +139,17 @@ app.post("/api/v1/auth/login", middleware.middleware, (req, res) => {
     }
 })
 
-app.get('/dashboard'|| '/signin', function(req,res) {
+app.get('/dashboard', function(req,res) {
+		res.sendFile(path.join(__dirname, 'client/build', '/index.html'));
+});
+app.get('/signin', function(req,res) {
 		res.sendFile(path.join(__dirname, 'client/build', '/index.html'));
 });
 
-app.get('/restaurants/:id' || "/restaurants/:id/update", function(req,res) {
+app.get('/restaurants/:id', function(req,res) {
+		res.sendFile(path.join(__dirname, 'client/build', '/index.html'));
+});
+app.get('/restaurants/:id/update', function(req,res) {
 		res.sendFile(path.join(__dirname, 'client/build', '/index.html'));
 });
 
@@ -197,7 +203,7 @@ app.get("/api/v1/myrestaurants", authenticateToken, async (req, res) => {
 app.get("/:look", async (req, res) => {
     try {
         const name = await db.query(
-            "select * from restaurants left join (select restaurant_id, COUNT(*), TRUNC(AVG(rating),1)as average_rating from reviews group by restaurant_id ) reviews on restaurants.id=reviews.restaurant_id LEFT JOIN images ON restaurants.id=images.restaurant where restaurants.name LIKE $1 ODER BY $2 $3;",
+            "select * from restaurants left join (select restaurant_id, COUNT(*), TRUNC(AVG(rating),1)as average_rating from reviews group by restaurant_id ) reviews on restaurants.id=reviews.restaurant_id LEFT JOIN images ON restaurants.id=images.restaurant where restaurants.name LIKE $1 ORDER BY $2 $3;",
             [`%${escape(req.params.look).toLowerCase()}%`, req.query.order_by, req.query.order]);
 
         if (name.rowCount > 0) {

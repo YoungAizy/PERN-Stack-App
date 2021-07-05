@@ -24,12 +24,13 @@ if (process.env.NODE_ENV === "production") {
 }
 
 app.get('/*', function(req,res) {
-		res.sendFile(path.join(__dirname, 'cient/build', '/index.html'));
+		res.sendFile(path.join(__dirname, 'client/build', '/index.html'));
 });
 
 // ****** AUTHENTICATION ROUTES ********
 
 app.post('/api/v1/auth/signup', middleware.middleware, async (req, res) => {
+    console.log("signup route")
     if (req.body.pass) {
         const encryptedPassword = await bcrypt.hash(req.body.password, 8);
         const email = escape(req.body.email).toLowerCase();

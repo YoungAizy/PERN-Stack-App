@@ -1,15 +1,5 @@
 const db = require("./db");
 
-// function checkUserCreds(req, res, next) {
-//     db.query("SELECT * FROM users WHERE name=$1", [req.body.username])
-//         .then(result => {if(result){console.log(result)} })
-//         .catch(err=>console.log(err));
-
-//     db.query("SELECT * FROM users WHERE email=$1", [req.body.email])
-//         .then(result => {if(result){console.log(result)} })
-//         .catch(err=>console.log(err));
-//     next();
-// }
 var namePass = false, emailPass = false;
 
 exports.middleware = async (req, res, next) => {

@@ -27,7 +27,6 @@ if (process.env.NODE_ENV === "production") {
 // ****** AUTHENTICATION ROUTES ********
 
 app.post('/api/v1/auth/signup', middleware.middleware, async (req, res) => {
-    console.log("signup route")
     if (req.body.pass) {
         const encryptedPassword = await bcrypt.hash(req.body.password, 8);
         const email = escape(req.body.email).toLowerCase();
@@ -140,7 +139,11 @@ app.post("/api/v1/auth/login", middleware.middleware, (req, res) => {
     }
 })
 
-app.get('/dashboard', function(req,res) {
+app.get('/dashboard'|| '/signin', function(req,res) {
+		res.sendFile(path.join(__dirname, 'client/build', '/index.html'));
+});
+
+app.get('/restaurants/:id' || "/restaurants/:id/update", function(req,res) {
 		res.sendFile(path.join(__dirname, 'client/build', '/index.html'));
 });
 

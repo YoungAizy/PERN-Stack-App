@@ -38,8 +38,7 @@ const RestaurantList = (props) => {
                                 authorization: token
                             }
                         });
-                        console.log("my restaurants", data)
-                        data.data && setMyRestaurants(data.data);
+                        setMyRestaurants(data.data);
                         setUser({ name: data.user.name, email: data.user.email });
                         setContent(data.data)
                     }

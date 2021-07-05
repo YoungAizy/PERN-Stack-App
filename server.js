@@ -23,10 +23,6 @@ if (process.env.NODE_ENV === "production") {
     app.use(express.static(path.join(__dirname, "client/build")))
 }
 
-app.get('/*', function(req,res) {
-		res.sendFile(path.join(__dirname, 'client/build', '/index.html'));
-});
-
 // ****** AUTHENTICATION ROUTES ********
 
 app.post('/api/v1/auth/signup', middleware.middleware, async (req, res) => {
@@ -312,6 +308,10 @@ app.post("/api/v1/restaurants/:id/reviews", async (req, res) => {
         data: result.rows
     })
 })
+
+app.get('/*', function(req,res) {
+		res.sendFile(path.join(__dirname, 'client/build', '/index.html'));
+});
 
 const port = process.env.PORT || 8040;
 

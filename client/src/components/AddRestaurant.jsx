@@ -20,24 +20,25 @@ const AddRestaurant = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const notification = document.getElementById('popup-notification');
-
+        console.log("triggered");
         const form = new FormData()
         if (name && location && city && price) {
+            console.log("sending data");
             setInvalid(false);
             form.append('image', picture);
             form.append('data',
                 JSON.stringify({ phone, website, name, location, price, about, user: user.name, email, city }))
             const response = await databinder.post("/restaurants", form);
-
+            console.log(response.data)
             addRestaurant(response.data.data)
-            setAbout();
-            setPhone();
-            setName("")
-            setLocation("")
-            setPrice("Price Range");
-            setWebsite()
-            setCity("")
-            setEmail()
+            // setAbout();
+            // setPhone();
+            // setName("")
+            // setLocation("")
+            // setPrice("Price Range");
+            // setWebsite()
+            // setCity("")
+            // setEmail()
             if (response) {
                 if (response.data.data.length > 0)
                     setIsSuccessful(true);

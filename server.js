@@ -140,7 +140,7 @@ app.post("/api/v1/auth/login", middleware.middleware, (req, res) => {
     }
 })
 
-app.get('/*', function(req,res) {
+app.get('/dashboard', function(req,res) {
 		res.sendFile(path.join(__dirname, 'client/build', '/index.html'));
 });
 

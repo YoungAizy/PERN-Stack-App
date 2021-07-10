@@ -31,8 +31,10 @@ const RestaurantList = (props) => {
             try {
                 if (props.myRestaurants) {
                     if (myrestaurants.length > 0) {
+                        console.log("stored restaurants");
                         setContent(myrestaurants);
                     } else {
+                        console.log("grop.");
                         const { data } = await axios.get(`/api/v1/myrestaurants`, {
                             headers: {
                                 authorization: token
@@ -46,6 +48,7 @@ const RestaurantList = (props) => {
                     setContent(restaurants)
                 }
                 else {
+                    console.log("somewhere else")
                     let result = await databinder.get('/restaurants?limit=10');
                     setRestaurants(result.data.data.restaurants);
                     setContent(result.data.data.restaurants)
@@ -57,7 +60,7 @@ const RestaurantList = (props) => {
 
         fetchData();
         // eslint-disable-next-line
-    }, [setRestaurants, setMyRestaurants])
+    }, [setMyRestaurants])
 
     const handleDelete = async (id) => {
         // console.log('handle delete entered', id)

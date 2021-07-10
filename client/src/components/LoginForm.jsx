@@ -9,6 +9,7 @@ const LoginForm = ({ toggle }) => {
     const { setUser } = useContext(RestaurantsContext);
 
     const login = async () => {
+        loginResponse && setLoginResponse("Attempting Login...");
         const { data } = await databinder.post(`/auth/login`, {
             email, password, type: "login"
         });

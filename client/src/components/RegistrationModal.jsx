@@ -15,6 +15,7 @@ function RegistrationModal(props) {
     }
 
     const createAccount = async () => {
+        serverResponse && setServerResponse("Attempting Registration...");
         const response = await databinder.post(`/auth/signup`, {
             name, password, email, type: 'registration'
         });

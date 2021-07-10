@@ -14,6 +14,7 @@ const SignIn = () => {
     const history = useHistory()
 
     const login = async () => {
+        loginResponse && setLoginResponse("Attempting Login...");
         const { data } = await databinder.post(`/auth/login`, {
             email, password, type: "login"
         });

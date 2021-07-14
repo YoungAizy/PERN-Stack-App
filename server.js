@@ -229,6 +229,7 @@ app.get("/:look", async (req, res) => {
 // Creating a New Restaurant
 app.post("/api/v1/restaurants", upload.single('image'), async (req, res) => {
     const data = JSON.parse(req.body.data);
+    console.log(data)
     try {
         const result = await db
             .query("INSERT INTO restaurants(name, street, price_range, description, created_by, telephone, email_address,website,city) values($1, $2, $3,$4,$5,$6,$7,$8,$9) returning *",

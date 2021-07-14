@@ -58,7 +58,7 @@ const DetailsPage = () => {
                         rating={selected.restaurant.average_rating} count={selected.restaurant.count} />
 
                     <div id="description">
-                        <div style={{ width: "80%" }}>
+                        <div style={{ width: "80%", paddingRight:".7rem" }}>
                             {selected.restaurant.description ? <p>{selected.restaurant.description}</p> : <h3>No Description given</h3>}
                         </div>
                         <div id="contact-details" >

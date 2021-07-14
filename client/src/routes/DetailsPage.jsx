@@ -54,7 +54,7 @@ const DetailsPage = () => {
 
             {selected && (
                 <>
-                    <DetailsHeader image={imgsrc && imgsrc} restaurant={selected.restaurant.name} street={selected.restaurant.street} suburb={selected.restaurant.suburb}
+                    <DetailsHeader image={imgsrc && imgsrc} restaurant={selected.restaurant.name} street={selected.restaurant.street} suburb={selected.restaurant.city}
                         rating={selected.restaurant.average_rating} count={selected.restaurant.count} />
 
                     <div id="description">

@@ -11,7 +11,7 @@ const AddRestaurant = () => {
     const [about, setAbout] = useState("");
     const [picture, setPicture] = useState("");
     const [email, setEmail] = useState("");
-    const [phone, setPhone] = useState("");
+    const [phone, setPhone] = useState();
     const [website, setWebsite] = useState("");
     const [city, setCity] = useState("");
     const [invalid, setInvalid] = useState(false);
@@ -36,9 +36,9 @@ const AddRestaurant = () => {
             setName("")
             setLocation("")
             setPrice("Price Range");
-            setWebsite("")
-            setCity("")
-            setEmail("")
+            setWebsite()
+            setCity()
+            setEmail()
                 if (response.data.status === "success")
                     setIsSuccessful(true);
                 else

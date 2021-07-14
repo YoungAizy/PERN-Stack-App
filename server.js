@@ -229,38 +229,39 @@ app.get("/:look", async (req, res) => {
 // Creating a New Restaurant
 app.post("/api/v1/restaurants", upload.single('image'), async (req, res) => {
     const data = JSON.parse(req.body.data);
-    try {
-        const result = await db
-            .query("INSERT INTO restaurants(name, street, price_range, description, created_by, telephone, email_address,website,city) values($1, $2, $3,$4,$5,$6,$7,$8,$9) returning *",
-                [escape(data.name).toLowerCase(), data.location, parseInt(data.price), data.about, data.user, data.phone, data.email, data.website, escape(data.city).toLowerCase()]);
-        if (req.file) {
-            try {
-                const imageData = await db.query("INSERT INTO images(pic,pic_name,mimetype,restaurant) values($1,$2,$3,$4)  returning *",
-                    [req.file.buffer, req.file.originalname, req.file.mimetype, result.rows[0].id]);
+    console.log(data);
+    // try {
+    //     const result = await db
+    //         .query("INSERT INTO restaurants(name, street, price_range, description, created_by, telephone, email_address,website,city) values($1, $2, $3,$4,$5,$6,$7,$8,$9) returning *",
+    //             [escape(data.name).toLowerCase(), data.location, parseInt(data.price), data.about, data.user, data.phone, data.email, data.website, escape(data.city).toLowerCase()]);
+    //     if (req.file) {
+    //         try {
+    //             const imageData = await db.query("INSERT INTO images(pic,pic_name,mimetype,restaurant) values($1,$2,$3,$4)  returning *",
+    //                 [req.file.buffer, req.file.originalname, req.file.mimetype, result.rows[0].id]);
 
-                if (result.rowCount > 0 && imageData.rowCount > 0) {
-                    res.json({
-                        status: "success",
-                        data: result.rows[0]
-                    })
-                }
-            } catch (error) {
-                console.log("Some Error", error);
-                res.json({
-                    status: "failed"
-                });
-            }
-        } else {
-            res.json({
-                status: "success",
-                data: result.rows[0]
-            })
-        }
-    } catch (error) {
-        res.json({
-            status: "error"
-        });
-    }
+    //             if (result.rowCount > 0 && imageData.rowCount > 0) {
+    //                 res.json({
+    //                     status: "success",
+    //                     data: result.rows[0]
+    //                 })
+    //             }
+    //         } catch (error) {
+    //             console.log("Some Error", error);
+    //             res.json({
+    //                 status: "failed"
+    //             });
+    //         }
+    //     } else {
+    //         res.json({
+    //             status: "success",
+    //             data: result.rows[0]
+    //         })
+    //     }
+    // } catch (error) {
+    //     res.json({
+    //         status: "error"
+    //     });
+    // }
 
 });
 

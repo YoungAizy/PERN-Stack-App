@@ -8,7 +8,7 @@ const AddRestaurant = () => {
     const [name, setName] = useState("");
     const [location, setLocation] = useState("");
     const [price, setPrice] = useState("Price Range");
-    const [about, setAbout] = useState();
+    const [about, setAbout] = useState("");
     const [picture, setPicture] = useState("");
     const [email, setEmail] = useState();
     const [phone, setPhone] = useState();
@@ -102,7 +102,7 @@ const AddRestaurant = () => {
                         <div className="row mb-2">
                             <div className="col-7">
                                 <textarea className="form-control" placeholder="Write about you restaurant..." rows="2"
-                                    value={about ||""} onChange={e => setAbout(e.target.value)}></textarea>
+                                    value={about} onChange={e => setAbout(e.target.value)}></textarea>
                             </div>
                             <div style={{ paddingLeft: "0" }} className="col-4 mb-3">
                                 <label htmlFor="formFile">Choose a shop image</label>

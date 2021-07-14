@@ -10,9 +10,9 @@ const AddRestaurant = () => {
     const [price, setPrice] = useState("Price Range");
     const [about, setAbout] = useState("");
     const [picture, setPicture] = useState("");
-    const [email, setEmail] = useState();
-    const [phone, setPhone] = useState();
-    const [website, setWebsite] = useState();
+    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
+    const [website, setWebsite] = useState("");
     const [city, setCity] = useState("");
     const [invalid, setInvalid] = useState(false);
     const [isSuccessful, setIsSuccessful] = useState();
@@ -32,14 +32,14 @@ const AddRestaurant = () => {
             if (response) {
                 console.log(response); 
             setAbout("");
-            setPhone();
+            setPhone("");
             setName("")
             setLocation("")
             setPrice("Price Range");
-            setWebsite()
+            setWebsite("")
             setCity("")
-            setEmail()
-                if (response.data.data.length > 0)
+            setEmail("")
+                if (response.data.status === "success")
                     setIsSuccessful(true);
                 else
                     setIsSuccessful(false);

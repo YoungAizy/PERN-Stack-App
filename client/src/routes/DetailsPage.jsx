@@ -23,7 +23,7 @@ const DetailsHeader = (props) => {
                         <StarRating rating={props.rating} />
                         <span className="text-warning">{props.count ? `(${props.count})` : "(0)"}</span>
                     </div>
-                    <div> 214 Dias Lane, Summerstrand<br />Port Elizabeth </div>
+                    <div> {props.street}<br />{props.suburb}</div>
                 </div>
                 <div style={{ boxShadow: "-2px 0 4px gray", display: "flex", alignItems: "center", justifyContent: "center" }}><Link to="/">Home</Link></div>
             </header>

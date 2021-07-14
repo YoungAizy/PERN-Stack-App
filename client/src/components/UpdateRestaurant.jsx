@@ -70,15 +70,15 @@ function UpdateRestaurant(props) {
                     <div className="form-group row mb-4">
                         <div className='col'>
                             <label htmlFor="name">Name</label>
-                            <input id="name" className="form-control" value={name} onChange={e => setName(e.target.value)} type="text" />
+                            <input id="name" className="form-control" value={name} onChange={e => setName(e.target.value.toLowerCase())} type="text" />
                         </div>
                         <div className="col">
                             <label htmlFor="streetLocation">Street and Suburb</label>
-                            <input id="streetLocation" value={location} onChange={e => setLocation(e.target.value)} type="text" className="form-control" placeholder="Street name and surburb" />
+                            <input id="streetLocation" value={location} onChange={e => setLocation(e.target.value.toLowerCase())} type="text" className="form-control" placeholder="Street name and surburb" />
                         </div>
                         <div className="col">
                             <label htmlFor="cityLocation">City</label>
-                            <input id="cityLocation" value={city} onChange={e => setCity(e.target.value)} type="text" className="form-control" placeholder="City" />
+                            <input id="cityLocation" value={city} onChange={e => setCity(e.target.value.toLowerCase())} type="text" className="form-control" placeholder="City" />
                         </div>
                     </div>
                     <div className="row mb-2">

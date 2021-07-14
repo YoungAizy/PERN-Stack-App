@@ -229,7 +229,6 @@ app.get("/:look", async (req, res) => {
 // Creating a New Restaurant
 app.post("/api/v1/restaurants", upload.single('image'), async (req, res) => {
     const data = JSON.parse(req.body.data);
-    console.log(data);
     try {
         const result = await db
             .query("INSERT INTO restaurants(name, street, price_range, description, created_by, telephone, email_address,website,city) values($1, $2, $3,$4,$5,$6,$7,$8,$9) returning *",
@@ -271,7 +270,7 @@ app.put("/api/v1/restaurants/:id", upload.single('image'), async (req, res) => {
     try {
         const result = await db
             .query("UPDATE restaurants SET name = $1, street=$2, price_range=$3, description=$4, created_by=$5, telephone=$6, email_address=$7,website=$8,city=$9 WHERE id=$10 returning *",
-                [escape(data.name).toLowerCase(), data.location, data.price, data.about, data.user, data.phone, data.email, data.website, escape(data.city).toLowerCase(), req.params.id]);
+                [data.name, data.location, data.price, data.about, data.user, data.phone, data.email, data.website, data.city, req.params.id]);
 
         if (req.file) {
             const imageData = await db.query("INSERT INTO images(pic,pic_name,mimetype,restaurant) values($1,$2,$3,$4)  returning *",

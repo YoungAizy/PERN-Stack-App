@@ -60,7 +60,7 @@ const RestaurantList = (props) => {
 
         fetchData();
         // eslint-disable-next-line
-    }, [setMyRestaurants])
+    }, [setMyRestaurants, myrestaurants])
 
     const handleDelete = async (id) => {
         // console.log('handle delete entered', id)

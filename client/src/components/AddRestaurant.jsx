@@ -30,7 +30,8 @@ const AddRestaurant = () => {
             addRestaurant(response.data.data)
 
             if (response) {
-                 setAbout();
+                console.log(response); 
+            setAbout("");
             setPhone();
             setName("")
             setLocation("")
@@ -66,7 +67,7 @@ const AddRestaurant = () => {
                     <form action="" style={{ margin: ".6rem" }} >
                         <div className="row mb-3">
                             <div className="col">
-                                <input value={name} onChange={e => setName(e.target.value)} type="text" className="form-control" placeholder="Name" maxLength="80" />
+                                <input value={name} onChange={e => setName(e.target.value.toLowerCase())} type="text" className="form-control" placeholder="Name" maxLength="80" />
                                 {!name && <div className="text-danger">
                                     Required!
                             </div>}
@@ -78,7 +79,7 @@ const AddRestaurant = () => {
                             </div>}
                             </div>
                             <div className="col">
-                                <input value={city} onChange={e => setCity(e.target.value)} type="text" className="form-control" placeholder="City" />
+                                <input value={city} onChange={e => setCity(e.target.value.toLowerCase())} type="text" className="form-control" placeholder="City" />
                                 {!city && <div className="text-danger">
                                     Required!
                             </div>}
@@ -101,7 +102,7 @@ const AddRestaurant = () => {
                         <div className="row mb-2">
                             <div className="col-7">
                                 <textarea className="form-control" placeholder="Write about you restaurant..." rows="2"
-                                    value={about} onChange={e => setAbout(e.target.value)}></textarea>
+                                    value={about ||""} onChange={e => setAbout(e.target.value)}></textarea>
                             </div>
                             <div style={{ paddingLeft: "0" }} className="col-4 mb-3">
                                 <label htmlFor="formFile">Choose a shop image</label>
@@ -112,13 +113,13 @@ const AddRestaurant = () => {
                         </div>
                         <div className="row">
                             <div className="col">
-                                <input value={email} onChange={e => setEmail(e.target.value)} type="email" className="form-control" placeholder="E-Mail" />
+                                <input value={email || ""} onChange={e => setEmail(e.target.value)} type="email" className="form-control" placeholder="E-Mail" />
                             </div>
                             <div className="col">
-                                <input value={phone} onChange={e => setPhone(e.target.value)} type="tel" className="form-control" placeholder="Contact Number" />
+                                <input value={phone || ""} onChange={e => setPhone(e.target.value)} type="tel" className="form-control" placeholder="Contact Number" />
                             </div>
                             <div className="col">
-                                <input value={website} onChange={e => setWebsite(e.target.value)} type="url" className="form-control" placeholder="Website" />
+                                <input value={website || ""} onChange={e => setWebsite(e.target.value)} type="url" className="form-control" placeholder="Website" />
                             </div>
 
                         </div>

@@ -30,7 +30,7 @@ const AddRestaurant = () => {
             addRestaurant(response.data.data)
 
             if (response) {
-                console.log(response); 
+            //console.log(response); 
             setAbout("");
             setPhone("");
             setName("")

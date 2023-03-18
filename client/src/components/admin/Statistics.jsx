@@ -1,8 +1,10 @@
 import React from 'react';
 
-export default Stats = (props)=>{
+const Stats = (props)=>{
 
     return(
-        
+        <div></div>
     )
 }
+
+export default Stats;

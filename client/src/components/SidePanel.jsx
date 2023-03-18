@@ -3,7 +3,9 @@ import React from 'react';
 const SidePanel = (props)=>{
 
 
-    return()
+    return(
+        <div></div>
+    )
 }
 
 export default SidePanel;

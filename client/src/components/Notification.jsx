@@ -1,7 +1,11 @@
 import React from 'react';
 
-export default _Notification = (props)=>{
+const _Notification = (props)=>{
     
     
-    return()
+    return(
+        <div></div>
+    )
 }
+
+export default _Notification;

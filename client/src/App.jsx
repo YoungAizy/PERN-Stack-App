@@ -8,7 +8,6 @@ import UpdatePage from "./routes/UpdatePage";
 import AdminPage from './routes/AdminPage';
 import { ContextProvider } from './Context API/Context';
 import SignIn from './routes/SignIn';
-import Footer from './components/Footer'
 import ProtectedRoute from './routes/ProtectedRoute';
 
 const App = ()=> {
@@ -24,7 +23,6 @@ const App = ()=> {
           <Route exact path="/restaurants/:id/update" component={ UpdatePage }/>
           <Route exact path="/admin" component={AdminPage}/>
         </Router>
-        {/* <Footer /> */}
     </div>
     </ContextProvider>
   );

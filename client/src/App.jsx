@@ -24,7 +24,7 @@ const App = ()=> {
           <Route exact path="/restaurants/:id/update" component={ UpdatePage }/>
           <Route exact path="/admin" component={AdminPage}/>
         </Router>
-        <Footer />
+        {/* <Footer /> */}
     </div>
     </ContextProvider>
   );

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default Function ProfilePage(props){
+export default function ProfilePage(props){
 
     return(
         

@@ -1,10 +1,12 @@
 import React from 'react';
+import NotificationComp from './Notification';
 
 const Notifications = (props)=>{
     
     
     return(
-        <div>
+        <div className='m-5'>
+            <NotificationComp/>
         </div>
     )
 }

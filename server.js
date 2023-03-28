@@ -9,6 +9,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 const cors = require('cors');
 const path = require('path');
+const helmet = require('helmet');
 
 var storage = multer.memoryStorage()
 const upload = multer({
@@ -16,6 +17,7 @@ const upload = multer({
 });
 
 app.use(cors())
+app.use(helmet())
 app.use(express.json());
 
 if (process.env.NODE_ENV === "production") {

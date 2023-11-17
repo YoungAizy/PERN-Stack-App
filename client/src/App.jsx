@@ -9,6 +9,7 @@ import AdminPage from './routes/AdminPage';
 import { ContextProvider } from './Context API/Context';
 import SignIn from './routes/SignIn';
 import ProtectedRoute from './routes/ProtectedRoute';
+import RegistrationPage from './routes/RegistrationPage';
 
 const App = ()=> {
   return (
@@ -17,6 +18,7 @@ const App = ()=> {
     <div>
         <Router>
           <Route exact path="/" component={Landing} />
+          <Route exact path="/signup" component={RegistrationPage}/>
           <ProtectedRoute exact path="/dashboard" component={Home}/>
           <Route path="/signin" component={ SignIn}/>
           <Route exact path="/restaurants/:id" component={ DetailsPage }/>

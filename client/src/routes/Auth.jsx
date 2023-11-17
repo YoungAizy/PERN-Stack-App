@@ -43,7 +43,10 @@ const SignIn = () => {
                             <input id="pass" type="password" className="form-control" onChange={e => setPassword(e.target.value)} />
                             <label htmlFor="pass">Password</label>
                         </div>
-                        <div className="form-margin"><input type="checkbox" onClick={e => {
+                        <div className="form-margin">
+                            <button type="button" className="btn btn-secondary" onClick={login}>LOGIN</button>
+                        </div>
+                        <div><input type="checkbox" onClick={e => {
                             const x = document.getElementById("pass");
                             if (x.type === "password") {
                                 x.type = "text"
@@ -51,9 +54,6 @@ const SignIn = () => {
                                 x.type = "password"
                             }
                         }} /> Show Password</div>
-                        <div className="form-margin">
-                            <button type="button" className="btn btn-secondary" onClick={login}>LOGIN</button>
-                        </div>
                     </div>
                 </form>
                 {loginResponse && !loginResponse.accessToken && <p style={{ fontWeight: "600", background: "whitesmoke" }}>{loginResponse}</p>}

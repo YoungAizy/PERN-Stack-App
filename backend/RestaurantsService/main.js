@@ -1,5 +1,5 @@
-import publicRouter from './routes/index.js' ;
-import {restaurant_Router as privateRouter, reviewsRouter} from './routes/protectedRoutes.js';
+import publicRouter from './routes/public.js';
+import {restaurant_Router as privateRouter, reviewsRouter} from './routes/protected.js';
 import express from 'express';
 import helmet from 'helmet';
 

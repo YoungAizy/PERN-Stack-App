@@ -1,5 +1,6 @@
 import Repo from "../Repository/reviews_repo.js";
 import constants from "../utils/constants/index.js";
+import { onError, onSucess } from '../utils/helper.js';
 
 export const new_review = async (req,res)=>{
     const payload = [req.body.display_picture, req.body.username, req.body.createdAt,req.body.rating,req.body.comment,req.body.restaurant_id]
@@ -39,8 +40,5 @@ export const remove_disLike = (req,res)=>{
 export const del_review = (req,res)=>{
     Repo.remove([req.params.id])
     .then(result=> onSucess(res))
-    .catch(error=> onError(res,error,"DELETE"));
+    .catch(error=> onError(res,error,constants.delete));
 }
-
-const onSucess = (res,data) => res.json({status: constants.sucess,data});
-const onError = (res,error, command) => res.json({status: `${command} ${constants.onFailure}`, error});

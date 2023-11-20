@@ -1,5 +1,12 @@
 export default {
-    sucess: "Successful",
+    success: "Successful",
     onFailure: "Failed",
-    onError: "An Error Occured"
+    upload_failure: "Failed to Upload",
+    onError: "An Error Occured",
+
+    //COMMANDS
+    delete: "DELETE",
+    upload: "UPLOAD",
+    update: "UPDATE"
+
 }

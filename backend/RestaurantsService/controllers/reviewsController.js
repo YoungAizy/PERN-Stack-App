@@ -1,4 +1,46 @@
-import Repop from "../Repository/reviews_repo";
+import Repo from "../Repository/reviews_repo.js";
+import constants from "../utils/constants/index.js";
 
-export const add_review =(req,res)=>{}
-export const del_review = (req,res)=>{}
+export const new_review = async (req,res)=>{
+    const payload = [req.body.display_picture, req.body.username, req.body.createdAt,req.body.rating,req.body.comment,req.body.restaurant_id]
+    try {
+        const result = await Repo.add_review(payload);
+        onSucess(res,result.rows);
+    } catch (error) {
+        console.log(error)
+        onError(res,error);
+    }
+}
+
+export const new_like = (req,res)=>{
+    Repo.updateLike([req.params.id])
+    .then(results=> onSucess(res,results.rows[0].likes))
+    .catch(error=> onError(res,error));
+}
+
+export const unlike = (req,res)=>{
+    Repo.updateLike([req.params.id],"UNLIKE")
+    .then(results=> onSucess(res,results.rows[0].likes))
+    .catch(error=> onError(res,error));
+}
+
+export const dislike = (req,res)=>{
+    Repo.updateLike([req.params.id],"DISLIKE")
+    .then(results=> onSucess(res,results.rows[0].dislikes))
+    .catch(error=> onError(res,error));
+}
+
+export const remove_disLike = (req,res)=>{
+    Repo.updateLike([req.params.id],"REMOVE DISLIKE")
+    .then(results=> onSucess(res,results.rows[0].dislikes))
+    .catch(error=> onError(res,error));
+}
+
+export const del_review = (req,res)=>{
+    Repo.remove([req.params.id])
+    .then(result=> onSucess(res))
+    .catch(error=> onError(res,error,"DELETE"));
+}
+
+const onSucess = (res,data) => res.json({status: constants.sucess,data});
+const onError = (res,error, command) => res.json({status: `${command} ${constants.onFailure}`, error});

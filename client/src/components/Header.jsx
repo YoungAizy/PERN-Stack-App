@@ -29,7 +29,7 @@ const Header = ({ isDashBoard }) => {
     return (
         <header className="home-header" style={{ backgroundImage: `url(${Background})` }}>
             <LoginForm toggle={toggle} />
-            <h1 className="font-weight-light display-1 text-center" style={{ color: "whitesmoke" }}>Restaurant Finder</h1>
+            <h1 className="font-weight-light display-1 text-center" style={{ color: "coral" }}>Restaurant Finder</h1>
             <div style={{ float: "right" }}>
                 {isAuthenticated ? <LoggedInBtns isDashBoard={isDashBoard} setProfileShown={setProfileShown} showProfile={showProfile} />
                     : <SignInButtons setShow={setShow} toggle={toggle} loginShown={loginShown} />}
@@ -56,8 +56,8 @@ const LoggedInBtns = ({ setProfileShown, isDashBoard }) => {
 const SignInButtons = ({ setShow, toggle, loginShown }) => {
     return (
         <React.Fragment>
-            <nav className="signin"><button onClick={() => setShow(true)} >Signup</button></nav>|
-            <nav className="signin"><button onClick={() => {
+            <nav className="signin bg-primary"><button onClick={() => setShow(true)} >Signup</button></nav>|
+            <nav className="signin bg-primary"><button onClick={() => {
                 if (!loginShown)
                     toggle()
             }}>Login</button></nav>

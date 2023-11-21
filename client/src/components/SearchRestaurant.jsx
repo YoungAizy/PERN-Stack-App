@@ -46,7 +46,7 @@ export default function SearchRestaurant({ onSearch, setRestaurants, setSearchRe
                         </select>
                     </div>
                     <div className="col">
-                        <button type="submit" onClick={handleSubmit} className="btn btn-success">
+                        <button type="submit" onClick={handleSubmit} className="btn bg-primary" style={{color:"ghostwhite"}}>
                             Search
                     </button>
 

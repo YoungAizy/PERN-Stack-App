@@ -1,3 +1,13 @@
+:root{
+    --primary-color: coral;
+    --btn-text-primary: antiquewhite;
+}
+.bg-primary{
+    background-color: var(--primary-color) !important;
+}
+.btn-text{
+    color: var(--btn-text-primary);
+}
 * {
     margin: 0;
     padding: 0;
@@ -17,14 +27,15 @@ body {
 }
 
 .signin {
-    background: rgb(223, 210, 210);
-    border: rgb(126, 118, 126) 2px solid;
+    /* background: rgb(223, 210, 210); */
+    /* border: rgb(126, 118, 126) 2px solid; */
     padding: .2rem 1rem;
+    border-radius: 8px 0 0 8px;
 }
 
 .signin>* {
     text-decoration: none;
-    color: black;
+    color: antiquewhite;
     border: none;
     background: transparent;
     padding: 0 6px;

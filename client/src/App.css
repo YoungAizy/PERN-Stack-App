@@ -24,6 +24,8 @@ body {
 
 .home-header {
     height: 200px;
+    background-color: rgba(0.1,0,0,.3);
+    background-blend-mode: color;
 }
 
 .signin {

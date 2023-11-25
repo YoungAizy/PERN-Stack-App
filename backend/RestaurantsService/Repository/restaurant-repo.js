@@ -1,5 +1,6 @@
 import db from "../config/index.js";
 import Query from "../config/queries.js"
+import constants from "../utils/constants/index.js";
 
 const client = db.getConnection();
 
@@ -11,8 +12,17 @@ class Repository{
         return result;
     }
 
-    async retrieveOne(id,cb){
-        const result = await client.query(Query.getOne, id);
+    async retrieveOne(id,request){
+        let result;
+        switch (request) {
+            case constants.partial.toLowerCase():
+                result = await client.query(Query.getPartial,id);
+                break;
+        
+            default:
+                result = await client.query(Query.getOne, id);
+                break;
+        }
         return result;
     }
 
@@ -20,6 +30,12 @@ class Repository{
         const result = await client.query(Query.getAll,limit_param);
         return result;
     }
+    async retrieveTop(){
+        const result = await client.query(Query.best_rated);
+        return result;
+    }
+    //TODO: implement userListing method
+    async userListings(){}
     
     async update(payload){
         const result = await client.query(Query.update,payload);

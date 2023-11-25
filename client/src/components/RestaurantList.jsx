@@ -2,21 +2,10 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import databinder from '../apis/databinder';
 import { RestaurantsContext } from '../Context API/Context';
-import StarRating from './StarRating';
+import RenderRating from './RestaurantCard';
 import DeleteModal from './DeleteModal';
 import axios from 'axios'
 
-export const RenderRating = ({ restaurant }) => {
-    if (!restaurant.count) {
-        return (<span className="text-warning"> 0 Reviews</span>)
-    }
-    return (
-        <>
-            <StarRating rating={restaurant.average_rating} />
-            <span className="text-warning ml-1">({restaurant.count})</span>
-        </>
-    )
-}
 
 const RestaurantList = (props) => {
     const token = JSON.parse(localStorage.getItem("token"))
@@ -116,7 +105,7 @@ const RestaurantList = (props) => {
                                     <td>{x.name}</td>
                                     <td>{location}</td>
                                     <td>{"$".repeat(x.price_range)}</td>
-                                    <td><RenderRating restaurant={x} /></td>
+                                    <td><RenderRating total_reviews={x.total_reviews} avg_rating={x.avg_rating} /></td>
                                     {!props.myRestaurants ? <td>{x.created_by}</td> : <><td><button onClick={(e) => handleUpate(e, x.id)} className="btn btn-warning">Update</button></td>
                                         <td><button onClick={(e) => showDeleteModal(e, x.id, x.name)} className="btn btn-danger">Delete</button></td></>}
                                 </tr>

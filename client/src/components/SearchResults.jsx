@@ -1,7 +1,7 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom';
 import Default from "../assets/default.jpg"
-import { RenderRating } from './RestaurantList';
+import { RenderRating } from './RestaurantCard';
 
 const SearchResults = ({ restaurants, status }) => {
     const history = useHistory();

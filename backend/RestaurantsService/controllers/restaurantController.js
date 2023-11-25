@@ -16,28 +16,54 @@ export const addRestaurant = async (req,res)=>{
 }
 
 export const getOne = async (req,res)=>{ 
+    console.log("help")
     try {
-        const result = await (new Repo()).retrieveOne([req.params.id]);
+        let restaurant;
         const reviews = await reviews_repo.getReviews([req.params.id]);
+
+        if (req.query.details === constants.partial.toLowerCase()) {
+            restaurant = await (new Repo()).retrieveOne([req.params.id],req.query.details);
+        }else{
+            restaurant = await (new Repo()).retrieveOne([req.params.id]);
+        }
         res.json({
             status: "Successful",
-            count:result.rowCount, 
-            data:{
-                restaurant: result.rows[0],
-                reviews: reviews.rows
-            }});
+            restaurant: restaurant.rows[0],
+            reviews: reviews.rows
+            });
     } catch (error) {
+        console.log(error);
         res.json({status:"Failed to Fetch restaurant information", error});
     }
  }
+
 export const getAll = async (req,res)=>{
+    console.log(req.query, "all")
+    let results = {};
     try {
-        const result = await (new Repo()).retrieveAll([req.query.limit]);
-        res.json({status: "Successful",count:result.rowCount, data:result.rows});
+        const restaurants = await (new Repo()).retrieveAll([req.query.limit]);
+        results.restaurants = restaurants.rows;
+        if (req.query.req_src === constants.client.toLowerCase()) {
+            const top_rated = await (new Repo()).retrieveTop();
+            results.top_rated = top_rated.rows;
+        }
+    
+        res.json({status: "Successful", ...results});
     } catch (error) {
+        console.log(error)
         res.json({status:"Failed to Fetch restaurants", error});
     }
 }
+//TODO: fully implement user listings retrieval
+export const getListings = async (req, res)=>{
+    const token = req.body.access_token;
+    try {
+        const result = await (new Repo()).userListings();
+    } catch (error) {
+        
+    }
+}
+
 export const update = async (req,res) => {
     const payload = [req.body.name,req.body.addr_,req.body.price,req.body.description,req.body.created_by,req.body.tel,
         req.body.email,req.body.web,req.body.city,req.body.tel_ext,req.body.img_url,req.params.id]

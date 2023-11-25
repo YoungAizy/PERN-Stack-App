@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
-import databinder from '../apis/databinder';
 import AddReview from '../components/addReview';
 import Reviews from '../components/Reviews';
 import StarRating from '../components/StarRating';
 import { RestaurantsContext } from '../Context API/Context';
 import Default from "../assets/default.jpg";
+import { _public } from '../apis/restaurants';
 
 
 const DetailsHeader = (props) => {
@@ -37,7 +37,7 @@ const DetailsPage = () => {
     const [imgsrc, setImgSrc] = useState();
 
     const fetchData = async () => {
-        const { data } = await databinder.get(`/restaurants/${id}`);
+        const { data } = await _public.singlePartial(id);
 
         const type = data.data.restaurant.mimetype;
         const buffer = data.data.restaurant.pic && Buffer.from(data.data.restaurant.pic).toString("base64");
@@ -71,7 +71,6 @@ const DetailsPage = () => {
                     </div>
                     <div className="mt-3">
                         <div >
-
                             <Reviews reviews={selected.reviews} />
                         </div>
                         <AddReview id={id} />

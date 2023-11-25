@@ -1,7 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import UpdateRestaurant from '../components/UpdateRestaurant';
-import { LoginHeader } from '../routes/SignIn';
+import { LoginHeader } from './SignIn';
 
 const UpdatePage = () => {
     const history = useHistory()

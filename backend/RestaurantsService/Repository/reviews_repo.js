@@ -1,3 +1,4 @@
+import { Query } from "pg";
 import db from "../config/index.js";
 import {REVIEWS_QUERIES} from "../config/queries.js"
 
@@ -8,6 +9,11 @@ export default {
     async getReviews(id){
         const result = await client.query(REVIEWS_QUERIES.getReviews,id);
         return result;
+    },
+
+    async getUserReviews(user){
+        const results = await client.query(REVIEWS_QUERIES.getUserReviews, user);
+        return results;
     },
 
     async add_review(review){

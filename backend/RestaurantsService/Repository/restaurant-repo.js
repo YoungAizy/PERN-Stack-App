@@ -30,12 +30,15 @@ class Repository{
         const result = await client.query(Query.getAll,limit_param);
         return result;
     }
-    async retrieveTop(){
+    async retrieveTopRated(){
         const result = await client.query(Query.best_rated);
         return result;
     }
     //TODO: implement userListing method
-    async userListings(){}
+    async getUserListings(user){
+        const result = await client.query(Query.getListings,user);
+        return result;
+    }
     
     async update(payload){
         const result = await client.query(Query.update,payload);

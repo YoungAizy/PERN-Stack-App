@@ -44,10 +44,10 @@ export const getAll = async (req,res)=>{
         const restaurants = await (new Repo()).retrieveAll([req.query.limit]);
         results.restaurants = restaurants.rows;
         if (req.query.req_src === constants.client.toLowerCase()) {
-            const top_rated = await (new Repo()).retrieveTop();
+            const top_rated = await (new Repo()).retrieveTopRated();
             results.top_rated = top_rated.rows;
         }
-    
+
         res.json({status: "Successful", ...results});
     } catch (error) {
         console.log(error)
@@ -58,9 +58,11 @@ export const getAll = async (req,res)=>{
 export const getListings = async (req, res)=>{
     const token = req.body.access_token;
     try {
-        const result = await (new Repo()).userListings();
+        const result = await (new Repo()).getUserListings([req.query.user]);
+        onSucess(res,result.rows);
     } catch (error) {
-        
+        console.log(error);
+        onError(res,error);
     }
 }
 

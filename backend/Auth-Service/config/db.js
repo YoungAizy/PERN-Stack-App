@@ -18,10 +18,11 @@ class RestauranstDB{
             this.#db = new Pool({
                 user: "postgres",
                 host: "localhost",
-                port:5437,
-                database: 'test_db',
+                port:2345,
+                database: 'test',
                 password: "restaurant_App"
             })
+            console.log("Connected to db.")
             
         } catch (error) {
             console.log("COULDN'T CONNECT TO THE DATABASE!");

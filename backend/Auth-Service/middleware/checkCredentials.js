@@ -39,6 +39,7 @@ export default async (req, res, next) => {
     
     data.userId = userId = uuidv4();
     req.body.user = data;
+    req.body.repo = repo;
     next();  
 }
 

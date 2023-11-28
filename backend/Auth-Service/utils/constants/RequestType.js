@@ -4,5 +4,7 @@ export default {
     UPDATE: "update_user",
     updateEmail: "update_email",
     updateName: "update_name",
-    updatePassword: "update_password"
+    updatePassword: "update_password",
+    DELETE: "delete",
+    GET_NAME: "get_name"
 }

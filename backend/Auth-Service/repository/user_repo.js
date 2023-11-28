@@ -42,8 +42,8 @@ export default class UserRepo {
     }
     
     async insert(){
-        const values = [this.#user.full_name,this.#user.email,this.#user.hashedPassword]
-        return await client.query(statements.INSERT_USER,values);
+        const values = [this.#user.full_name,this.#user.email,this.#user.hashedPassword,this.#user.userId]
+        return client.query(statements.INSERT_USER,values).then(result=> result.rows[0]);
     }
 
     async update(request){
@@ -51,34 +51,48 @@ export default class UserRepo {
 
         switch (request) {
             case RequestType.updateName:
-                result = this.#setNewName()
+                result = await this.#setNewName()
                 break;
             case RequestType.updateEmail:
-                result = this.#setNewEmail();
+                result = await this.#setNewEmail();
                 break;
             case RequestType.updatePassword:
-                result = this.#setNewPassword();
+                result = await this.#setNewPassword();
                 break;
             default:
                 //default behavior is updating both the name and email of the user
-                const values = [this.#user.name,this.#user.email]
-                result = await client.query(statements.UPDATE_USER,values)
+                result = await this.#setBoth()
                 break;
         }
         return result;
     }
-    async #setNewPassword(){ return await client.query(statements.UPDATE_PASSWORD,this.#user.hashedPassword)}
-    async #setNewName(){return await client.query(statements.UPDATE_NAME,this.#user.name)}
-    async #setNewEmail(){return await client.query(statements.UPDATE_EMAIL,this.#user.email)}
+    async #setNewName(){
+        const result = await client.query(statements.UPDATE_NAME,[this.#user.full_name,this.#user.email]);
+        return result.rows[0].full_name;
+    }
+    async #setNewEmail(){
+        const result = await client.query(statements.UPDATE_EMAIL,[this.#user.new_email,this.#user.email]);
+        return result;
+    }
+    async #setBoth(){
+        const values = [this.#user.full_name,this.#user.new_email,this.#user.email]
+        result = await client.query(statements.UPDATE_USER,values)
+        return result.rows[0];
+    }
+    async #setNewPassword(){ 
+        const result = await client.query(statements.UPDATE_PASSWORD,
+            [this.#user.hashedPassword,this.#user.email]);
+        return result;
+    }
 
-    retrieve(query){
+    async retrieveCredentials(query){
         let result;
         switch (query) {
             case RequestType.updatePassword:
                 result = this.#getPassword();
                 break;
-            case RequestType.UPDATE:
-                result = this.#getNameandEmail();
+            case RequestType.LOGIN:
+                result = this.#getEmailandPassword();
                 break
             default:
                 //default behavior is getting the email of the user
@@ -87,16 +101,25 @@ export default class UserRepo {
         }
         return result;
     }
-    async #getPassword(){return await client.query(statements.FETCH_PASSWORD,this.#user._id)}
-    async #getEmail(){ 
-        statements.FETCH_EMAIL.values = email;
-        return await client.query(statements.FETCH_EMAIL);
+    #getPassword(){
+        return client.query(statements.FETCH_PASSWORD,[this.#user.email]).then(result=> result.rows[0].password) 
     }
-    async #getNameandEmail(){
+    #getEmail(){ 
+        statements.FETCH_EMAIL_PREPARED.values = [this.#user.email];
+        return client.query(statements.FETCH_EMAIL_PREPARED).then(results => results.rows[0].email);
+    }
+    #getEmailandPassword(){
         //select name and email fields from the db and send back to client when they hit the {update details} page to compare
         //cache the results for 24 hours only
-        return await client.query(statements.INSERT_USER,this.#user._id);
+        return client.query(statements.FETCH_LOGIN_CREDENTIALS,[this.#user.email]).then(result => result.rows[0]);
+    }
+
+    get name(){
+        return client.query(statements.FETCH_NAME,[this.#user.email]).then(result=> result)
     }
     
-    delete(email){}
+    async delete(){
+        let result = await client.query(statements.DELETE_USER, [this.#user.email]);
+        return result;
+    }
 }

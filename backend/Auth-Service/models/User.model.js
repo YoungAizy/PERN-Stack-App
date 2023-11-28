@@ -1,4 +1,6 @@
 import Joi from "joi";
+import bcrypt from 'bcryptjs';
+import RequestType from "../utils/constants/RequestType.js";
 
 export default class User{
     #user;
@@ -6,18 +8,25 @@ export default class User{
     //Use Joi to draw up a schema for the User model
     #User_Schema = Joi.object({
         full_name: Joi.string().min(8).max(16).required(),
-        username: Joi.string().alphanum().min(4).required(),
         email: Joi.string().email().lowercase().max(70).required(),
         password: Joi.string().min(7).max(19).required(),
+        userId: Joi.string().uuid().required(),
         hashedPassword: Joi.string().length(60)
     });
     #Update_Login_Schema =Joi.object({
-        _id: Joi.number(),
-        name: Joi.string().min(8).max(16),
+        userId: Joi.string().uuid(),
+        full_name: Joi.string().min(8).max(16).optional(),
         email: Joi.string().email().lowercase().max(70),
+        new_email: Joi.string().email().lowercase().max(70),
         password: Joi.string().min(7).max(19).required(),
-        hashedPassword: Joi.string().length(60)
+        hashedPassword: Joi.string().length(60),
+        new_password: Joi.string().min(7).max(19).optional(),
+    });
+
+    #defaultSchema = Joi.object({
+        email: Joi.string().email().lowercase().max(70)
     })
+    
     constructor(data,request_type){
         this.#validate(data,request_type);
     }
@@ -29,8 +38,14 @@ export default class User{
     #validate(data,request_type){
         //TODO: Use Joi to validate if the data complies with our schema and set isValid accordingly
         let schema;
+        if( request_type === RequestType.updatePassword){
+            data.hashedPassword = bcrypt.hashSync(data.new_password, 8);
+        }
         if(request_type === "new_user"){   
+            data.hashedPassword = bcrypt.hashSync(data.password, 8);
             schema = this.#User_Schema;
+        }else if(request_type === "get_name"){
+            schema = this.#defaultSchema;
         }else{
             schema = this.#Update_Login_Schema;
         }

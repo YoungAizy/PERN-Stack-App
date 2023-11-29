@@ -12,7 +12,7 @@ export default function verifyToken(req, res, next) {
     const bearerHeader = req.headers['authorization'];
     const parts = bearerHeader.split(' ');
     const token = parts[1]
-    let email;
+    let email,userId;
     if (token != null) {
         jwt.verify(token, publicKey, (err, user) => {
             if (err) {
@@ -20,8 +20,10 @@ export default function verifyToken(req, res, next) {
                 return;
             }
             email = user.email;
+            userId = user.userId;
         })
     }
+    req.body.userId = userId;
     req.body.data.email = email;
     next();
 }

@@ -7,9 +7,9 @@ export default async (req, res, next) => {
 
     const _request = req.body.request_type;
     const {full_name, email,password} = req.body.data;
-    const data = { full_name, email:email.toLowerCase(), password:password}
+    const data = { full_name, email:email.toLowerCase(), password:password,userId: uuidv4()}
 
-    const user = new User(data);
+    const user = new User(data,_request);
     const repo = new UserRepo(user);
 
     let _email, _password, userId;
@@ -19,7 +19,7 @@ export default async (req, res, next) => {
        
         if (!result) {
             //TODO: res.send() a message saying user doesn't exist on database
-            res.send({message:"Email not registered"})
+            res.send({message:"Email not registered"});
             return;
         }
         _email= result.email;
@@ -32,13 +32,12 @@ export default async (req, res, next) => {
     
     _email = await repo.retrieveCredentials(_request);
 
-    if (_email) {
+    if (_email.rows[0]) {
         res.send("Email already exist in our database. Log in instead.");
         return;
     }
     
-    data.userId = userId = uuidv4();
-    req.body.user = data;
+    req.body.user = user.user;
     req.body.repo = repo;
     next();  
 }

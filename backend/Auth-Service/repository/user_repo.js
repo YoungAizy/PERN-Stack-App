@@ -1,35 +1,11 @@
 import db from '../config/db.js';
 import statements from '../config/statements.js';
-
 import User from "../models/User.model.js";
 import RequestType from "../utils/constants/RequestType.js";
 
 const client = db.getConnection();
-const mock_data = {
-    0: {
-        name: "Ayanda Marotya",
-        email: "test1@gmail.com",
-        username: "mdrez",
-        password: "mypassword",
-    },
-    1: {
-        name: "Ayanda Drai Marotya",
-        email: "test2@gmail.com",
-        username: "drai",
-        password: "weakpassword",
-    },
-    2: {
-        name: "Jake Peralta",
-        email: "peralta1@gmail.com",
-        username: "mdrez",
-        password: "somethingElse"
-    },
-
-}
 
 export default class UserRepo {
-
-    //prepare the email select statement
 
     #user;
     constructor(user){
@@ -61,28 +37,28 @@ export default class UserRepo {
                 break;
             default:
                 //default behavior is updating both the name and email of the user
-                result = await this.#setBoth()
+                result = await this.#setBoth();
                 break;
         }
         return result;
     }
     async #setNewName(){
         const result = await client.query(statements.UPDATE_NAME,[this.#user.full_name,this.#user.email]);
-        return result.rows[0].full_name;
+        return result.rows[0];
     }
     async #setNewEmail(){
         const result = await client.query(statements.UPDATE_EMAIL,[this.#user.new_email,this.#user.email]);
-        return result;
-    }
-    async #setBoth(){
-        const values = [this.#user.full_name,this.#user.new_email,this.#user.email]
-        result = await client.query(statements.UPDATE_USER,values)
         return result.rows[0];
+    }
+    #setBoth(){
+        const values = [this.#user.full_name,this.#user.new_email,this.#user.email]
+        return client.query(statements.UPDATE_USER,values).then(result=> result.rows[0]);
+
     }
     async #setNewPassword(){ 
         const result = await client.query(statements.UPDATE_PASSWORD,
             [this.#user.hashedPassword,this.#user.email]);
-        return result;
+        return result.rowCount;
     }
 
     async retrieveCredentials(query){
@@ -106,7 +82,7 @@ export default class UserRepo {
     }
     #getEmail(){ 
         statements.FETCH_EMAIL_PREPARED.values = [this.#user.email];
-        return client.query(statements.FETCH_EMAIL_PREPARED).then(results => results.rows[0].email);
+        return client.query(statements.FETCH_EMAIL_PREPARED).then(results => results);
     }
     #getEmailandPassword(){
         //select name and email fields from the db and send back to client when they hit the {update details} page to compare

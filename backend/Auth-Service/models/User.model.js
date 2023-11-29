@@ -38,11 +38,13 @@ export default class User{
     #validate(data,request_type){
         //TODO: Use Joi to validate if the data complies with our schema and set isValid accordingly
         let schema;
+        console.log(request_type)
         if( request_type === RequestType.updatePassword){
             data.hashedPassword = bcrypt.hashSync(data.new_password, 8);
         }
         if(request_type === "new_user"){   
             data.hashedPassword = bcrypt.hashSync(data.password, 8);
+            console.log("llll", data)
             schema = this.#User_Schema;
         }else if(request_type === "get_name"){
             schema = this.#defaultSchema;

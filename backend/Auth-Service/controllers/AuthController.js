@@ -1,22 +1,15 @@
 import bcrypt from 'bcryptjs';
-import jwt from "jsonwebtoken";
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import jose from 'node-jose'
 import User from '../models/User.model.js';
 import UserRepo from '../repository/user_repo.js';
 import RequestType from '../utils/constants/RequestType.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-//Read signing key from pem file
-const privateKey = fs.readFileSync(path.resolve(__dirname,"../certs/private-key.pem"));
+import compare from '../utils/checkRequestType.js';
+import signJwt from '../utils/signJwt.js';
 
 
 export const register = async(req,res)=>{
     console.log("Registration controller");
+    if(compare(req.body.request_type, RequestType.LOGIN,res)) return;
+    console.log("continuing");
     const repo = req.body.repo;
     const data = req.body.user;
     console.log(data)
@@ -26,8 +19,7 @@ export const register = async(req,res)=>{
 
         //create a token and send it back to client in the http header
         if (Object.keys(result).length >= 4) {
-            const user = {userId:result.userid,email:result.email};
-            const accessToken = jwt.sign(user, privateKey,{algorithm:"RS256"});
+            const accessToken = signJwt({userId:result.userid,email:result.email});
             res.json({accessToken: accessToken});
         }else{
             console.log(err);
@@ -40,16 +32,14 @@ export const register = async(req,res)=>{
 }
 
 export const signIn = (req,res)=>{
+    if(compare(req.body.request_type, RequestType.LOGIN,res)) return;
+
     const {hashedPassword,userId} = req.body.credentials;
     
     try {
         if (bcrypt.compareSync(req.body.data.password, hashedPassword)) {
-            const token_data = {
-                email: req.body.data.email,
-                userId //use uuidv4 to create userId durimg signup
-            }
-            const accessToken = jwt.sign(token_data, privateKey, {algorithm: "RS256"});
-            //const encryptedJWT = jose.EncryptJWT();
+            
+            const accessToken = signJwt({email: req.body.data.email, userId});
             res.send({accessToken});
         } else
             res.send({message:"Incorrect password given."})
@@ -60,12 +50,12 @@ export const signIn = (req,res)=>{
 
 }
 
-export const getName = async(req,res)=>{
+export const getName = (req,res)=>{
     const {email} = req.body;
 
     const repo = new UserRepo(new User(email,RequestType.GET_NAME));
     try {
-        const result = await repo.name;
+        const result = repo.name;
         res.send(result);
     } catch (error) {
         console.log(error)
@@ -74,8 +64,10 @@ export const getName = async(req,res)=>{
 }
 
 export const update = async(req,res)=>{
+    if(compare(req.body.request_type, RequestType.LOGIN,res)) return;
+
     const {repo }= req.body;
-    let result;
+    let result, accessToken;
 console.log("Update Controller")
     const {request_type} = req.body;
     try {
@@ -85,6 +77,7 @@ console.log("Update Controller")
                 break;
             case RequestType.updateEmail:
                 result = await repo.update(RequestType.updateEmail);
+                result.email && (accessToken = signJwt({userId:result.userid,email:result.email}));
                 break;
             case RequestType.updatePassword:
                 const {password,new_password} = req.body.data;
@@ -96,10 +89,11 @@ console.log("Update Controller")
             default:
                 console.log("default...")
                 //default behavior is updating both name and email
-                result = await repo.update(RequestType.UPDATE)
+                result = await repo.update(RequestType.UPDATE);
+                result.email && (accessToken = signJwt({userId:result.userid,email:result.email}));
                 break;
         }
-        res.json({data:result})//TODO: check result.rowCount == 1
+        res.json({data:result,accessToken})//TODO: check result.rowCount == 1
     } catch (error) {
         
     }
@@ -107,6 +101,7 @@ console.log("Update Controller")
 
 // export const signOut = (req,res)=>{}
 export const deleteUser = async (req,res)=>{
+    if(compare(req.body.request_type, RequestType.LOGIN,res)) return;
     const {repo} = req.body;
     
     try {

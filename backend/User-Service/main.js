@@ -5,7 +5,8 @@ import cors from 'cors';
 import helmet from 'helmet';
 import { expressjwt } from 'express-jwt';
 import JwksRsa from 'jwks-rsa';
-// import UserRouter from './routes/user.route.js';
+import profileRouter from './routes/index.js';
+import 'dotenv/config'
 
 const app = express();
 
@@ -15,22 +16,17 @@ app.use(express.json());
 app.use(hpp());
 
 // app.use(express.static("./public"))
-app.use(expressjwt({
-    secret: JwksRsa.expressJwtSecret({
-        jwksUri: "http://localhost:5079/.well-known/jwks.json",
-        cache: true,
-        rateLimit: true
-    }),
-    algorithms: ["HS256"]
-}).unless({path:['/']}))
-
-app.get('/', (req,res)=>{
-    res.send("This is a public route");
-})
-// app.use('/api/v1/auth',AuthRouter);
-app.get('api/v1/user', (req,res)=>{
-    res.send("protected route safely hit")
-});
+// app.use(expressjwt({
+//     secret: JwksRsa.expressJwtSecret({
+//         jwksUri: "http://localhost:5079/.well-known/jwks.json",
+//         cache: true,
+//         rateLimit: true
+//     }),
+//     algorithms: ["RS256"]
+// }).unless({path:['/']}))
 
 
-app.listen(6001, () => console.log(`Server is up and running on port ${6001}`));
+app.use('/api/v1/profile', profileRouter);
+
+const port = process.env.PORT || 6001
+app.listen(port, () => console.log(`Server is up and running on port ${port}`));

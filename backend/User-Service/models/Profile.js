@@ -1,15 +1,20 @@
 import {Sequelize,DataTypes} from 'sequelize';
-const sequelize = new Sequelize();
+import 'dotenv/config'
 
-const Profile = sequelize.define('Profile',{
-    name:{
-        type: DataTypes.STRING(40),
-        allowNull: false
-    },
+
+const sequelize = new Sequelize(process.env.PG_DB,process.env.PG_USER,process.env.PG_PASSWORD,
+    {host:process.env.PG_HOST,dialect:"postgres",port:process.env.PG_PORT});
+sequelize.authenticate().then(()=> console.log("CONNECTION TO DATABASE ESTABLISHED"))
+.catch(error=>{
+    console.log("COULDN'T CONNECT TO DATABASE. SOMETHING WENT WRONG.");
+    console.log(error)
+})
+
+const ProfileSchema = sequelize.define('profile',{
+  
     username:{
         type: DataTypes.STRING(20),
         allowNull: false,
-        primaryKey: true
     },
     sex:{
         type: DataTypes.STRING(1),
@@ -25,18 +30,23 @@ const Profile = sequelize.define('Profile',{
         type:DataTypes.STRING,
         allowNull: false
     },
-    role:{
-        type: DataTypes.STRING(8),
+    account_type:{
+        type: DataTypes.STRING(13),
         allowNull: false
     },
-    imgUrl:{
+    img_url:{
         type:DataTypes.STRING,
         defaultValue: "default"
     },
-    DOB:{
-        type: DataTypes.DATE,
+    dob:{
+        type: DataTypes.DATEONLY,
+        allowNull: false
+    },
+    userid:{
+        primaryKey: true,
+        type: DataTypes.STRING,
         allowNull: false
     }
 })
-
-export default Profile;
+// ProfileSchema.sync();
+export default ProfileSchema;

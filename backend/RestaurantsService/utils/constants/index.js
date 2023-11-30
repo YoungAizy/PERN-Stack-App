@@ -7,6 +7,15 @@ export default {
     //COMMANDS
     delete: "DELETE",
     upload: "UPLOAD",
-    update: "UPDATE"
+    update: "UPDATE",
+
+    /** ----REQUEST/QUERY TYPES---- */
+    //Single Restaurants
+    partial: "PARTIAL",
+    dertailed: "DETAILED",
+
+    //All restaurants
+    client: "CLIENT",
+    super: "ADMIN",
 
 }

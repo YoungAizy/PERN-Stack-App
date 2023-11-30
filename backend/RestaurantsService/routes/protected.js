@@ -1,6 +1,6 @@
 import express from 'express';
 import { addRestaurant, update, del_Restaurant, upVote, downVote, getListings } from '../controllers/restaurantController.js';
-import { new_review, del_review, new_like, dislike, unlike, remove_disLike, user_reviews } from '../controllers/reviewsController.js';
+import { new_review, del_review, new_like, dislike, unlike, remove_disLike, user_reviews, listingReviews } from '../controllers/reviewsController.js';
 export const restaurant_Router = express.Router();
 export const reviewsRouter = express.Router();
 
@@ -19,4 +19,5 @@ reviewsRouter.patch("/unlike/:id", unlike);
 reviewsRouter.patch("/dislike/:id", dislike);
 reviewsRouter.patch("/undo_dislike/:id", remove_disLike);
 reviewsRouter.get("/reviews",user_reviews);
+reviewsRouter.get("/listings", listingReviews);
 reviewsRouter.delete("/delete/:id", del_review);

@@ -10,8 +10,20 @@ export const user_reviews = async (req,res)=>{
         console.log(error);
         onError(res,error);
     }
-
 }
+
+export const listingReviews = async (req,res)=>{
+    let {payload} = req.query;
+    payload = JSON.parse(payload)
+
+    try {
+        const result = await Repo.getListingsReviews(payload);
+        onSucess(res,result);
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export const new_review = async (req,res)=>{
     const payload = [req.body.display_picture, req.body.username, req.body.createdAt,req.body.rating,req.body.comment,req.body.restaurant_id]
     try {

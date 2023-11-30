@@ -17,6 +17,7 @@ export const REVIEWS_QUERIES = {
     add: "INSERT INTO reviews (pp_url,username,review_time,rating,review_text,restaurant_id) values($1, $2, $3, $4, $5, $6) returning *;",
     getReviews: "SELECT * FROM reviews WHERE restaurant_id=$1",
     getUserReviews: 'SELECT * FROM reviews where username = $1',
+    getListingsReviews: "SELECT * FROM reviews WHERE restaurant_id = ANY($1) order by restaurant_id;",
     newLike: "UPDATE reviews SET likes = likes+1 WHERE id = $1 returning likes;",
     unLike: "UPDATE reviews SET likes = likes - 1 WHERE id = $1 returning likes;",
     disLike: "UPDATE reviews SET dislikes = dislikes+1 WHERE id = $1 returning dislikes;",

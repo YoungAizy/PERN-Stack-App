@@ -16,6 +16,11 @@ export const _public = {
 //PROTECTED ROUTES
 export const _protected = {
     post: databinder.post('/restaurants/protected/publish'),
+    async fetchListings(user){
+        console.log(user)
+        const listings = await databinder.get(`/restaurants/protected/listings?createdby=${user}`);
+        return listings;
+    },
     async update(id){
         const result = await databinder.put(`/restaurants/protected/update/${id}`);
         return result;

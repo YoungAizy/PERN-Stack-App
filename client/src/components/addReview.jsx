@@ -7,7 +7,6 @@ const AddReview = ({ id }) => {
     const location = useLocation(),
         history = useHistory();
 
-    const [name, setName] = useState("");
     const [rating, setRating] = useState("Rating");
     const [review, setReview] = useState("");
 
@@ -15,7 +14,7 @@ const AddReview = ({ id }) => {
         e.preventDefault();
 
         const response = await databinder.post(`/restaurants/${id}/reviews`, {
-            name, rating, review,
+            rating, review,
         });
         console.log(response);
         history.push("/");
@@ -26,11 +25,6 @@ const AddReview = ({ id }) => {
         <div className="container mb-2">
             <form className='add-review'>
                 <div className="form-row ">
-                    <div className="form-group col-4 mb-3">
-                        <label htmlFor="name">Name</label>
-                        <input value={name} className="form-control" type="text" id="name"
-                            onChange={e => setName(e.target.value)} maxLength="50" />
-                    </div>
                     <div className="form-group col-4 mb-2">
 
                         <select value={rating} className="form-select " id="rating" onChange={e => setRating(e.target.value)}>

@@ -15,4 +15,10 @@ export const REVIEWS_TYPES = {
     DELETE_REVIEW: "review/ delete review"
 }
 
+export const PROFILE ={
+    SAVE_PROFILE: "profile/ save profile details",
+    UPDATE_PROFILE: "profile/ update profile details",
+    DELETE_PROFILE: "profile/ delete profile details"
+}
+
 export const USER_TYPES = {}

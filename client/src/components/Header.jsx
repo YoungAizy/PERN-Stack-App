@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Background from '../assets/bowl.jpg';
 import LoginForm from './LoginForm';
-import RegistrationModal from './RegistrationModal';
-import ProfileModal from '../components/ProfileModal';
 
 const Header = ({ isDashBoard }) => {
     const [show, setShow] = useState(false);
@@ -34,8 +32,6 @@ const Header = ({ isDashBoard }) => {
                 {isAuthenticated ? <LoggedInBtns isDashBoard={isDashBoard} setProfileShown={setProfileShown} showProfile={showProfile} />
                     : <SignInButtons setShow={setShow} toggle={toggle} loginShown={loginShown} />}
             </div>
-            <RegistrationModal onClose={() => { setShow(false); }} show={show} />
-            <ProfileModal profileShown={profileShown} setProfileShown={setProfileShown} />
         </header>
     )
 }

@@ -18,7 +18,7 @@ const pageList ={
     4: "stats"
 }
 
-export default function AdminPage(props){
+export default function DashboardPage(props){
     const [page, setPage] = useState(pageList[1]);
 
     const onPageChanged =()=>{

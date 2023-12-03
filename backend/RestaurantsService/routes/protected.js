@@ -18,6 +18,6 @@ reviewsRouter.patch("/like/:id", new_like);
 reviewsRouter.patch("/unlike/:id", unlike);
 reviewsRouter.patch("/dislike/:id", dislike);
 reviewsRouter.patch("/undo_dislike/:id", remove_disLike);
-reviewsRouter.get("/reviews",user_reviews);
+reviewsRouter.get("/",user_reviews);
 reviewsRouter.get("/listings", listingReviews);
 reviewsRouter.delete("/delete/:id", del_review);

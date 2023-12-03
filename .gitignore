@@ -7,3 +7,5 @@ notes.txt
 **/key.pub
 **/structure
 **/private
+backend/Auth-Service/decrypt.js
+backend/Auth-Service/test.js

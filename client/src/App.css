@@ -21,7 +21,12 @@ body {
     background: whitesmoke;
     width: 100%;
 }
-
+.hidden{
+    visibility: hidden;
+}
+div[data-show=true]{
+    visibility: visible !important;
+}
 .home-header {
     height: 200px;
     background-color: rgba(0.1,0,0,.3);
@@ -136,23 +141,20 @@ h2 {
     font-weight: bold;
 }
 
-#detail-header {
-    display: grid;
-    grid-template-columns: 20% 60% 20%;
-    grid-template-rows: 140px auto;
-    background: white;
+#details-header {
+    max-height: 180px;
+    background-color: rgb(75, 73, 73);
+    color: white;
     box-shadow: 0 2px 3px rgba(26, 25, 25, 0.8);
     text-transform: capitalize;
 }
 
 .detail-img {
-    height: 100%;
-    box-shadow: 2px 0 4px gray;
+    max-height: 100%;
 }
 
 .detail-img img {
-    width: 100%;
-    height: 100%;
+    max-height: 100%;
     object-fit: contain;
 }
 
@@ -161,14 +163,11 @@ h2 {
     flex-direction: row;
     border: 1px solid gray;
     border-radius: 16px;
-    margin: 1rem;
-    padding: 1rem;
 }
 
 #contact-details {
     border: 1px solid gray;
     border-radius: 16px;
-    margin: auto;
     padding: .2rem .4rem;
 }
 

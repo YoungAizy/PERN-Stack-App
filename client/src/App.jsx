@@ -5,7 +5,7 @@ import Landing from "./pages/LandingPage"
 import Home from "./pages/Home";
 import DetailsPage from "./pages/DetailsPage";
 import UpdatePage from "./pages/UpdatePage";
-import AdminPage from './pages/AdminPage';
+import DashboardPage from './pages/DashboardPage';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import SignIn from './pages/SignIn';
 import ProtectedRoute from './pages/ProtectedRoute';
@@ -24,7 +24,7 @@ const App = ()=> {
           <Route path="/signin" component={ SignIn}/>
           <Route exact path="/restaurant/:id" component={ DetailsPage }/>
           <Route exact path="/restaurant/:id/update" component={ UpdatePage }/>
-          <Route exact path="/manage" component={AdminPage}/>
+          <Route exact path="/manage" component={DashboardPage}/>
         </Router>
     </div>
     </QueryClientProvider>

@@ -4,7 +4,7 @@ export const TextInput = ({inputId, label, val, inputType, fieldName, placeholde
   return (
     <div className="form-margin col-5">
     <label htmlFor={inputId} >{label}</label>
-    <input value={val} type={inputType} name={fieldName} id={inputId} className="form-control" placeholder={placeholder} onChange={onChangeEvent}/>
+    <input value={val} type={inputType} name={fieldName} id={inputId} className="form-control" placeholder={placeholder} onChange={e=>onChangeEvent(e.target.value)}/>
 </div>
   )
 }

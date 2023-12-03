@@ -1,4 +1,6 @@
 import React, {useState} from 'react'
+import FloatingInputField from '../styled/FloatingInput';
+import Button from '../styled/Button';
 
 function NewUserForm() {
     const [fullName, setFullName] = useState();
@@ -9,25 +11,11 @@ function NewUserForm() {
   return (
     <div>
         <form action="" method="post" className="container mb-4 login-page">
-            <div className="form-margin form-floating">
-                <input type="text" name="full_name" id="fullName" className="form-control" placeholder='John Doe' onChange={e => setFullName(e.target.value)}/>
-                <label htmlFor="fullName">Full Name</label>
-            </div>
-            <div className="form-floating form-margin">
-                <input id="newUserEmail" type="email" className="form-control" placeholder="example@host.com" onChange={e => setEmail(e.target.value)} />
-                <label htmlFor="newUserEmail">E-Mail</label>
-            </div>
-            <div className="form-floating form-margin">
-                <input id="passwrd" type="password" className="form-control" placeholder='abc' onChange={e => setPassword(e.target.value)} />
-                <label htmlFor="passwrd">Password</label>
-            </div>
-            <div className="form-floating form-margin">
-                <input id="confirm_passwrd" type="password" className="form-control" placeholder='abc' onChange={e => setConfirmPassword(e.target.value)} />
-                <label htmlFor="confirm_passwrd">Confirm Password</label>
-            </div>
-            <div className="form-margin flex-end">
-                <button type="submit" className="btn btn-secondary">Register</button>
-            </div>
+            <FloatingInputField value={fullName} label={"Full Name"} inputType="text" inputId="reg_fullName" placeholder='John Doe' onInputChanged={setFullName}/>
+            <FloatingInputField value={email} inputId="newUserEmail" inputType="email" label={"E-Mail"} placeholder="example@host.com" onInputChanged={setEmail} />
+            <FloatingInputField value={password} inputId="reg_password" inputType="password" label={"Password"} placeholder='abc' onInputChanged={setPassword} />
+            <FloatingInputField value={confirmPassword} inputId="confirm_passwrd" label={"Confirm Password"} inputType="password" placeholder='abc' onInputChanged={setConfirmPassword} />
+            <Button text={"Next"} btnType={"submit"} placement={"flex-end"}/>
         </form>
     </div>
   )

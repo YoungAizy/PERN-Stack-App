@@ -1,6 +1,5 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import databinder from '../apis/databinder';
-import { RestaurantsContext } from '../Context API/Context';
 
 
 function RegistrationModal(props) {
@@ -8,7 +7,6 @@ function RegistrationModal(props) {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [serverResponse, setServerResponse] = useState();
-    const { setUser } = useContext(RestaurantsContext);
 
     if (!props.show) {
         return null;
@@ -21,7 +19,7 @@ function RegistrationModal(props) {
         });
         setServerResponse(response.data);
         if (response.data.accessToken) {
-            setUser(response.data.user);
+    
             localStorage.setItem("token", JSON.stringify(response.data.accessToken));
             localStorage.setItem("isAuthenticated", true);
             window.location.pathname = "/dashboard";

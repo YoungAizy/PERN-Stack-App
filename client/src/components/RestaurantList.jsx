@@ -1,61 +1,28 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, {  useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import databinder from '../apis/databinder';
-import { RestaurantsContext } from '../Context API/Context';
 import RenderRating from './RestaurantCard';
 import DeleteModal from './DeleteModal';
-import axios from 'axios'
 
 
 const RestaurantList = (props) => {
-    const token = JSON.parse(localStorage.getItem("token"))
-    const { restaurants, setRestaurants, setUser, myrestaurants, setMyRestaurants } = useContext(RestaurantsContext);
+    // const token = JSON.parse(localStorage.getItem("token"))
+
+
     const [content, setContent] = useState([]);
     const [openModal, setOpenModal] = useState(false);
     const [toDelete, setToDelete] = useState();
     const [toDeleteId, setToDeleteId] = useState()
     let history = useHistory();
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                if (props.myRestaurants) {
-                    if (myrestaurants.length > 0) {
-                        console.log("stored restaurants");
-                        setContent(myrestaurants);
-                    } else {
-                        console.log("grop.");
-                        const { data } = await axios.get(`/api/v1/myrestaurants`, {
-                            headers: {
-                                authorization: token
-                            }
-                        });
-                        setMyRestaurants(data.data);
-                        setUser({ name: data.user.name, email: data.user.email });
-                        setContent(data.data)
-                    }
-                } else if (restaurants.length > 0) {
-                    setContent(restaurants)
-                }
-                else {
-                    console.log("somewhere else")
-                    let result = await databinder.get('/restaurants?limit=10');
-                    setRestaurants(result.data.data.restaurants);
-                    setContent(result.data.data.restaurants)
-                }
-            } catch (error) {
-                console.log(error)
-            }
-        }
 
-        fetchData();
-        // eslint-disable-next-line
-    }, [setMyRestaurants, myrestaurants])
+
+  
 
     const handleDelete = async (id) => {
         // console.log('handle delete entered', id)
         setOpenModal(false);
         await databinder.delete(`/restaurants/${id}`);
-        setMyRestaurants(content.filter(x => x.id !== id))
+        // setMyRestaurants(content.filter(x => x.id !== id))
     }
 
     const showDeleteModal = (e, id, name) => {
@@ -72,7 +39,7 @@ const RestaurantList = (props) => {
         history.push(`/restaurants/${id}/update`)
     }
 
-    if (props.myRestaurants && content.length === 0) {
+    if (content.length < 1) {
         return (
 
             <div>

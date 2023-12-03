@@ -1,12 +1,12 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import databinder from '../apis/databinder';
 import Upload from '../assets/upload-icon.png'
-import { RestaurantsContext } from '../Context API/Context';
+import { useDispatch } from 'react-redux';
 
 function UpdateRestaurant(props) {
     let { id } = useParams();
-    const { user } = useContext(RestaurantsContext);
+    const dispatch = useDispatch();
     const [name, setName] = useState("");
     const [location, setLocation] = useState("");
     const [price, setPrice] = useState("");
@@ -47,7 +47,7 @@ function UpdateRestaurant(props) {
         const form = new FormData()
         form.append('image', picture);
         form.append('data',
-            JSON.stringify({ phone, website, name, location, price, about, user: user.name, email, city }))
+            JSON.stringify({ phone, website, name, location, price, about, user:"aizy", email, city }))
         const updateResponse = await databinder.put(`/restaurants/${id}`, form);
         // console.log("Update Response", updateResponse)
         setResponseStatus(updateResponse.data.status);

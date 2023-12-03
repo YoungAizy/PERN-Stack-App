@@ -1,8 +1,8 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import BackgroundBowl from '../assets/bowl.jpg'
 import RegistrationModal from '../components/RegistrationModal'
 import { useHistory } from 'react-router'
-import { RestaurantsContext } from '../Context API/Context'
+
 import databinder from '../apis/databinder'
 
 const SignIn = () => {
@@ -10,7 +10,6 @@ const SignIn = () => {
     const [password, setPassword] = useState();
     const [show, setShow] = useState(false);
     const [loginResponse, setLoginResponse] = useState();
-    const { setUser } = useContext(RestaurantsContext);
     const history = useHistory()
 
     const login = async () => {
@@ -19,7 +18,7 @@ const SignIn = () => {
             email, password, type: "login"
         });
         setLoginResponse(data);
-        setUser(data.user)
+        // setUser(data.user)
         localStorage.setItem("token", JSON.stringify(data.accessToken));
         if (data.accessToken) {
             localStorage.setItem("isAuthenticated", true);

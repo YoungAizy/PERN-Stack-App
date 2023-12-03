@@ -1,16 +1,17 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import BackgroundBowl from '../assets/bowl.jpg'
 import RegistrationModal from '../components/RegistrationModal'
 import { useHistory } from 'react-router'
-import { RestaurantsContext } from '../Context API/Context'
+
 import databinder from '../apis/databinder'
+import FloatingInputField from '../components/styled/FloatingInput'
+import Button from '../components/styled/Button'
 
 const SignIn = () => {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [show, setShow] = useState(false);
     const [loginResponse, setLoginResponse] = useState();
-    const { setUser } = useContext(RestaurantsContext);
     const history = useHistory()
 
     const login = async () => {
@@ -19,7 +20,6 @@ const SignIn = () => {
             email, password, type: "login"
         });
         setLoginResponse(data);
-        setUser(data.user)
         localStorage.setItem("token", JSON.stringify(data.accessToken));
         if (data.accessToken) {
             localStorage.setItem("isAuthenticated", true);
@@ -29,30 +29,24 @@ const SignIn = () => {
     return (
         <div style={{ background: `url(${BackgroundBowl})`, height: "100vh", position: "relative" }}>
             <LoginHeader setShow={setShow} history={history} LoggedIn={false} />
-            <h1 style={{ textAlign: "center", color: "whitesmoke" }}>RESTAURANT FINDER</h1>
-            <RegistrationModal onClose={() => { setShow(false); }} show={show} />
+            <h2 className='m-5' style={{ color: "whitesmoke" }}>SIGN-IN</h2>
+            {/* <RegistrationModal onClose={() => { setShow(false); }} show={show} /> */}
             <div className="container mb-4 login-page">
                 <form>
-                    <div>
-                        <h3 style={{ textAlign: "center" }}>Sign-In</h3>
-                        <div className="form-floating form-margin">
-                            <input id="userEmail" type="email" className="form-control" placeholder="example@host.com" onChange={e => setEmail(e.target.value)} />
-                            <label htmlFor="userEmail">E-Mail</label>
-                        </div>
-                        <div className="form-floating form-margin">
-                            <input id="pass" type="password" className="form-control" onChange={e => setPassword(e.target.value)} />
-                            <label htmlFor="pass">Password</label>
-                        </div>
+                    <div>    
+                        <FloatingInputField value={email} label={"E-Mail"} inputId="sign_in_Email" inputType="email" placeholder="example@host.com" onInputChanged={setEmail} />
+                        <FloatingInputField value={password} inputId="sign_in_password" inputType="password" label={"Password"} placeholder={"password"} onInputChanged={setPassword} />
+                       
                         <div className="form-margin"><input type="checkbox" onClick={e => {
-                            const x = document.getElementById("pass");
+                            const x = document.getElementById("sign_in_password");
                             if (x.type === "password") {
                                 x.type = "text"
                             } else {
                                 x.type = "password"
                             }
                         }} /> Show Password</div>
-                        <div className="form-margin">
-                            <button type="button" className="btn btn-secondary" onClick={login}>LOGIN</button>
+                        <div>
+                            <Button text={"SIGN-IN"} btnType="button" onBtnClick={login} />
                         </div>
                     </div>
                 </form>

@@ -1,12 +1,12 @@
-import React, { useState, useContext } from 'react';
+import React, { useState} from 'react';
 import databinder from '../apis/databinder';
-import { RestaurantsContext } from '../Context API/Context'
+
 
 const LoginForm = ({ toggle }) => {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [loginResponse, setLoginResponse] = useState();
-    const { setUser } = useContext(RestaurantsContext);
+
 
     const login = async () => {
         loginResponse && setLoginResponse("Attempting Login...");
@@ -14,7 +14,6 @@ const LoginForm = ({ toggle }) => {
             email, password, type: "login"
         });
         setLoginResponse(data);
-        setUser(data.user)
         localStorage.setItem("token", JSON.stringify(data.accessToken));
         if (data.accessToken) {
             localStorage.setItem("isAuthenticated", true);

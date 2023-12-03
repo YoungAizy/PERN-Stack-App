@@ -1,10 +1,10 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import databinder from '../apis/databinder';
-import { RestaurantsContext } from '../Context API/Context';
 import UploadNotification from './UploadNotification'
+import { useDispatch } from 'react-redux';
 
 const AddRestaurant = () => {
-    const { addRestaurant, user } = useContext(RestaurantsContext);
+    const dispatch = useDispatch()
     const [name, setName] = useState("");
     const [location, setLocation] = useState("");
     const [price, setPrice] = useState("Price Range");
@@ -25,9 +25,9 @@ const AddRestaurant = () => {
             setInvalid(false);
             form.append('image', picture);
             form.append('data',
-                JSON.stringify({ phone, website, name, location, price, about, user: user.name, email, city }))
+                JSON.stringify({ phone, website, name, location, price, about, user: "aizy", email, city }))
             const response = await databinder.post("/restaurants", form);
-            addRestaurant(response.data.data)
+            // addRestaurant(response.data.data)
 
             if (response) {
             //console.log(response); 

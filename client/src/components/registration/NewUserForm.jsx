@@ -2,11 +2,16 @@ import React, {useState} from 'react'
 import FloatingInputField from '../styled/FloatingInput';
 import Button from '../styled/Button';
 
-function NewUserForm() {
+function NewUserForm({onPageChange, setBackgroundHeight}) {
     const [fullName, setFullName] = useState();
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
-    const [confirmPassword, setConfirmPassword] = useState()
+    const [confirmPassword, setConfirmPassword] = useState();
+
+    const btnClick = ()=>{
+      onPageChange(2);
+      setBackgroundHeight('100%');
+    }
 
   return (
     <div>
@@ -15,7 +20,7 @@ function NewUserForm() {
             <FloatingInputField value={email} inputId="newUserEmail" inputType="email" label={"E-Mail"} placeholder="example@host.com" onInputChanged={setEmail} />
             <FloatingInputField value={password} inputId="reg_password" inputType="password" label={"Password"} placeholder='abc' onInputChanged={setPassword} />
             <FloatingInputField value={confirmPassword} inputId="confirm_passwrd" label={"Confirm Password"} inputType="password" placeholder='abc' onInputChanged={setConfirmPassword} />
-            <Button text={"Next"} btnType={"submit"} placement={"flex-end"}/>
+            <Button text={"Next"} btnType={"submit"} placement={"flex-end"} onBtnClick={btnClick}/>
         </form>
     </div>
   )

@@ -6,7 +6,7 @@ import GenderOptions from '../GenderOptions';
 import Button from '../styled/Button';
 import Avatar from '../styled/Avatar';
 
-function ProfileForm() {
+function ProfileForm({onPageChange, setBackgroundHeight}) {
     const [isReviewer, setIsReviewer] = useState(true);
     const [picture, getPictureData] = useState(null);
     //username, role(switch), city, country, gender, image, date of birth
@@ -38,13 +38,7 @@ function ProfileForm() {
   return (
     <div className="pb-4">
         <form action="" method="post" className="container mb-4 login-page">
-            <div className="mb-4 form-margin">
-                <input className="form-control" type="file" id="formImg" accept="image/*"
-                    onChange={e => getPictureData(e.target)} style={{ display: 'none' }} />
-                <label htmlFor="formImg" style={{display:"inline"}} >
-                    {picture ? <img id="input-img" src={picture} alt='' />: <Avatar initials={"AM"} bg_color={"orange"} />}
-                </label>
-            </div>
+            <Avatar initials={"AM"} bg_color={"orange"} imgId={'reg_img'} />
             <FloatingInputField value={username} label={"Username"} placeholder={"username"} inputType={"text"} inputId={"reg_username"} onInputChanged={setUsername} />
             <GenderOptions />
             <DOB />

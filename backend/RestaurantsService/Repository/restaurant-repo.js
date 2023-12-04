@@ -36,7 +36,7 @@ class Repository{
     }
     //TODO: implement userListing method
     async getUserListings(user){
-        const result = await client.query(Query.getListings,user);
+        const result = await client.query(Query.getListings,[user]);
         return result;
     }
     

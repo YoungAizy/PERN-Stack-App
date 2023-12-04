@@ -28,5 +28,10 @@ app.use(hpp());
 
 app.use('/api/v1/profile', profileRouter);
 
+app.get('/test',(req,res)=>{
+    console.log(req.header['authorization']);
+    res.send("Molo Ayanda")
+})
+
 const port = process.env.PORT || 6001
 app.listen(port, () => console.log(`Server is up and running on port ${port}`));

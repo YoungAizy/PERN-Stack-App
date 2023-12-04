@@ -2,6 +2,8 @@ import React from 'react';
 import StarRating from './StarRating';
 import Default from "../assets/default.jpg";
 import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setSelected } from '../store/actions/restaurantActions';
 
 export const RenderRating = ({ total_reviews, avg_rating }) => {
     if (!total_reviews) {
@@ -16,7 +18,7 @@ export const RenderRating = ({ total_reviews, avg_rating }) => {
 }
 
 const RestaurantCard = ({restaurant}) => {
-    
+    const dispatch = useDispatch();
     const history = useHistory();
 
     const location = restaurant["_str/sub"] + ", " + restaurant._city;
@@ -24,12 +26,15 @@ const RestaurantCard = ({restaurant}) => {
     const buffer = restaurant.pic && Buffer.from(restaurant.pic).toString("base64");
     const imgSrc = restaurant.pic && (`data:${type};base64, ${buffer}`);
 
+    const cardClicked = e =>{
+        e.stopPropagation();
+        dispatch(setSelected({data:restaurant}));
+        history.push(`/restaurant/${restaurant.id}`);
+    }
+
   return (
     <div key={restaurant.id} className="card mb-3" style={{ maxWidth: "480px", margin: "1rem" }}>
-                            <div className="row g-0" onClick={e => {
-                                e.stopPropagation()
-                                history.push(`/restaurants/${restaurant.id}`)
-                            }}>
+                            <div className="row g-0" onClick={e => cardClicked(e)}>
                                 <div className="col-md-5" style={{ display: 'flex', alignItems: "center", height: '100%' }}>
                                     <img style={{ width: "100%" }} src={imgSrc ? imgSrc : Default} alt="" />
                                 </div>

@@ -13,20 +13,20 @@ const AddReview = ({ id }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const response = await databinder.post(`/restaurants/${id}/reviews`, {
-            rating, review,
-        });
-        console.log(response);
-        history.push("/");
-        history.push(location.pathname);
+        // const response = await databinder.post(`/restaurants/${id}/reviews`, {
+        //     rating, review,
+        // });
+        // console.log(response);
+        // history.push("/");
+        // history.push(location.pathname);
     }
 
     return (
-        <div className="container mb-2">
+        <div className="container mb-2 mt-2">
             <form className='add-review'>
                 <div className="form-row ">
-                    <div className="form-group col-4 mb-2">
-
+                    <div className="form-goup col-2 mb-2">
+                       
                         <select value={rating} className="form-select " id="rating" onChange={e => setRating(e.target.value)}>
                             <option disabled>Rating</option>
                             <option value="1">1</option>
@@ -39,9 +39,9 @@ const AddReview = ({ id }) => {
                 </div>
                 <div className="form-group col-6 mb-3">
                     <label htmlFor="review">Review:</label>
-                    <textarea value={review} id="review" className="form-control" onChange={e => setReview(e.target.value)}></textarea>
+                    <textarea value={review} id="review" rows={4} className="form-control" onChange={e => setReview(e.target.value)}></textarea>
                 </div>
-                <button onClick={e => handleSubmit(e)} className="btn btn-primary">Submit</button>
+                <button onClick={handleSubmit} className="btn btn-primary">Submit</button>
             </form>
         </div>
     )

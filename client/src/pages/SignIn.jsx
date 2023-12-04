@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import BackgroundBowl from '../assets/bowl.jpg'
-import RegistrationModal from '../components/RegistrationModal'
 import { useHistory } from 'react-router'
 
 import databinder from '../apis/databinder'
@@ -30,7 +29,6 @@ const SignIn = () => {
         <div style={{ background: `url(${BackgroundBowl})`, height: "100vh", position: "relative" }}>
             <LoginHeader setShow={setShow} history={history} LoggedIn={false} />
             <h2 className='m-5' style={{ color: "whitesmoke" }}>SIGN-IN</h2>
-            {/* <RegistrationModal onClose={() => { setShow(false); }} show={show} /> */}
             <div className="container mb-4 login-page">
                 <form>
                     <div>    

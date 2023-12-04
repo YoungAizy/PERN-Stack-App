@@ -5,6 +5,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import { expressjwt } from 'express-jwt';
 import JwksRsa from 'jwks-rsa';
+import morgan from 'morgan'
 import profileRouter from './routes/index.js';
 import 'dotenv/config'
 
@@ -13,7 +14,9 @@ const app = express();
 app.use(cors())
 app.use(helmet())
 app.use(express.json());
+app.use(express.urlencoded())
 app.use(hpp());
+app.use(morgan())
 
 // app.use(express.static("./public"))
 // app.use(expressjwt({

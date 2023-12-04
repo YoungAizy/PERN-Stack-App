@@ -16,7 +16,7 @@ app.use(helmet())
 app.use(express.json());
 app.use(express.urlencoded())
 app.use(hpp());
-app.use(morgan())
+app.use(morgan('dev'))
 
 // app.use(express.static("./public"))
 // app.use(expressjwt({

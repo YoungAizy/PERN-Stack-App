@@ -1,5 +1,5 @@
 import express from 'express';
-import { fetchProfile, newProfile, updateProfile,deleteProfile } from '../controllers/index.js';
+import { fetchProfile, newProfile, updateProfile,deleteProfile } from '../User-Service/controllers/index.js';
 
 const profileRouter = express.Router();
 

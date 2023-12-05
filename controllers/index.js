@@ -1,5 +1,5 @@
-import Profile from "../../models/Profile.js";
-import ProfileRepo from "../../repo/profileRepo.js";
+import Profile from "../models/Profile.js";
+import ProfileRepo from "../repo/profileRepo.js";
 import ProfileService from "../services/ProfileService.js";
 
 const profileRepo = new ProfileRepo(Profile);

@@ -48,5 +48,5 @@ const ProfileSchema = sequelize.define('profile',{
         allowNull: false
     }
 })
-ProfileSchema.sync();
+// ProfileSchema.sync();
 export default ProfileSchema;

@@ -1,5 +1,5 @@
-import fs from 'fs';
+const fs = require('fs');
 
 const privateKey = fs.readFileSync("../certs/private");
 console.log(privateKey)
-export {privateKey};
+module.exports = {privateKey};

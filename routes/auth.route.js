@@ -1,16 +1,19 @@
-import express from "express";
-import { register, signIn, deleteUser, update, getName } from "../controllers/AuthController.js";
-import checkPassword from "../middleware/checkPassword.js";
-import checkCredentials from "../middleware/checkCredentials.js";
-import verifyToken from "../middleware/verifyToken.js";
+const express = require("express");
+const { register, signIn, deleteUser, update, signOut, 
+    verifyUser, verifyUpdate, 
+    forgotPassword, passwordReset } = require("../controllers/AuthController.js");
+// const {verifyToken} = require("../middleware/verifyToken.js");
 const AuthRouter = express.Router();
 
-AuthRouter.post('/registration',checkCredentials,register);
-AuthRouter.post('/login',checkCredentials,signIn);
-AuthRouter.patch('/update',verifyToken, checkPassword,update);
-AuthRouter.get('/name',verifyToken,getName);
-// AuthRouter.post('/logout',signOut);
-AuthRouter.delete('/delete',verifyToken,checkPassword,deleteUser);
+AuthRouter.post('/registration',register);
+AuthRouter.post('/registration/verify', verifyUser);
+AuthRouter.post('/login',signIn);
+AuthRouter.patch('/update',update);
+AuthRouter.post('/update/verify', verifyUpdate);
+AuthRouter.post('/account/recovery',forgotPassword);
+AuthRouter.post('/account/password_reset/confirm', passwordReset);
+AuthRouter.post('/logout',signOut);
+AuthRouter.delete('/delete',deleteUser);
 
 
-export default AuthRouter;
+module.exports = {AuthRouter};

@@ -1,11 +1,12 @@
-import express from 'express';
-import hpp from 'hpp';
-import cors from 'cors';
+const express =  require('express');
+const hpp =  require('hpp');
+const cors = require('cors');
 // path = require('path');
-import helmet from 'helmet';
-import AuthRouter from './routes/auth.route.js';
-import fs from 'fs';
-import jwt from 'jsonwebtoken'
+const helmet = require('helmet');
+const {AuthRouter} = require('./routes/auth.route.js');
+const fs = require('fs');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 const app = express();
 
@@ -17,6 +18,9 @@ app.use(hpp());
 app.use(express.static("./public"))
 
 app.use('/api/v1/auth',AuthRouter);
+app.post('/api/v1/auth/test',(req,res)=>{
+    console.log(req.headers.authorization);
+})
 
 app.get('/user', (req,res)=>{
     var pem = fs.readFileSync('./private-key.pem',"utf8");

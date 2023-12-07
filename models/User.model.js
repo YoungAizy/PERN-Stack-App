@@ -1,8 +1,8 @@
-import Joi from "joi";
-import bcrypt from 'bcryptjs';
-import RequestType from "../utils/constants/RequestType.js";
+const Joi = require("joi");
+const bcrypt = require('bcryptjs');
+const RequestType = require("../utils/constants/RequestType.js");
 
-export default class User{
+exports.User = class User{
     #user;
 
     //Use Joi to draw up a schema for the User model

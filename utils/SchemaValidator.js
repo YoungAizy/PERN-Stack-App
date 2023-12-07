@@ -14,7 +14,8 @@ const profileUpdateSchema = Joi.object({
     username: Joi.string().min(6),
     sex: Joi.string().min(1).max(1),
     city: Joi.string(),
-    dob: Joi.string()
+    dob: Joi.string(),
+    userId: Joi.string().uuid().required()
 })
 
 export const validateProfile = (data)=>{ 

@@ -3,8 +3,6 @@ import hpp from 'hpp';
 import cors from 'cors';
 // path = require('path');
 import helmet from 'helmet';
-import { expressjwt } from 'express-jwt';
-import JwksRsa from 'jwks-rsa';
 import morgan from 'morgan'
 import profileRouter from './routes/index.js';
 import 'dotenv/config'
@@ -31,10 +29,13 @@ app.use(morgan('dev'))
 
 app.use('/api/v1/profile', profileRouter);
 
-app.get('/test',(req,res)=>{
+app.post('/test', async (req,res)=>{
     console.log(req.header['authorization']);
+    console.log(req.body);
+    console.log(req.file);
+    
     res.send("Molo Ayanda")
 })
 
-const port = process.env.PORT || 6001
+const port = 6001
 app.listen(port, () => console.log(`Server is up and running on port ${port}`));

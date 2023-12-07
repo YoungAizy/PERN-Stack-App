@@ -29,5 +29,5 @@ app.get('/user', (req,res)=>{
     res.send(jws);
 });
 
-
-app.listen(7009, () => console.log(`Server is up and running on port ${7009}`));
+const port = process.env.PORT
+app.listen(port, () => console.log(`Server is up and running on port ${port}`));

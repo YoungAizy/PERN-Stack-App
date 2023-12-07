@@ -1,7 +1,7 @@
 import Profile from "../models/Profile.js";
 import ProfileRepo from "../repo/profileRepo.js";
 import ProfileService from "../services/ProfileService.js";
-import RequestType from '../utils/requestType.js'
+import RequestType from '../utils/requestType.js';
 
 const profileRepo = new ProfileRepo(Profile);
 const profileService = new ProfileService(profileRepo);

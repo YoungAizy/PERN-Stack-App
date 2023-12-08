@@ -6,7 +6,7 @@ import GenderOptions from '../GenderOptions';
 import Button from '../styled/Button';
 import Avatar from '../styled/Avatar';
 
-function ProfileForm({onPageChange, setBackgroundHeight}) {
+function ProfileForm({onPageChange, dispatch}) {
     const [isReviewer, setIsReviewer] = useState(true);
     const [picture, getPictureData] = useState(null);
     //username, role(switch), city, country, gender, image, date of birth

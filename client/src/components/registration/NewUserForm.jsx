@@ -2,15 +2,16 @@ import React, {useState} from 'react'
 import FloatingInputField from '../styled/FloatingInput';
 import Button from '../styled/Button';
 
-function NewUserForm({onPageChange, setBackgroundHeight}) {
+function NewUserForm({onPageChange, setBackgroundHeight, dispatch}) {
     const [fullName, setFullName] = useState();
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [confirmPassword, setConfirmPassword] = useState();
 
     const btnClick = ()=>{
+      dispatch({type:"Done", step: "step1"});
+      dispatch({type:"Active", step: "step2"})
       onPageChange(2);
-      setBackgroundHeight('100%');
     }
 
   return (

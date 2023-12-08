@@ -57,8 +57,10 @@ export const getAll = async (req,res)=>{
 //TODO: fully implement user listings retrieval
 export const getListings = async (req, res)=>{
     const token = req.body.access_token;
+    console.log("YEBO",req.query.createdby)
     try {
-        const result = await (new Repo()).getUserListings([req.query.user]);
+        const result = await (new Repo()).getUserListings(req.query.createdby);
+        console.log(result.rows)
         onSucess(res,result.rows);
     } catch (error) {
         console.log(error);

@@ -1,15 +1,24 @@
-import * as AWS from 'aws-sdk';
-import 'dotenv/config';
+import fetch from 'node-fetch';
+import requestType from './requestType.js';
 
-const CognitoIdentity = new AWS.CognitoIdentityServiceProvider({region: process.env.AWS_REGION});
 
-export const updateUser = async(userId,token)=>{
-    const attribute = [{Name:"custom:userid", Value: userId}]
-    const params = {
-        AccessToken: token,
-        UserAttributes: attribute
+export const updateUser = async(userId,token,request)=>{
+    // abort function if request is not from the registration process
+    if(!(request === requestType.CREATE)) return false;
+    const requestBody = {
+        request_type: "update_uuid",
+        body:{
+            accessToken: token,
+            user_id: userId
+        }
     }
-    const result = await CognitoIdentity.updateUserAttributes(params).promise();
-    console.log("userId Insertion:", result);
-    return result;
+    const response = await fetch('http://localhost:7009/api/v1/auth/update', {
+        method: 'patch',
+        body: JSON.stringify(requestBody),
+        headers: {'Content-Type': 'application/json'}
+    });
+    console.log("Response from Cognito", response);
+    const data = await response.json();
+
+    console.log(data);
 }

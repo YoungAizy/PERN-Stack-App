@@ -18,12 +18,12 @@ export default class ProfileService{
         const parts = bearerHeader.split(' ');
         const accessToken = parts[1]
 
-        const {data} = req.body;
+        const {data,request_type} = req.body;
         const payload = mapNewkeys(data);
         validateProfile(payload);
-        
-        const userId = await generateUserId(req.body.request_type);
-        await updateUser(userId, accessToken);
+
+        const userId = await generateUserId(request_type);
+        await updateUser(userId, accessToken,request_type);
         payload.userid = userId;
         
         payload.img_url = await uploadImage(req.file, payload.userid);

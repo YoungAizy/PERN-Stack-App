@@ -2,7 +2,7 @@ import React from 'react'
 
 const GenderOptions = () => {
   return (
-    <div className='form-margin'>
+    <div className='form-margin gender-group'>
       <p>Gender:</p>
       <div className="form-check form-check-inline">
         <label className='form-check-label' htmlFor="male">Male</label>

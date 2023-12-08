@@ -33,7 +33,7 @@ const stepState =
   }
 
 function RegistrationPage() {
-    const [height,setHeight] = useState("100vh");
+    const [height,setHeight] = useState("fit-content");
     const [page,setPage] = useState(1);
     const [state, dispatch] = useReducer(reducer, stepState);
 

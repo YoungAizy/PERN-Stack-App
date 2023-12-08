@@ -3,7 +3,8 @@ import FloatingInputField from '../styled/FloatingInput';
 import Button from '../styled/Button';
 
 function NewUserForm({onPageChange, setBackgroundHeight, dispatch}) {
-    const [fullName, setFullName] = useState();
+    const [firstName, setFirstName] = useState();
+    const [surname, setSurname] = useState();
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [confirmPassword, setConfirmPassword] = useState();
@@ -17,7 +18,14 @@ function NewUserForm({onPageChange, setBackgroundHeight, dispatch}) {
   return (
     <div>
         <form action="" method="post" className="container mb-4 login-page">
-            <FloatingInputField value={fullName} label={"Full Name"} inputType="text" inputId="reg_fullName" placeholder='John Doe' onInputChanged={setFullName}/>
+          <div className="d-flex">
+            <div className="col-6">
+              <FloatingInputField value={firstName} label={"First Name(s)"} inputType="text" inputId="reg_firstName" placeholder='John Doe' onInputChanged={setFirstName}/>
+            </div>
+            <div className="col-6">
+              <FloatingInputField value={surname} label={"Last Name"} inputType="text" inputId="reg_surname" placeholder='Smith' onInputChanged={setSurname}/>
+            </div>
+          </div>
             <FloatingInputField value={email} inputId="newUserEmail" inputType="email" label={"E-Mail"} placeholder="example@host.com" onInputChanged={setEmail} />
             <FloatingInputField value={password} inputId="reg_password" inputType="password" label={"Password"} placeholder='abc' onInputChanged={setPassword} />
             <FloatingInputField value={confirmPassword} inputId="confirm_passwrd" label={"Confirm Password"} inputType="password" placeholder='abc' onInputChanged={setConfirmPassword} />

@@ -73,6 +73,10 @@ exports.update = async(req,res)=>{
     console.log("Update Controller")
     const {request_type} = req.body;
     switch (request_type) {
+        case RequestType.insertUserId:
+            console.log("inserting userId");
+            attr.push({Name:"custom:userid", Value: data.user_id});
+            break;
         case RequestType.updateName:
             console.log("update name")
             attr.push({Name: "given_name", Value: data.firstname});

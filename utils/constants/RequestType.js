@@ -3,6 +3,7 @@ exports.RequestType = {
     VERIFICATION: "verify",
     LOGIN: "login",
     UPDATE: "update_user",
+    insertUserId: "update_uuid",
     updateEmail: "update_email",
     updateEmailVerification: "update_email_verify",
     updateName: "update_name",

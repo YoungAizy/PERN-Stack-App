@@ -6,7 +6,10 @@ const databinder = axios.create({
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
-    post: databinder.post('/add'),
+    async post(payload) {
+        const result = await databinder.post('/add',payload);
+        return result;
+    },
     async like(id){ 
         const result = await databinder.patch(`/like/${id}`);
         return result;

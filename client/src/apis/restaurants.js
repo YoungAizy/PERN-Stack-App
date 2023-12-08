@@ -6,7 +6,10 @@ const databinder = axios.create({
 
 //PUBLIC ROUTES
 export const _public = {
-    all: databinder.get('/public/all?req_src=client'),
+    async all() {
+        const result = await databinder.get('/public/all?req_src=client');
+        return result;
+    },
     async singleAll(id){ 
         const result = await databinder.get(`/public/${id}?details=all`);
         return result;
@@ -19,7 +22,10 @@ export const _public = {
 
 //PROTECTED ROUTES
 export const _protected = {
-    post: databinder.post('s/protected/publish'),
+    async post() {
+        const result = await databinder.post('/protected/publish');
+        return result;
+    },
     async fetchListings(user){
         console.log(user)
         const listings = await databinder.get(`/protected/listings?createdby=${user}`);

@@ -5,7 +5,10 @@ const databinder = axios.create({
 });
 
 const profileApi= {
-    create: databinder.post('/create')
+    async create(payload) {
+        const result = await databinder.post('/create',payload);
+        return result;
+    }
 }
 
 export default profileApi;

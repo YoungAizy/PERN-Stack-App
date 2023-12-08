@@ -37,6 +37,6 @@ const getUrl = async (fileName)=>{
     }
 
     const command = new GetObjectCommand(getObjectParams);
-    const url = await getSignedUrl(client, command, { expiresIn: 3600 });
+    const url = await getSignedUrl(client, command, { expiresIn: 3600 *24 });
     return url;
 }

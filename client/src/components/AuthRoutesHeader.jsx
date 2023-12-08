@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router'
 import BackgroundBowl from '../assets/bowl.jpg'
-import RegistrationModal from './RegistrationModal';
+import LoginModal from './LoginModal';
 
 const AuthRoutesHeader = (props) => {
   const [showModal, setShowModal] = useState(false);
@@ -9,7 +9,7 @@ const AuthRoutesHeader = (props) => {
   return (
     <div style={{ background: `url(${BackgroundBowl})`, height: props.height, position: "relative",backgroundColor:"rgba(0,0,0,.4)",backgroundBlendMode:"hard-light" }}>
         <NavBar LoggedIn={false} setShow={setShowModal} history={history} {...props }/>
-        <RegistrationModal onClose={() => setShowModal(false) } show={showModal} />
+        <LoginModal onClose={() => setShowModal(false) } show={showModal} />
         {props.children}
     </div>
   )

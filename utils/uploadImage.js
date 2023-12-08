@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 const client = new S3Client({ region: process.env.AWS_REGION,
@@ -30,7 +30,7 @@ export default async function(file,filename){
 
 }
 
-const getUrl = async (fileName)=>{
+export const getUrl = async (fileName)=>{
     const getObjectParams = {
         Bucket: bucketName,
         Key: fileName
@@ -39,4 +39,13 @@ const getUrl = async (fileName)=>{
     const command = new GetObjectCommand(getObjectParams);
     const url = await getSignedUrl(client, command, { expiresIn: 3600 *24 });
     return url;
+}
+export const deleteImage = async (fileName)=>{
+    const getObjectParams = {
+        Bucket: bucketName,
+        Key: fileName
+    }
+
+    const command = new DeleteObjectCommand(getObjectParams);
+    await client.send(command);
 }

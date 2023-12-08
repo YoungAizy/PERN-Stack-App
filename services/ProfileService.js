@@ -1,7 +1,7 @@
 import { validateProfile, validateUpdate } from "../utils/SchemaValidator.js";
 import generateUserId from "../utils/generateUserId.js";
 import { mapNewkeys } from "../utils/helper.js";
-import uploadImage from "../utils/uploadImage.js";
+import uploadImage, { deleteImage } from "../utils/uploadImage.js";
 
 
 export default class ProfileService{
@@ -63,6 +63,8 @@ export default class ProfileService{
 
     async deleteProfile(req){
         const {userid} = req.query;
+
+        await deleteImage(userid);
 
         const result = await this.profileRepo.deleteProfile(userid);
         if (result >= 1) {

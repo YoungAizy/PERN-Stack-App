@@ -1,6 +1,7 @@
 import { validateProfile, validateUpdate } from "../utils/SchemaValidator.js";
 import generateUserId from "../utils/generateUserId.js";
 import { mapNewkeys } from "../utils/helper.js";
+import { updateUser } from "../utils/updateUser.js";
 import uploadImage, { deleteImage } from "../utils/uploadImage.js";
 
 
@@ -12,10 +13,17 @@ export default class ProfileService{
 
     async createProfile(req){
         console.log("service")
+
+        const bearerHeader = req.headers['authorization'];
+        const parts = bearerHeader.split(' ');
+        const accessToken = parts[1]
+
         const {data} = req.body;
         const payload = mapNewkeys(data);
         validateProfile(payload);
+        
         const userId = await generateUserId(req.body.request_type);
+        await updateUser(userId, accessToken);
         payload.userid = userId;
         
         payload.img_url = await uploadImage(req.file, payload.userid);

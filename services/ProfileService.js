@@ -1,3 +1,7 @@
+import { validateProfile, validateUpdate } from "../utils/SchemaValidator.js";
+import generateUserId from "../utils/generateUserId.js";
+import { mapNewkeys } from "../utils/helper.js";
+import uploadImage from "../utils/uploadImage.js";
 
 
 export default class ProfileService{
@@ -8,8 +12,13 @@ export default class ProfileService{
 
     async createProfile(req){
         console.log("service")
-        const {...payload} = req.body.data;
+        const {data} = req.body;
+        const payload = mapNewkeys(data);
+        validateProfile(payload);
+        const userId = await generateUserId();
+        payload.userid = userId;
         
+        payload.img_url = await uploadImage(req.file, payload.userid);
         const response= {}
         
         const profile = await this.profileRepo.createProfile(payload);
@@ -30,13 +39,26 @@ export default class ProfileService{
 
     }
 
+    async updateImage(req){
+        const payload={};
+        const userId = req.body.data.userId
+        payload.img_url = await uploadImage(req.file, userId);
+
+        if(payload.img_url){
+            const profile = await this.profileRepo.updateProfile(payload,userId);
+            return profile;
+        }
+        return;
+    }
+
     async updateProfile(req){
         console.log("Service", req.body.data);
-        const {userid, ...payload} = req.body.data;
+        const {data} = req.body;
+        const {userid, ...payload} = mapNewkeys(data);
+        validateUpdate({...payload, userid})
 
         const profile = await this.profileRepo.updateProfile(payload,userid);
         return profile;
-
     }
 
     async deleteProfile(req){

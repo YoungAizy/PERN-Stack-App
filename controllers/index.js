@@ -49,6 +49,15 @@ export const updateProfile = async (req,res)=>{
         console.log(error)
     }
 }
+export const updateImage = async (req,res)=>{
+    try {
+        const result = await profileService.updateImage(req);
+        if(result) res.send("OK");
+    } catch (error) {
+        console.log("Image Update Fail:", error);
+        res.send(error);
+    }
+}
 export const deleteProfile = async(req,res)=>{
     if(!(req.body.request_type === RequestType.DELETE)){
         res.send("Invalid Request");

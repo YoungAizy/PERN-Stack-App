@@ -54,7 +54,7 @@ div[data-show=true]{
     /* margin-top: 1rem; */
 }
 .step {
-    margin: 0.5rem 3rem;
+    margin: 0.5rem 2rem;
     display: flex;
     color: #ccc;
 }
@@ -74,6 +74,16 @@ div[data-show=true]{
     margin-top: 3%;
 }
 
+.active{
+    color: var(--primary-color);
+}
+
+.is-active{
+    color: white;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color) !important;
+}
+
 h2 {
     text-align: center;
 }
@@ -91,9 +101,11 @@ h2 {
     transition: 1s ease;
 }
 
-.reg {
+.login-modal {
     position: fixed;
     z-index: 5;
+    width: 45%;
+    background-color: coral;
 }
 
 .reg-form {
@@ -115,6 +127,10 @@ h2 {
     width: 50%;
     padding: 1.2rem 1rem 1rem;
     /* margin-top: 10%; */
+}
+
+.login-page p, .login-page h2, .login-page .gender-group div label{
+    color: whitesmoke;
 }
 
 .login-header {

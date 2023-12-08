@@ -2,11 +2,13 @@ import publicRouter from './routes/public.js';
 import {restaurant_Router as privateRouter, reviewsRouter} from './routes/protected.js';
 import express from 'express';
 import helmet from 'helmet';
+import morgan from 'morgan';
 
 const app = express();
 
 app.use(helmet())
 app.use(express.json());
+app.use(morgan('dev'));
 
 app.use('/api/v1/restaurants/public',publicRouter);
 app.use('/api/v1/reviews', reviewsRouter);

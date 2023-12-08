@@ -15,7 +15,7 @@ export default class ProfileService{
         const {data} = req.body;
         const payload = mapNewkeys(data);
         validateProfile(payload);
-        const userId = await generateUserId();
+        const userId = await generateUserId(req.body.request_type);
         payload.userid = userId;
         
         payload.img_url = await uploadImage(req.file, payload.userid);

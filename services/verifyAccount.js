@@ -8,12 +8,7 @@ exports.verifyAccount = async (email,verificationCode)=>{
         ConfirmationCode: verificationCode
     }
 
-    CognitoIdentity.confirmSignUp(params,(err,data)=>{
-        if(err){
-            console.log("Confirmation Code Incorrect");
-            return err;
-        }
-
-        return data;
-    })
+    const result = await CognitoIdentity.confirmSignUp(params).promise();
+    console.log("Verify returned result:", result);
+    return result;
 }

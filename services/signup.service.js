@@ -19,12 +19,6 @@ exports.signUp = async (email,firstname, surname, password, suspended = false)=>
 
     }
 
-    CognitoIdentity.signUp(params,(error,data)=>{
-        if(error){
-            console.log("ERROR:", error);
-            return error;
-        }
-        console.log(data)
-        return data;
-    })
+    const result = await CognitoIdentity.signUp(params).promise();
+    return result;
 }

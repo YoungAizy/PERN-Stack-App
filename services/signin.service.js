@@ -13,7 +13,7 @@ exports.SignIn = async(email,password)=>{
     }
 
    const result = await CognitoIdentity.initiateAuth(params).promise();
-   return result;
+   return result.AuthenticationResult;
 
  
 

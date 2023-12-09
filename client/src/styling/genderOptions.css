@@ -1,0 +1,4 @@
+.gender-group .form-check-input:checked {
+    background-color: coral;
+    border-color: coral;
+}

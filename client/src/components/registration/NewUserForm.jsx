@@ -1,6 +1,10 @@
 import React, {useState} from 'react'
 import FloatingInputField from '../styled/FloatingInput';
 import Button from '../styled/Button';
+import authApi from '../../apis/auth';
+import requestBody from '../../utils/requestBody';
+import { userRequests } from '../../utils/requestTypes';
+import { newUser } from '../../utils/requestObjects';
 
 function NewUserForm({onPageChange, setBackgroundHeight, dispatch}) {
     const [firstName, setFirstName] = useState();
@@ -8,16 +12,35 @@ function NewUserForm({onPageChange, setBackgroundHeight, dispatch}) {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [confirmPassword, setConfirmPassword] = useState();
+    const [invalidSubmit, setInvalidSubmit] = useState(false);
 
-    const btnClick = ()=>{
+    const btnClick = async (e)=>{
+      e.preventDefault();
+      if(!(firstName && surname && email && password && confirmPassword)) {
+        setInvalidSubmit(true);
+        return;
+      }
+      if(!(password===confirmPassword)){
+        alert("Passwords don't match");
+        return;
+      }
+      const body = requestBody(userRequests.REGISTRATION,  newUser(firstName,surname,email,password));
+      try {
+        const user = await authApi.createUser(body);
+        console.log("New User:",user); //check result.statusText == "OK" and result.status == 200
+      } catch (error) {
+        console.log(error);
+        return;
+      }
       dispatch({type:"Done", step: "step1"});
-      dispatch({type:"Active", step: "step2"})
+      dispatch({type:"Active", step: "step2"});
+      setBackgroundHeight("100vh")
       onPageChange(2);
     }
 
   return (
-    <div>
-        <form action="" method="post" className="container mb-4 login-page">
+    <div className='pb-2'>
+        <form className="container mb-4 login-page">
           <div className="d-flex">
             <div className="col-6">
               <FloatingInputField value={firstName} label={"First Name(s)"} inputType="text" inputId="reg_firstName" placeholder='John Doe' onInputChanged={setFirstName}/>
@@ -29,6 +52,7 @@ function NewUserForm({onPageChange, setBackgroundHeight, dispatch}) {
             <FloatingInputField value={email} inputId="newUserEmail" inputType="email" label={"E-Mail"} placeholder="example@host.com" onInputChanged={setEmail} />
             <FloatingInputField value={password} inputId="reg_password" inputType="password" label={"Password"} placeholder='abc' onInputChanged={setPassword} />
             <FloatingInputField value={confirmPassword} inputId="confirm_passwrd" label={"Confirm Password"} inputType="password" placeholder='abc' onInputChanged={setConfirmPassword} />
+            {invalidSubmit && <p className='form-margin ps-2' style={{backgroundColor:"crimson", color:"ghostwhite", textTransform:"uppercase"}}>Fill in all the fields</p>}
             <Button text={"Next"} btnType={"submit"} placement={"flex-end"} onBtnClick={btnClick}/>
         </form>
     </div>

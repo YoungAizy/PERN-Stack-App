@@ -11,6 +11,9 @@ const {resetPassword} = require('../services/resetPassword.service.js')
 const {signOut} = require('../services/signOut.service.js');
 const {deleteAccount} = require('../services/deleteAccount.service.js');
 
+const {redirectToLoginService} = require('../utils/redirectToLogin.js');
+const { unverifiedUsers } = require('../memory/signup_dictionary.js');
+
 
 exports.register = async(req,res)=>{
     console.log("Registration controller");
@@ -22,6 +25,7 @@ exports.register = async(req,res)=>{
     try {
       const result = await signUp(data.email, data.firstname, data.surname, data.password);
       console.log(result);
+      unverifiedUsers[data.email] = data.password;
       res.send(result)
     } catch (error) {
         console.log("Signup Error:",error);
@@ -33,13 +37,19 @@ exports.verifyUser = async(req,res)=>{
     if(compare(req.body.request_type, RequestType.VERIFICATION,res)) return;
 
     const {data} = req.body;
+    console.log(req.body.data);
     
     try {
         const result = await verifyAccount(data.email, data.verificationCode);
-        result && console.log("User Verified", result);
-        result && res.send(result)
+        console.log(result);
+
+        if(result){
+            const authTokens = redirectToLoginService()
+            console.log("User Verified", authTokens);
+            res.json({tokens: authTokens});
+        }
     } catch (error) {
-        console.log(error);
+        console.log("Confirmation Code Incorrect:", err);
         res.send(error);        
     }
 }
@@ -52,7 +62,7 @@ exports.signIn = async (req,res)=>{
     try {
         const result = await SignIn(req.body.data.email, req.body.data.password);
         console.log("LOGIN:",result);
-        res.json(result.AuthenticationResult);
+        res.json(result);
     } catch (error) {
         console.log("ERR",error);
         res.send({message:"Login Failed"});

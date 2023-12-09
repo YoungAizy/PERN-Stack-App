@@ -14,11 +14,7 @@ export default class ProfileService{
     async createProfile(req){
         console.log("service")
 
-        const bearerHeader = req.headers['authorization'];
-        const parts = bearerHeader.split(' ');
-        const accessToken = parts[1]
-
-        const {data,request_type} = req.body;
+        const {data,request_type, accessToken} = req.body;
         const payload = mapNewkeys(data);
         validateProfile(payload);
 

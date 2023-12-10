@@ -5,7 +5,8 @@ const Notifications = (props)=>{
     
     
     return(
-        <div className='m-5'>
+        <div className='m-3'>
+            <h3 className='text-center mb-4'>Notifications</h3>
             <NotificationComp/>
         </div>
     )

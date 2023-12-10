@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import SidePanel from '../components/dashboard/SidePanel';
 import Statistics from '../components/dashboard/windows/Statistics';
-import Notifications from '../components/Notifications';
+import Notifications from '../components/dashboard/Notifications';
 import ProfilePage from '../components/dashboard/windows/ProfileWindow';
 import ReviewsWindow from '../components/dashboard/windows/ReviewsWindow';
 import ListingsWindow from '../components/dashboard/windows/ListingsWindow';

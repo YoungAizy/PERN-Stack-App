@@ -5,11 +5,11 @@ import requestBody from '../../utils/requestBody';
 import { userRequests } from '../../utils/requestTypes';
 import authApi from '../../apis/auth';
 
-const VerifyEmail = ({onPageChange, setBackgroundHeight, dispatch}) => {
+const VerifyEmail = ({onPageChange, setBackgroundHeight, dispatch, email}) => {
     const [verificationCode, setVerificationCode] = useState("");
     const [invalid, setInvalid] = useState(false)
     
-    
+    console.log(email);
     const btnClick = async e =>{
         e.preventDefault();
 
@@ -18,10 +18,11 @@ const VerifyEmail = ({onPageChange, setBackgroundHeight, dispatch}) => {
             return;
         }
 
-        const body = requestBody(userRequests.VERIFICATION,{email: "muspacukku@gufum.com", verificationCode});
+        const body = requestBody(userRequests.VERIFICATION,{email, verificationCode});
         try {
             const result = await authApi.verifyUser(body);
-            console.log("Verification results:",result);// check result.status==200 and result.statusText == "OK"
+            localStorage.setItem("tokens", JSON.stringify(result.data.tokens))
+            console.log("Verification results:",result.data);// check result.status==200 and result.statusText == "OK"
         } catch (error) {
             console.log("Verification Failed:", error);
             return;
@@ -38,7 +39,7 @@ const VerifyEmail = ({onPageChange, setBackgroundHeight, dispatch}) => {
             <p className='form-margin'>Enter the code sent to your Email below.</p>
             <FloatingInputField value={verificationCode} inputId={"signup_verification_code"} inputType={"text"} 
                 label={"Verification Code"} placeholder={"Verification code"} onInputChanged={setVerificationCode}  />
-            {invalid && <p className='form-margin ps-2' style={{backgroundColor:"crimson", color:"ghostwhite"}}>Invalid Code. Try Again.</p>}
+            {invalid && <p className='form-margin ps-2' style={{backgroundColor:"crimson", color:"ghostwhite"}}>Invalid Code length. Try Again.</p>}
             <Button text={"Next"} btnType={"submit"} placement={"flex-end"} onBtnClick={btnClick}/>
         </form>
     </div>

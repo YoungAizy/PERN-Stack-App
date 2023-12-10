@@ -36,13 +36,14 @@ function RegistrationPage() {
     const [height,setHeight] = useState("fit-content");
     const [page,setPage] = useState(1);
     const [state, dispatch] = useReducer(reducer, stepState);
+    const  [email, setEmail] = useState() ;
 
     const getPage = ()=>{
         switch (page) {
             case 1:
-                return <NewUserForm onPageChange={setPage} setBackgroundHeight={setHeight} dispatch={dispatch}/>
+                return <NewUserForm onPageChange={setPage} setBackgroundHeight={setHeight} dispatch={dispatch} signupEmail={setEmail}/>
             case 2:
-                return <VerifyEmail onPageChange={setPage} setBackgroundHeight={setHeight} dispatch={dispatch}/>
+                return <VerifyEmail onPageChange={setPage} setBackgroundHeight={setHeight} dispatch={dispatch} email={email}/>
             case 3:
                 return <ProfileForm onPageChange={setPage} dispatch={dispatch}/>
             default:

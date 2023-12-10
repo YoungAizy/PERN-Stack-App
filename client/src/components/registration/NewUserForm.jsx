@@ -6,7 +6,7 @@ import requestBody from '../../utils/requestBody';
 import { userRequests } from '../../utils/requestTypes';
 import { newUser } from '../../utils/requestObjects';
 
-function NewUserForm({onPageChange, setBackgroundHeight, dispatch}) {
+function NewUserForm({onPageChange, setBackgroundHeight, dispatch, signupEmail}) {
     const [firstName, setFirstName] = useState();
     const [surname, setSurname] = useState();
     const [email, setEmail] = useState();
@@ -32,6 +32,7 @@ function NewUserForm({onPageChange, setBackgroundHeight, dispatch}) {
         console.log(error);
         return;
       }
+      signupEmail(email);
       dispatch({type:"Done", step: "step1"});
       dispatch({type:"Active", step: "step2"});
       setBackgroundHeight("100vh")

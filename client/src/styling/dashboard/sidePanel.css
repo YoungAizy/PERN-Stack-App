@@ -1,0 +1,31 @@
+.back-home {
+    border: 1px solid coral;
+    cursor: pointer;
+}
+
+.back-home-span{
+    margin-right: 5rem;
+}
+
+.back-home:hover{
+    background-color: coral;
+}
+
+.btn-bg{
+    background-color: coral;
+    color: white;
+}
+
+#sidepanel .btn{
+    text-align: left;
+    padding-left: 4rem;
+    padding-right: 2rem;
+}
+
+#sidepanel .btn-bg:hover{
+    border: 1px solid coral;
+}
+
+#sidepanel .btn span{
+    margin-right: 2rem;
+}

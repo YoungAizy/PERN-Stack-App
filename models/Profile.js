@@ -35,7 +35,7 @@ const ProfileSchema = sequelize.define('profile',{
         allowNull: false
     },
     img_url:{
-        type:DataTypes.STRING,
+        type:DataTypes.STRING(600),
         defaultValue: "default"
     },
     dob:{
@@ -48,5 +48,5 @@ const ProfileSchema = sequelize.define('profile',{
         allowNull: false
     }
 })
-// ProfileSchema.sync();
+// ProfileSchema.sync({force: true});
 export default ProfileSchema;

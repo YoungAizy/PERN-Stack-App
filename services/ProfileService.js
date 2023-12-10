@@ -1,7 +1,6 @@
 import { validateProfile, validateUpdate } from "../utils/SchemaValidator.js";
-import generateUserId from "../utils/generateUserId.js";
 import { mapNewkeys } from "../utils/helper.js";
-import { updateUser } from "../utils/updateUser.js";
+import { getUserId } from "../utils/getUserId.js";
 import uploadImage, { deleteImage } from "../utils/uploadImage.js";
 
 
@@ -12,15 +11,15 @@ export default class ProfileService{
     }
 
     async createProfile(req){
-        console.log("service")
+        console.log("service:", req.file);
 
         const {data,request_type, accessToken} = req.body;
+        console.log(data);
         const payload = mapNewkeys(data);
         validateProfile(payload);
 
-        const userId = await generateUserId(request_type);
-        await updateUser(userId, accessToken,request_type);
-        payload.userid = userId;
+        payload.userid = await getUserId(accessToken,request_type);
+        console.log("New Payload:", payload)
         
         payload.img_url = await uploadImage(req.file, payload.userid);
         const response= {}
@@ -30,7 +29,7 @@ export default class ProfileService{
             response.message = "Sever error";
             return response;
         }
-        response.data = profile.data.dataValues;
+        response.data = profile;
         return response;
     }
 

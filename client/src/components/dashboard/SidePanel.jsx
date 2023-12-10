@@ -1,4 +1,5 @@
 import React from 'react';
+import {useHistory} from 'react-router-dom'
 import DefaultImage from '../../assets/default.jpg';
 import { pageList } from '../../pages/DashboardPage';
 import '../../styling/dashboard/sidePanel.css';
@@ -10,6 +11,7 @@ const tabs = {display:'contents'}
 // TODO: wrap component with useMemo to prevent re-rendering each time a different page is selected
 
 const SidePanel = ({ onPageChanged, active, setActive })=>{
+    const history = useHistory()
 
     const onTabChange = (tab)=>{
         setActive(tab);
@@ -17,12 +19,17 @@ const SidePanel = ({ onPageChanged, active, setActive })=>{
         return;
     }
 
+    const homeClick = e=>{
+        e.preventDefault();
+        history.push('/');
+    }
+
 
     return(
         <div className='col-3 bg-dark text-white'>
             <div className='p-3 d-flex flex-column justify-content-around' style={{maxHeight:"676px"}}>
             
-            <div className="m-3 mt-1 p-3 rounded-4 back-home">
+            <div className="m-3 mt-1 p-3 rounded-4 back-home" onClick={homeClick}>
                 <span className='back-home-span' ><i class="fas fa-arrow-left"></i></span>
                 HOME
             </div>

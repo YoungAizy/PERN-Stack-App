@@ -1,11 +1,14 @@
 import React, {useState} from 'react'
 
-const Avatar = ({ initials, bg_color, imgId}) => {
+const Avatar = ({ initials, bg_color, imgId,setPictureData}) => {
   const [picture, setPicture] = useState(null);
 
   const getPictureData = (file) => {
     const reader = new FileReader();
-    reader.onload = (e) => setPicture(e.target.result);
+    reader.onload = (e) => {
+      setPicture(e.target.result);
+      setPictureData(file);
+    }
     reader.readAsDataURL(file);
 }
 

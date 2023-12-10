@@ -7,6 +7,10 @@ const profileRepo = new ProfileRepo(Profile);
 const profileService = new ProfileService(profileRepo);
 
 export const newProfile = async (req,res)=>{
+    console.log("New Profile Request:", req.body );
+    console.log("File: ", req.file);
+    const body = JSON.parse(req.body.data);
+    req.body = body;
     if(!(req.body.request_type === RequestType.CREATE)){
         res.send("Invalid Request");
         return
@@ -14,7 +18,7 @@ export const newProfile = async (req,res)=>{
 
     console.log("controller")
     try {
-        const results = await profileService.createprofile(req);
+        const results = await profileService.createProfile(req);
         console.log(results);
         res.json(results);
     } catch (error) {

@@ -10,7 +10,7 @@ const myStyle= {
     height: "100vh"
 }
 
-const pageList ={
+export const pageList ={
     0: "Profile",
     1: "notifications",
     2: "reviews",
@@ -20,9 +20,11 @@ const pageList ={
 
 export default function DashboardPage(props){
     const [page, setPage] = useState(pageList[1]);
+    const [activeTab, setActiveTab] = useState("notifications");
 
     const onPageChanged =()=>{
         switch(page){
+            case pageList[1]: return <Notifications/>;
             case pageList[2]: return <ReviewsWindow />
             case pageList[3]: return <ListingsWindow />
             case pageList[4]: return <Statistics/>
@@ -34,7 +36,7 @@ export default function DashboardPage(props){
     return(
         <div>
             <div className="row g-0" style={myStyle}>
-                <SidePanel pages={pageList} onPageChanged={setPage}/>
+                <SidePanel onPageChanged={setPage} active={activeTab} setActive={setActiveTab} />
                 <div className="content col p-2">
                     {onPageChanged()}
                 </div>

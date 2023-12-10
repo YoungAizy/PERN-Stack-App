@@ -1,11 +1,12 @@
 const axios = require('axios');
 
 const databinder = axios.create({
-    baseURL: "/api/v1/profile"
+    baseURL: "http://localhost:6001/api/v1/profile"
 });
-
 const profileApi= {
     async create(payload) {
+      
+        // databinder.defaults.headers.common['Authorization'] = accessToken;
         const result = await databinder.post('/create',payload);
         return result;
     },

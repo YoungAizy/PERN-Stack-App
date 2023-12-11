@@ -4,6 +4,7 @@ import ListedRestaurants from '../components/ListedRestaurants'
 import SearchRestaurant from '../components/SearchRestaurant'
 import SearchResults from '../components/SearchResults'
 import RestaurantCard from '../components/RestaurantCard';
+import LoginModal from '../components/LoginModal';
 import {useSelector, useDispatch} from 'react-redux';
 import { saveRestaurants, saveTopRated} from '../store/actions/restaurantActions'
 import {useQuery} from 'react-query';
@@ -19,6 +20,7 @@ function LandingPage() {
     const [search, setSearch] = useState(false);
     const [searchResults, setSearchResults] = useState(false);
     const [status, setStatus] = useState();
+    const [showLoginModal, setShowLoginModal] = useState(false);
     
    
     useQuery('restaurants', async()=>{
@@ -37,11 +39,12 @@ function LandingPage() {
 
     return (
         <div style={{ margin: "0", padding: "0", boxSizing: "border-box", position: "relative" }}>
-            <Header />
+            <Header setShow={setShowLoginModal} />
             <SearchRestaurant onSearch={(status) => checkSearchState(status)} setSearchResults={setSearchResults} setStatus={setStatus} />
             {topRatedRestaurants && <TopRated restaurants={topRatedRestaurants}/>}
             <h2>Listed on our site</h2>
             {searchResults ? <SearchResults restaurants={restaurants} status={status} /> : <ListedRestaurants onSearch={search}  restaurants={restaurants} />}
+            <LoginModal onClose={()=> setShowLoginModal(false)} show={showLoginModal} />
         </div>
     )
 }

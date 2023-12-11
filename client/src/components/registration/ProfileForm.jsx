@@ -1,52 +1,80 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react';
+import {useHistory} from 'react-router-dom'
 import DoubleSwitch from '../DoubleSwitch';
 import DOB from '../DOB';
 import FloatingInputField from '../styled/FloatingInput';
 import GenderOptions from '../GenderOptions';
 import Button from '../styled/Button';
 import Avatar from '../styled/Avatar';
+import requestBody from '../../utils/requestBody';
+import { profileRequests } from '../../utils/requestTypes';
+import { profileSchema } from '../../utils/requestObjects';
+import profileApi from '../../apis/profile';
+import { useDispatch } from 'react-redux';
+import getAccessToken from '../../utils/getAccessToken';
+import { saveProfileDetails } from '../../store/actions/profileActions';
 
-function ProfileForm({onPageChange, dispatch}) {
-    const [isReviewer, setIsReviewer] = useState(true);
-    const [picture, getPictureData] = useState(null);
-    //username, role(switch), city, country, gender, image, date of birth
-    const [username,setUsername] = useState("");
-    const [city, setCity] = useState("");
-    const [dob,setDob] = useState(null);
-    const [gender,setGender] = useState();
+function ProfileForm() {
+  const dispatch = useDispatch();
 
-    //companyName, position(select)
-    const [companyName,setCompanyName] = useState('');
-    const [position,setPosition] = useState('');
+  //username, role(switch), city, country, gender, image, date of birth
+  const [isReviewer, setIsReviewer] = useState(true);
+  const [picture, setPictureData] = useState(null);
+  const [username,setUsername] = useState("");
+  const [city, setCity] = useState("Cape Town");
+  const [dob,setDob] = useState('');
+  const [gender,setGender] = useState("F");
+  //companyName, companyPosition(select)
+  const [companyName,setCompanyName] = useState('');
+  const [position,setPosition] = useState('');
+  
+  const [transferingData, setTransferingData] = useState(false);
 
-    const currentYear = (new Date()).getFullYear();
-    let startYear = currentYear - 65;
+  const history = useHistory();
 
-    const populateYears = ()=>{
-      let years;
-      for (startYear; startYear <= currentYear; startYear++) {
-        years = startYear;
+  const createProfile = async (e)=>{
+    e.preventDefault();
+    if(transferingData) return;
+
+    console.log("birthday", dob);
+    const dateOfBirth = dob || "2015-09-28";
+    const userRole = isReviewer ? "reviewer":"restaurateur";
+    
+    const schema = profileSchema(username,gender,dateOfBirth,city,userRole,companyName,position);
+    const data = requestBody(profileRequests.CREATE, schema);
+    
+    data.accessToken = getAccessToken();
+    
+    const form = new FormData();
+    form.append('avatar', picture);
+    form.append('data',JSON.stringify(data));
+    try {
+      setTransferingData(true);
+      const {data} = await profileApi.create(form);
+      console.log("Profile Reg Successful", data);
+      setTransferingData(false);
+      if(data.data.createdAt){
+        dispatch(saveProfileDetails(data.data));
+        history.push('/manage');
       }
-      return new Promise(years);
+    } catch (error) {
+      setTransferingData(false);
+      console.log("Profile reg Error: ", error);
     }
-
-    // useEffect(()=>{
-    //   populateYears()
-    // // eslint-disable-next-line react-hooks/exhaustive-deps
-    // },[])
+  }
 
   return (
     <div className="pb-4">
         <form action="" method="post" className="container mb-4 login-page">
-            <Avatar initials={"AM"} bg_color={"orange"} imgId={'reg_img'} />
+            <Avatar initials={"AM"} bg_color={"orange"} imgId={'reg_img'} setPictureData={setPictureData}/>
             <FloatingInputField value={username} label={"Username"} placeholder={"username"} inputType={"text"} inputId={"reg_username"} onInputChanged={setUsername} />
-            <GenderOptions />
-            <DOB />
+            <GenderOptions onGenderChange={setGender} />
+            <DOB monthCol='col-3' yearCol='col-3' setDOB={setDob} />
             <DoubleSwitch LeftTag={'Reviewer'} RightTag={'Restaurateur'} leftClick={setIsReviewer} rightClick={setIsReviewer}/>
             {!isReviewer && <AdminFields companyName={companyName} setCompanyName={setCompanyName} position={position} setPosition={setPosition} /> }
             <p className='form-margin'>Location:</p>
             <FloatingInputField value={city} inputId={"reg_city"} inputType={"text"} label={"City"} placeholder={"city"} onInputChanged={setCity} />
-            <Button text={"Create"} btnType={"submit"} placement={"flex-end"}/>
+            <Button text={transferingData ? "Wait..":"Create"} btnType={"submit"} placement={"flex-end"} onBtnClick={createProfile} disabled={transferingData} />
         </form>
     </div>
   )

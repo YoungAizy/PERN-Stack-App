@@ -1,6 +1,6 @@
 import { validateProfile, validateUpdate } from "../utils/SchemaValidator.js";
 import { mapNewkeys } from "../utils/helper.js";
-import { getUserId } from "../utils/getUserId.js";
+import { getUserId } from "../middleware/getUserId.js";
 import uploadImage, { deleteImage } from "../utils/uploadImage.js";
 
 
@@ -12,16 +12,16 @@ export default class ProfileService{
 
     async createProfile(req){
         console.log("service:", req.file);
-
         const {data,request_type, accessToken} = req.body;
-        console.log(data);
+        console.log(req.body);
         const payload = mapNewkeys(data);
         validateProfile(payload);
 
-        payload.userid = await getUserId(accessToken,request_type);
+        payload.userid = await getUserId({body:{accessToken, request: request_type}});
         console.log("New Payload:", payload)
         
-        payload.img_url = await uploadImage(req.file, payload.userid);
+        if(req.file) payload.img_url = await uploadImage(req.file, payload.userid);
+        
         const response= {}
         
         const profile = await this.profileRepo.createProfile(payload);
@@ -29,12 +29,14 @@ export default class ProfileService{
             response.message = "Sever error";
             return response;
         }
-        response.data = profile;
+        response.data = {createdAt: profile.createdAt, username: profile.username, gender: profile.sex,
+            city: profile.city, user_type: profile.account_type, d_o_b: profile.dob, 
+            companyName: profile.company, companyPosition: profile.position};
         return response;
     }
 
     async getProfile(req){
-        const {userid:id} = req.query;
+        const {userid:id} = req.body;
         console.log(id)
 
         const profile = await this.profileRepo.getProfile(id);
@@ -56,16 +58,21 @@ export default class ProfileService{
 
     async updateProfile(req){
         console.log("Service", req.body.data);
-        const {data} = req.body;
-        const {userid, ...payload} = mapNewkeys(data);
-        validateUpdate({...payload, userid})
+        
+        const {data,userid} = req.body;
+        const payload = mapNewkeys(data);
+        payload.userId = userid;
+        console.log(payload);
 
-        const profile = await this.profileRepo.updateProfile(payload,userid);
+        validateUpdate(payload);
+        const {userId, ...values} = payload;
+
+        const profile = await this.profileRepo.updateProfile(values,userId);
         return profile;
     }
 
     async deleteProfile(req){
-        const {userid} = req.query;
+        const {userid} = req.body;
 
         await deleteImage(userid);
 

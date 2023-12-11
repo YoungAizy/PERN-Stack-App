@@ -27,15 +27,16 @@ export const newProfile = async (req,res)=>{
     }
 }
 export const fetchProfile = async (req,res)=>{
-    if(!(req.body.request_type === RequestType.GET)){
-        res.send("Invalid Request");
-        return
-    }
+    // if(!(req.body.request_type === RequestType.GET)){
+    //     res.send("Invalid Request");
+    //     return
+    // }
 
     console.log("FETCHING")
     try {
         const result = await profileService.getProfile(req);
-        res.json({data:result})
+        res.json({username:result.username, gender: result.sex, d_o_b: result.dob, city: result.city, img_url: result.img_url,
+        companyName: result.company, companyPosition: result.position, user_type: result.account_type, createdAt: result.createdAt })
     } catch (error) {
         console.log(error)
     }

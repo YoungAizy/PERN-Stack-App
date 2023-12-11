@@ -29,7 +29,7 @@ function SignInModal(props) {
     }
 
     return (
-        <div style={{ display: "flex", justifyContent: "space-around", width: "100%" }}>
+        <div className='modal z-3' style={{ display: "flex", justifyContent: "space-around", width: "100%" }}>
             <div className="container mt-5 mb-4 login-modal reg-form">
                 <div style={{ display: "flex", justifyContent: "flex-end" }}>
                     <button className="btn close-btn" onClick={props.onClose}>Close</button>

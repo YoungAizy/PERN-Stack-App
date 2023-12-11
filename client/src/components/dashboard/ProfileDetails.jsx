@@ -5,21 +5,59 @@ import GenderOptions from '../GenderOptions';
 import DOB from '../DOB';
 import Avatar from '../styled/Avatar';
 import Button from '../styled/Button';
+import { updateProfile } from '../../utils/requestObjects';
+import requestBody from '../../utils/requestBody';
+import { profileRequests } from '../../utils/requestTypes';
+import profileApi from '../../apis/profile';
 
 const ProfileDetails = () => {
     const dispatch = useDispatch();
     const profile = useSelector(state=>state.profile.profile)
-    const [username, setUsername] = useState("");
-    const [city,setCity] = useState("");
+    
+    const [username, setUsername] = useState(profile.username);
+    const [city,setCity] = useState(profile.city);
+    const [gender,setGender] = useState(profile.gender);
+    const [dob,setDob] = useState(profile.d_o_b);
 
     const trackChanges = (type)=>{
       switch (type) {
         case 'username':
           return setUsername;
-          case 'city':
-            return setCity;
+        case 'city':
+          return setCity;
+        case 'gender':
+          return setGender;
+        case 'birthday':
+          return setDob;
         default:
-          break;
+          return;
+      }
+    }
+
+    const onUpdateUser = async e=>{
+      e.preventDefault();
+
+      if((username === profile.username) && (city === profile.city) && (gender === profile.gender)){ 
+        console.log("nothing", profile.d_o_b);
+        console.log(dob)
+        return;
+      }
+      
+      console.log("updating....")
+
+      const schema = updateProfile(username,city,dob,gender);
+      const body = requestBody(profileRequests.UPDATE, schema);
+
+      const tokens = JSON.parse(localStorage.getItem("tokens"));
+      console.log("tokens:", tokens);
+      const accessToken = tokens.AccessToken;
+      body.accessToken = accessToken;
+
+      try {
+        const result = await profileApi.update(body);
+        console.log(result);
+      } catch (error) {
+        console.log(error);
       }
     }
     
@@ -28,12 +66,12 @@ const ProfileDetails = () => {
         <h4>Profile:</h4>
         <form action="" method="post">
           <Avatar initials={"AMD"} bg_color={"orange"} />
-          <TextInput label="Username" inputId="username" val={username} inputType="text" onChangeEvent={()=>trackChanges("username")} fieldName="user_name" />
-          <TextInput label={"City"} inputId={"city"} val={"cape town"} inputType={"text"} fieldName={"city"} />
-          <GenderOptions />
-          <DOB />
+          <TextInput label="Username" inputId="username" val={username} inputType="text" onChangeEvent={trackChanges("username")} fieldName="user_name" />
+          <TextInput label={"City"} inputId={"city"} val={city} inputType={"text"} fieldName={"city"} onChangeEvent={trackChanges("city")} />
+          <GenderOptions onGenderChange={setGender} val={profile.gender}/>
+          <DOB setDOB={setDob} />
           <div className='col-6 text-center mt-4'>
-            <Button btnType={"submit"} text={"update"} disabled={true}/>
+            <Button btnType={"submit"} text={"update"} onBtnClick={onUpdateUser}/>
           </div>
         </form>
     </div>

@@ -1,6 +1,6 @@
 const keyMap ={
     d_o_b: "dob",
-    user_role: "account_type",
+    user_type: "account_type",
     companyName: "company",
     companyPosition: "position",
     gender: "sex",

@@ -6,9 +6,11 @@ export default class ProfileRepo{
         this.profileModel = Profile;
     }
 
-    createProfile(payload){
-        console.log("repo")
-        return this.profileModel.create(payload);
+    async createProfile(payload){
+        console.log("profile repo:", payload);
+        const result = await this.profileModel.create(payload);
+        console.log("done posting repo.")
+        return result;
     }
 
     getProfile(userid){

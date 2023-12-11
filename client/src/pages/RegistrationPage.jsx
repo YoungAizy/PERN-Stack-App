@@ -1,9 +1,10 @@
-import React, {useReducer, useState}from 'react';
+import React, {useEffect, useReducer, useState}from 'react';
 import AuthRoutesHeader from '../components/AuthRoutesHeader';
 import RegistrationProgress from '../components/registration/RegistrationProgress';
 import NewUserForm from '../components/registration/NewUserForm';
 import ProfileForm from '../components/registration/ProfileForm';
 import VerifyEmail from '../components/registration/VerifyEmail';
+import useQuery from '../hooks/useQuery';
 
 const stepState = 
     {
@@ -36,16 +37,23 @@ function RegistrationPage() {
     const [height,setHeight] = useState("fit-content");
     const [page,setPage] = useState(1);
     const [state, dispatch] = useReducer(reducer, stepState);
-    const  [email, setEmail] = useState() ;
+    const [email, setEmail] = useState();
+    const query = useQuery();
+
+    useEffect(()=>{
+      console.log(parseInt(query.get("page")))
+      setPage(parseInt(query.get("page")))
+    },[])
 
     const getPage = ()=>{
+      console.log("page",page);
         switch (page) {
             case 1:
                 return <NewUserForm onPageChange={setPage} setBackgroundHeight={setHeight} dispatch={dispatch} signupEmail={setEmail}/>
             case 2:
                 return <VerifyEmail onPageChange={setPage} setBackgroundHeight={setHeight} dispatch={dispatch} email={email}/>
             case 3:
-                return <ProfileForm onPageChange={setPage} dispatch={dispatch}/>
+                return <ProfileForm />
             default:
                 return <NewUserForm onPageChange={setPage} setBackgroundHeight={setHeight} dispatch={dispatch}/>
         }

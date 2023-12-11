@@ -13,9 +13,11 @@ function NewUserForm({onPageChange, setBackgroundHeight, dispatch, signupEmail})
     const [password, setPassword] = useState();
     const [confirmPassword, setConfirmPassword] = useState();
     const [invalidSubmit, setInvalidSubmit] = useState(false);
+    const [transferingData, setTransferingData] = useState(false);
 
     const btnClick = async (e)=>{
       e.preventDefault();
+      if(transferingData) return;
       if(!(firstName && surname && email && password && confirmPassword)) {
         setInvalidSubmit(true);
         return;
@@ -24,12 +26,15 @@ function NewUserForm({onPageChange, setBackgroundHeight, dispatch, signupEmail})
         alert("Passwords don't match");
         return;
       }
+
       const body = requestBody(userRequests.REGISTRATION,  newUser(firstName,surname,email,password));
       try {
+        setTransferingData(true);
         const user = await authApi.createUser(body);
         console.log("New User:",user); //check result.statusText == "OK" and result.status == 200
       } catch (error) {
         console.log(error);
+        setTransferingData(false);
         return;
       }
       signupEmail(email);
@@ -54,7 +59,7 @@ function NewUserForm({onPageChange, setBackgroundHeight, dispatch, signupEmail})
             <FloatingInputField value={password} inputId="reg_password" inputType="password" label={"Password"} placeholder='abc' onInputChanged={setPassword} />
             <FloatingInputField value={confirmPassword} inputId="confirm_passwrd" label={"Confirm Password"} inputType="password" placeholder='abc' onInputChanged={setConfirmPassword} />
             {invalidSubmit && <p className='form-margin ps-2' style={{backgroundColor:"crimson", color:"ghostwhite", textTransform:"uppercase"}}>Fill in all the fields</p>}
-            <Button text={"Next"} btnType={"submit"} placement={"flex-end"} onBtnClick={btnClick}/>
+            <Button text={transferingData ? "Wait...":"Next"} btnType={"submit"} placement={"flex-end"} onBtnClick={btnClick} disabled={transferingData} />
         </form>
     </div>
   )

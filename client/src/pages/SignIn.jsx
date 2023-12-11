@@ -1,33 +1,33 @@
 import React, { useState } from 'react'
 import BackgroundBowl from '../assets/bowl.jpg'
 import { useHistory } from 'react-router'
-
-import databinder from '../apis/databinder'
 import FloatingInputField from '../components/styled/FloatingInput'
 import Button from '../components/styled/Button'
+import authApi from '../apis/auth'
+import { userRequests } from '../utils/requestTypes'
+import requestBody from '../utils/requestBody'
 
 const SignIn = () => {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
-    const [show, setShow] = useState(false);
     const [loginResponse, setLoginResponse] = useState();
     const history = useHistory()
 
     const login = async () => {
         loginResponse && setLoginResponse("Attempting Login...");
-        const { data } = await databinder.post(`/auth/login`, {
-            email, password, type: "login"
-        });
-        setLoginResponse(data);
-        localStorage.setItem("token", JSON.stringify(data.accessToken));
-        if (data.accessToken) {
+        const body = requestBody(userRequests.LOGIN, {email,password});
+        const { data } = await authApi.signIn(body);
+        console.log("Login Results:", data);
+        // setLoginResponse(data);
+        localStorage.setItem("tokens", JSON.stringify(data));
+        if (data) {
             localStorage.setItem("isAuthenticated", true);
-            window.location.pathname = "/dashboard";
+            window.location.pathname = "/manage";
         }
     }
     return (
         <div style={{ background: `url(${BackgroundBowl})`, height: "100vh", position: "relative" }}>
-            <LoginHeader setShow={setShow} history={history} LoggedIn={false} />
+            <LoginHeader history={history} LoggedIn={false} />
             <h2 className='m-5' style={{ color: "whitesmoke" }}>SIGN-IN</h2>
             <div className="container mb-4 login-page">
                 <form>
@@ -54,12 +54,12 @@ const SignIn = () => {
     )
 }
 
-export const LoginHeader = ({ setShow, history, LoggedIn }) => {
+export const LoginHeader = ({ history, LoggedIn }) => {
 
     return (
         <div className="login-header">
             <button className="nav-btn" onClick={() => history.push('/')}>Home</button>
-            {LoggedIn ? <button className="nav-btn" onClick={() => history.push('/dashboard')}>DashBoard</button> : <button className="nav-btn" onClick={() => setShow(true)}>SignUp</button>}
+            {LoggedIn ? <button className="nav-btn" onClick={() => history.push('/dashboard')}>DashBoard</button> : <button className="nav-btn" onClick={() => history.push('/signup')}>SignUp</button>}
         </div>
     )
 }

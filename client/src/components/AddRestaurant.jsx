@@ -84,8 +84,8 @@ const AddRestaurant = () => {
                                     Required!
                             </div>}
                             </div>
-                            <div className="col">
-                                <select value={price} onChange={e => setPrice(parseInt(e.target.value))} className="my-1" >
+                            <div className="col-2">
+                                <select value={price} className="form-select my-1" onChange={e => setPrice(parseInt(e.target.value))} >
                                     <option disabled >Price Range</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
@@ -123,8 +123,9 @@ const AddRestaurant = () => {
                             </div>
 
                         </div>
-                        <div style={{ height: "fit-content" }} className="d-grid gap-2 col-4 mx-auto">
-                            <button id='add-btn' style={{ marginTop: "2.5%" }} type="submit" onClick={handleSubmit} className="btn btn-primary">
+                        <div style={{ height: "fit-content" }} className="d-grid gap-2 col-3 mx-auto mt-4">
+                            
+                            <button id='add-btn' className="btn bg-primary" style={{ color:"white" }} type="submit" onClick={handleSubmit} >
                                 Add
                             </button>
                         </div>

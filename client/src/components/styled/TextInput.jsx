@@ -1,8 +1,8 @@
 import React from 'react'
 
-export const TextInput = ({inputId, label, val, inputType, fieldName, placeholder = "", onChangeEvent}) => {
+export const TextInput = ({inputId, label, val, inputType, fieldName, placeholder = "", onChangeEvent, additionalClasses}) => {
   return (
-    <div className="form-margin col-5">
+    <div className={`form-margin col-5 ${additionalClasses}`}>
     <label htmlFor={inputId} >{label}</label>
     <input value={val || ""} type={inputType} name={fieldName} id={inputId} className="form-control" placeholder={placeholder} onChange={e=>onChangeEvent(e.target.value)} />
 </div>

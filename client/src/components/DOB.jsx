@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Months from '../utils/Months';
 
-const DOB = ({setDOB, dayCol = "col-2", monthCol = "col-2", yearCol= "col-2" }) => {
+const DOB = ({setDOB, dayCol = "col-2", monthCol = "col-2", yearCol= "col-2", parentStyling}) => {
     const [days,setDays] = useState([1])
     const [dayOfBirth,setDayOfBirth] = useState(0);
     const [_month,setMonth] = useState('01');
@@ -43,7 +43,7 @@ const DOB = ({setDOB, dayCol = "col-2", monthCol = "col-2", yearCol= "col-2" }) 
     },[_month, year,dayOfBirth])
 
   return (
-    <div className='m-1 row'>
+    <div className={`m-1 row ${parentStyling}`}>
         <p>Birthday:</p>
         <div className={dayCol}>
             <select className='form-select' name="dob" id="day" onChange={e=>setDayOfBirth(e.target.value)}>

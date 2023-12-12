@@ -2,11 +2,11 @@ import React from 'react';
 import DefaultImage from '../../assets/default.jpg';
 import '../../styling/dashboard/notification.css';
 
-const _Notification = (props)=>{
+const _Notification = ({wrapperClasses})=>{
     
     
     return(
-        <div>
+        <div className={wrapperClasses}>
             <div className="card">
                 <div className="row g-0">
                     <div className="col-2 align-self-center"> <img className="img-fluid rounded-start notification-image"   src={DefaultImage} alt="" /></div>

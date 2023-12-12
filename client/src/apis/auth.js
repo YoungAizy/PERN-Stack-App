@@ -21,7 +21,8 @@ const authApi = {
         const result = await databinder.get('/account');
         return result;
     },
-    async updateUser(payload) {
+    async updateUser(payload,accessToken) {
+        databinder.defaults.headers.common['Authorization'] = accessToken;
         const result = await databinder.patch('/update',payload);
         return result;
     },
@@ -37,7 +38,8 @@ const authApi = {
         const result = await databinder.post('/account/password_reset/confirm',payload);
         return result;
     },
-    async signOut() {
+    async signOut(accessToken) {
+        databinder.defaults.headers.common['Authorization'] = accessToken;
         const result = await databinder.post('/logout');
         return result;
     },

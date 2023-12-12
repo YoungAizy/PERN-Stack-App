@@ -1,39 +1,44 @@
-import React, { useEffect, useState } from 'react';
-import AddRestaurant from '../components/AddRestaurant';
+import React from 'react';
 import Header from '../components/Header';
-import RestaurantList from '../components/RestaurantList';
+import { useHistory, useParams } from 'react-router-dom/cjs/react-router-dom.min';
+import NotificationsPage from '../components/dashboard/reviewer/NotificationsPage';
+import ReviewsPage from '../components/dashboard/reviewer/ReviewsPage';
+import ProfilePage from '../components/dashboard/reviewer/ProfilePage';
 
 const Home = () => {
-    const [mobileScreen, setMobileScreen] = useState(false)
+    const history = useHistory();
+    const {page} = useParams();
 
-    useEffect(() => {
-        const screen = window.innerWidth;
-        if (screen <= 760) {
-            setMobileScreen(true);
+
+    const checkPage = ()=>{
+        switch (page) {
+            case "notifications":
+                return <NotificationsPage cardWrapperClasses={'col-8 mx-auto'} />
+
+            case "reviews":
+                return <ReviewsPage />
+
+            case "profile":
+                return <ProfilePage />
+            default:
+                history.push('/')
+                break;
         }
-    }, []);
-
-    if (mobileScreen) {
-        return (
-            <div>
-                <Header isDashBoard={true} />
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "65vh" }}>
-                    <h4>This Page Is Not Available In Mobile.</h4>
-                </div>
-            </div>
-        )
     }
 
     return (
         <div>
-            <Header isDashBoard={true} />
-            <h2>My Restaurants</h2>
-            <AddRestaurant />
-            <RestaurantList myRestaurants={true} />
-            <h2>OTHER LISTINGS</h2>
-            <RestaurantList />
+            <Header />
+            
+            {/* <RestaurantList myRestaurants={true} /> */}
+            
+            {checkPage()}
+            
+            
         </div>
     )
 }
+
+
 
 export default Home;

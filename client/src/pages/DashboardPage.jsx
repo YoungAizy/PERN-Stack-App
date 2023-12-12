@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import SidePanel from '../components/dashboard/SidePanel';
 import Statistics from '../components/dashboard/windows/Statistics';
 import Notifications from '../components/dashboard/Notifications';
-import ProfilePage from '../components/dashboard/windows/ProfileWindow';
+import ProfileWindow from '../components/dashboard/windows/ProfileWindow';
 import ReviewsWindow from '../components/dashboard/windows/ReviewsWindow';
 import ListingsWindow from '../components/dashboard/windows/ListingsWindow';
 import { useDispatch, useSelector } from 'react-redux';
@@ -50,7 +50,7 @@ export default function DashboardPage(props){
             case pageList[2]: return <ReviewsWindow />
             case pageList[3]: return <ListingsWindow />
             case pageList[4]: return <Statistics/>
-            case pageList[0]: return <ProfilePage/>
+            case pageList[0]: return <ProfileWindow/>
             default: return <Notifications/>;
         }
     }

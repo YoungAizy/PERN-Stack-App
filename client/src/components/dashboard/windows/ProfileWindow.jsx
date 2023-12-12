@@ -2,7 +2,7 @@ import React from 'react';
 import ProfileDetails from '../ProfileDetails';
 import UserDetails from '../UserDetails';
 
-export default function ProfilePage(props){
+export default function ProfileWindow(props){
 
     return(
         <div className='container'>

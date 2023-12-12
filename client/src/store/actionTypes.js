@@ -22,3 +22,8 @@ export const PROFILE ={
 }
 
 export const USER_TYPES = {}
+
+export const REVIEWER_TYPES = {
+    SETPAGE: "reviewer/ change dashboard selected page",
+    // RESETPAGE: "RVIEWER/ clear active page when user clicks home button"
+}

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import databinder from '../apis/databinder';
 import FloatingInputField from './styled/FloatingInput';
 
 
@@ -15,9 +14,7 @@ function SignInModal(props) {
 
     const Login = async () => {
         serverResponse && setServerResponse("Attempting Registration...");
-        const response = await databinder.post(`/auth/signup`, {
-            name, password, email, type: 'registration'
-        });
+        const response = "";
         setServerResponse(response.data);
         if (response.data.accessToken) {
     

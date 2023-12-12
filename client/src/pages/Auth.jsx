@@ -3,7 +3,7 @@ import BackgroundBowl from '../assets/bowl.jpg'
 import RegistrationModal from '../components/RegistrationModal'
 import { useHistory } from 'react-router'
 
-import databinder from '../apis/databinder'
+
 
 const SignIn = () => {
     const [email, setEmail] = useState();
@@ -14,9 +14,7 @@ const SignIn = () => {
 
     const login = async () => {
         loginResponse && setLoginResponse("Attempting Login...");
-        const { data } = await databinder.post(`/auth/login`, {
-            email, password, type: "login"
-        });
+        const { data } = "";
         setLoginResponse(data);
         // setUser(data.user)
         localStorage.setItem("token", JSON.stringify(data.accessToken));

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
-import databinder from '../apis/databinder';
 import Upload from '../assets/upload-icon.png'
 import { useDispatch } from 'react-redux';
 
@@ -18,29 +17,29 @@ function UpdateRestaurant(props) {
     const [website, setWebsite] = useState("");
     const [responseStatus, setResponseStatus] = useState("");
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                let { data } = await databinder.get(`/restaurants/${id}`);
-                setName(data.data.restaurant.name);
-                setLocation(data.data.restaurant.street);
-                setCity(data.data.restaurant.city);
-                setAbout(data.data.restaurant.description);
-                setEmail(data.data.restaurant.email_address);
-                setPhone(data.data.restaurant.telephone);
-                setWebsite(data.data.restaurant.website);
-                setPrice(data.data.restaurant.price_range);
-                const type = data.data.restaurant.mimetype;
-                const buffer = data.data.restaurant.pic && Buffer.from(data.data.restaurant.pic).toString("base64");
-                data.data.restaurant.pic && setPicture(`data:${type};base64, ${buffer}`);
-            } catch (error) {
-                console.log(error)
-            }
-        }
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             let { data } = await databinder.get(`/restaurants/${id}`);
+    //             setName(data.data.restaurant.name);
+    //             setLocation(data.data.restaurant.street);
+    //             setCity(data.data.restaurant.city);
+    //             setAbout(data.data.restaurant.description);
+    //             setEmail(data.data.restaurant.email_address);
+    //             setPhone(data.data.restaurant.telephone);
+    //             setWebsite(data.data.restaurant.website);
+    //             setPrice(data.data.restaurant.price_range);
+    //             const type = data.data.restaurant.mimetype;
+    //             const buffer = data.data.restaurant.pic && Buffer.from(data.data.restaurant.pic).toString("base64");
+    //             data.data.restaurant.pic && setPicture(`data:${type};base64, ${buffer}`);
+    //         } catch (error) {
+    //             console.log(error)
+    //         }
+    //     }
 
-        fetchData();
-        // eslint-disable-next-line
-    }, []);
+    //     fetchData();
+    //     // eslint-disable-next-line
+    // }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -48,7 +47,7 @@ function UpdateRestaurant(props) {
         form.append('image', picture);
         form.append('data',
             JSON.stringify({ phone, website, name, location, price, about, user:"aizy", email, city }))
-        const updateResponse = await databinder.put(`/restaurants/${id}`, form);
+        const updateResponse ="";
         // console.log("Update Response", updateResponse)
         setResponseStatus(updateResponse.data.status);
 
@@ -111,7 +110,7 @@ function UpdateRestaurant(props) {
                             <input value={price} onChange={e => setPrice(e.target.value)} id="price" className="form-control" type="number" />
                         </div>
                         <div className='col mt-4'>
-                            <button type='submit' onClick={(e) => handleSubmit(e)} className="btn btn-primary">Submit</button>
+                            <button type='submit' onClick={(e) => handleSubmit(e)} className="btn bg-primary">Submit</button>
                         </div>
                     </div>
                 </form>

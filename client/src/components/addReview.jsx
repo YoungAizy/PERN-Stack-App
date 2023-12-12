@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import databinder from '../apis/databinder';
 
 const AddReview = ({ id }) => {
     // Gives us acces to our entire current URL

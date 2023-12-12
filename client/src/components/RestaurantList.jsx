@@ -1,6 +1,5 @@
 import React, {  useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import databinder from '../apis/databinder';
 import RenderRating from './RestaurantCard';
 import DeleteModal from './DeleteModal';
 
@@ -21,7 +20,6 @@ const RestaurantList = (props) => {
     const handleDelete = async (id) => {
         // console.log('handle delete entered', id)
         setOpenModal(false);
-        await databinder.delete(`/restaurants/${id}`);
         // setMyRestaurants(content.filter(x => x.id !== id))
     }
 

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import databinder from '../apis/databinder';
 import UploadNotification from './UploadNotification'
 import { useDispatch } from 'react-redux';
 
@@ -26,7 +25,7 @@ const AddRestaurant = () => {
             form.append('image', picture);
             form.append('data',
                 JSON.stringify({ phone, website, name, location, price, about, user: "aizy", email, city }))
-            const response = await databinder.post("/restaurants", form);
+            const response = "";
             // addRestaurant(response.data.data)
 
             if (response) {

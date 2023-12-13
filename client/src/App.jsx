@@ -25,7 +25,7 @@ const App = ()=> {
           <Route exact path="/restaurant/:id" component={ DetailsPage }/>
           <Route exact path="/restaurant/:id/update" component={ UpdatePage }/>
           <Route exact path="/dashboard/manage" component={DashboardPage}/>
-          <Route exact path="/dashboard/:page" component={Home}/>
+          <Route exact path="/home/:page" component={Home}/>
         </Router>
     </div>
     </QueryClientProvider>

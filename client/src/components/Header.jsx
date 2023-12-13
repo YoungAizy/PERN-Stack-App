@@ -30,15 +30,15 @@ const LoggedInBtns = ({ history}) => {
 
     const onProfileClick = ()=>{
         dispatch(setActiveDashboardPage("profile"));
-        history.push('/dashboard/profile')
+        history.push('/home/profile')
     }
     const onNotificationsClick = ()=>{
         dispatch(setActiveDashboardPage("notifications"));
-        history.push('/dashboard/notifications')
+        history.push('/home/notifications')
     }
     const onReviewsClick = ()=>{
         dispatch(setActiveDashboardPage("reviews"));
-        history.push('/dashboard/reviews')
+        history.push('/home/reviews')
     }
 
     const onLogout = ()=>{

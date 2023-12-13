@@ -37,7 +37,7 @@ const SignIn = () => {
                 // eslint-disable-next-line default-case
                 switch (data.user_type) {
                     case "reviewer":
-                        history.push('/dashboard/notifications')
+                        history.push('/home/notifications')
                         break;
                 
                     case "restaurateur":

@@ -5,8 +5,10 @@ import authApi from '../../apis/auth';
 import requestBody from '../../utils/requestBody';
 import { userRequests } from '../../utils/requestTypes';
 import { newUser } from '../../utils/requestObjects';
+import { useDispatch } from 'react-redux';
+import { storeVerificationEmail } from '../../store/actions/userActions';
 
-function NewUserForm({onPageChange, setBackgroundHeight, dispatch, signupEmail}) {
+function NewUserForm({onPageChange, setBackgroundHeight, dispatch}) {
     const [firstName, setFirstName] = useState();
     const [surname, setSurname] = useState();
     const [email, setEmail] = useState();
@@ -14,6 +16,8 @@ function NewUserForm({onPageChange, setBackgroundHeight, dispatch, signupEmail})
     const [confirmPassword, setConfirmPassword] = useState();
     const [invalidSubmit, setInvalidSubmit] = useState(false);
     const [transferingData, setTransferingData] = useState(false);
+
+    const signupEmail = useDispatch();
 
     const btnClick = async (e)=>{
       e.preventDefault();
@@ -44,7 +48,7 @@ function NewUserForm({onPageChange, setBackgroundHeight, dispatch, signupEmail})
         setTransferingData(false);
         return;
       }
-      signupEmail(email);
+      signupEmail(storeVerificationEmail({email}));
       dispatch({type:"Done", step: "step1"});
       dispatch({type:"Active", step: "step2"});
       setBackgroundHeight("100vh")

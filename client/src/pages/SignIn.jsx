@@ -10,6 +10,7 @@ import SigninOverlay from '../components/SigninOverlay'
 import { useDispatch } from 'react-redux'
 import profileApi from '../apis/profile'
 import { saveProfileDetails } from '../store/actions/profileActions'
+import { storeVerificationEmail } from '../store/actions/userActions';
 
 const SignIn = () => {
     const [email, setEmail] = useState();
@@ -53,8 +54,14 @@ const SignIn = () => {
     }
 
     const verifyUser = async()=>{
-        await authApi.resendVerificationCode(email);
-        history.push('/registratiion?page=2');
+        try {
+            await authApi.resendVerificationCode(email);
+            dispatch(storeVerificationEmail({email}));
+            history.push('/registratiion?page=2');
+        } catch (error) {
+            console.log("Error while resending verification code.");
+            console.log("EERR:", error);
+        }
     }
 
     const login = async () => {

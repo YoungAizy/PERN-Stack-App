@@ -1,4 +1,4 @@
-require('dotenv').config()
+import 'dotenv/config'
 import jwt from 'jsonwebtoken';
 import jwksClient from 'jwks-rsa';
 import requestType from '../utils/requestType.js';

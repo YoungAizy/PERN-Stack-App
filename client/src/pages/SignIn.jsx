@@ -31,7 +31,7 @@ const SignIn = () => {
                 return;
             }
             if(status === 200 && data.user_type){
-                dispatch(saveProfileDetails({payload: data}));
+                dispatch(saveProfileDetails({data}));
                 localStorage.setItem("user_type", data.user_type);
                 // eslint-disable-next-line default-case
                 switch (data.user_type) {

@@ -3,6 +3,9 @@ import {useHistory} from 'react-router-dom'
 import DefaultImage from '../../assets/default.jpg';
 import { pageList } from '../../pages/DashboardPage';
 import '../../styling/dashboard/sidePanel.css';
+import authApi from '../../apis/auth';
+import requestBody from '../../utils/requestBody';
+import { userRequests } from '../../utils/requestTypes';
 
 const imageStyle ={ marginLeft: 10}
 const nameStyle ={marginTop:6}
@@ -24,13 +27,31 @@ const SidePanel = ({ onPageChanged, active, setActive })=>{
         history.push('/');
     }
 
+    const signOut = async e =>{
+        e.preventDefault();
+
+        const tokens = JSON.parse(localStorage.getItem("tokens"));
+        const refreshToken = tokens.RefreshToken;
+
+        const body = requestBody(userRequests.LOGOUT, {refreshToken});
+
+        try {
+            await authApi.signOut(body);
+            localStorage.clear();
+            history.push('/');
+        } catch (error) {
+            console.log("Error while signing out", error);
+        }
+
+    }
+
 
     return(
         <div className='col-3 bg-dark text-white'>
-            <div className='p-3 d-flex flex-column justify-content-around' style={{maxHeight:"676px"}}>
+            <div className='p-3 pb-1 d-flex flex-column justify-content-around' style={{maxHeight:"676px"}}>
             
-            <div className="m-3 mt-1 p-3 rounded-4 back-home" onClick={homeClick}>
-                <span className='back-home-span' ><i class="fas fa-arrow-left"></i></span>
+            <div className="m-3 mt-0 p-2 rounded-4 back-home" onClick={homeClick}>
+                <span className='back-home-span' ><i className="fas fa-arrow-left"></i></span>
                 HOME
             </div>
             <div className='align-self-center text-center'>
@@ -39,17 +60,17 @@ const SidePanel = ({ onPageChanged, active, setActive })=>{
             </div>
             <div id='sidepanel' style={tabs}>
                 <button className={`d-block btn rounded-pill mt-3 ${active === pageList[1] ? 'btn-secondary' : 'btn-bg' }`}
-                onClick={()=> onTabChange(pageList[1])}><span><i class="fas fa-bell"></i></span> Notifications</button>
+                onClick={()=> onTabChange(pageList[1])}><span><i className="fas fa-bell"></i></span> Notifications</button>
                 <button className={`d-block btn rounded-pill mt-4 ${active === pageList[2] ? 'btn-secondary' : 'btn-bg' }`}
-                onClick={()=> onTabChange(pageList[2])}><span><i class="fas fa-comment-alt"></i></span> Reviews</button>
+                onClick={()=> onTabChange(pageList[2])}><span><i className="fas fa-comment-alt"></i></span> Reviews</button>
                 <button className={`d-block btn rounded-pill mt-4 ${active === pageList[3] ? 'btn-secondary' : 'btn-bg' }`}
-                onClick={()=>onTabChange(pageList[3]) }><span><i class="fas fa-folder"></i></span> My Listings</button>
+                onClick={()=>onTabChange(pageList[3]) }><span><i className="fas fa-folder"></i></span> My Listings</button>
                 <button className={`d-block btn rounded-pill mt-4 ${active === pageList[4] ? 'btn-secondary' : 'btn-bg' }`}
-                onClick={()=> onTabChange(pageList[4])}><span><i class="fas fa-chart-line"></i></span> Analytics</button>
+                onClick={()=> onTabChange(pageList[4])}><span><i className="fas fa-chart-line"></i></span> Analytics</button>
                 <button className={`d-block btn rounded-pill mt-4 ${active === pageList[0] ? 'btn-secondary' : 'btn-bg' }`}
-                onClick={()=> onTabChange(pageList[0])}><span><i class="fas fa-user-alt"></i></span> Profile</button>
+                onClick={()=> onTabChange(pageList[0])}><span><i className="fas fa-user-alt"></i></span> Profile</button>
             </div>
-            <button className='mt-4 btn btn-primary rounded-3 bg-dark'>Logout</button>
+            <button className='mt-5 btn btn-primary rounded-3 bg-dark' onClick={signOut}>Logout</button>
             </div>
         </div>
     )

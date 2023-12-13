@@ -3,6 +3,9 @@ import { useHistory } from 'react-router-dom';
 import Background from '../assets/bowl.jpg';
 import { useDispatch, useSelector } from 'react-redux';
 import { setActiveDashboardPage } from '../store/actions/reviewerDashboardActions';
+import requestBody from '../utils/requestBody';
+import { userRequests } from '../utils/requestTypes';
+import authApi from '../apis/auth';
 
 
 const Header = ({ setShow }) => {
@@ -41,10 +44,21 @@ const LoggedInBtns = ({ history}) => {
         history.push('/home/reviews')
     }
 
-    const onLogout = ()=>{
-        
-        localStorage.clear();
-        history.push('/');
+    const onLogout = async e=>{
+        e.preventDefault();
+
+        const tokens = JSON.parse(localStorage.getItem("tokens"));
+        const refreshToken = tokens.RefreshToken;
+
+        const body = requestBody(userRequests.LOGOUT, {refreshToken});
+
+        try {
+            await authApi.signOut(body);
+            localStorage.clear();
+            history.push('/');
+        } catch (error) {
+            console.log("Signout Error:", error);
+        }
     }
     
     return (

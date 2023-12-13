@@ -43,9 +43,9 @@ const authApi = {
         const result = await databinder.post('/account/password_reset/confirm',payload);
         return result;
     },
-    async signOut(accessToken) {
-        databinder.defaults.headers.common['Authorization'] = accessToken;
-        const result = await databinder.post('/logout');
+    async signOut(payload) {
+        // databinder.defaults.headers.common['Authorization'] = accessToken;
+        const result = await databinder.post('/logout', payload);
         return result;
     },
     async deleteUser() {

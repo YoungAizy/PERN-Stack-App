@@ -29,3 +29,7 @@
 #sidepanel .btn span{
     margin-right: 2rem;
 }
+
+.logout-btn:hover{
+    background-color: #ab0a0a !important;
+}

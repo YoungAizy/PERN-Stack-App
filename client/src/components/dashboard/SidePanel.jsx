@@ -70,7 +70,7 @@ const SidePanel = ({ onPageChanged, active, setActive })=>{
                 <button className={`d-block btn rounded-pill mt-4 ${active === pageList[0] ? 'btn-secondary' : 'btn-bg' }`}
                 onClick={()=> onTabChange(pageList[0])}><span><i className="fas fa-user-alt"></i></span> Profile</button>
             </div>
-            <button className='mt-5 btn btn-primary rounded-3 bg-dark' onClick={signOut}>Logout</button>
+            <button className='mt-5 btn btn-primary rounded-3 bg-dark logout-btn' onClick={signOut}>Logout</button>
             </div>
         </div>
     )

@@ -7,18 +7,16 @@ const profileRepo = new ProfileRepo(Profile);
 const profileService = new ProfileService(profileRepo);
 
 export const newProfile = async (req,res)=>{
-    console.log("New Profile Request:", req.body );
-    console.log("File: ", req.file);
     const body = JSON.parse(req.body.data);
-    req.body = body;
-    if(!(req.body.request_type === RequestType.CREATE)){
+    console.log("New Profile Request:", body );
+    if(!(body.request_type === RequestType.CREATE)){
         res.send("Invalid Request");
         return
     }
 
     console.log("controller")
     try {
-        const results = await profileService.createProfile(req);
+        const results = await profileService.createProfile(body,req.file,req.body.userid);
         console.log(results);
         res.json(results);
     } catch (error) {
@@ -35,10 +33,15 @@ export const fetchProfile = async (req,res)=>{
     console.log("FETCHING")
     try {
         const result = await profileService.getProfile(req);
-        res.json({username:result.username, gender: result.sex, d_o_b: result.dob, city: result.city, img_url: result.img_url,
-        companyName: result.company, companyPosition: result.position, user_type: result.account_type, createdAt: result.createdAt })
+        if(result.createdAt){
+            res.json({username:result.username, gender: result.sex, d_o_b: result.dob, city: result.city, img_url: result.img_url,
+            companyName: result.company, companyPosition: result.position, user_type: result.account_type, createdAt: result.createdAt })
+        }else {
+            res.send(result);
+        }
     } catch (error) {
-        console.log(error)
+        console.log(error);
+        res.send(error);
     }
 }
 export const updateProfile = async (req,res)=>{

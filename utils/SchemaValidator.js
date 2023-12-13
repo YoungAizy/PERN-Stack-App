@@ -7,7 +7,8 @@ const profileSchema = Joi.object({
     position: Joi.string().min(0).max(20).optional(),
     account_type: Joi.string().max(13).required(),
     city: Joi.string().required(),
-    dob: Joi.string().min(10).max(10).required()
+    dob: Joi.string().min(10).max(10).required(),
+    userid: Joi.string().uuid().required()
 })
 
 const profileUpdateSchema = Joi.object({

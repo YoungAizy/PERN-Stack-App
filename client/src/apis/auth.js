@@ -13,6 +13,10 @@ const authApi = {
         const result = await databinder.post('/registration/verify',payload);
         return result;
     },
+    async resendVerificationCode(email){
+        const result = await databinder.post('/registration/verify/resend',email);
+        return result;
+    },
     async signIn(payload) {
         const result = await databinder.post('/login',payload);
         return result;

@@ -21,7 +21,9 @@ export const PROFILE ={
     DELETE_PROFILE: "profile/ delete profile details"
 }
 
-export const USER_TYPES = {}
+export const USER_TYPES = {
+    STORE_VERIFICATION_EMAIL: "REGISTRATION/ temporarily store verification email"
+}
 
 export const REVIEWER_TYPES = {
     SETPAGE: "reviewer/ change dashboard selected page",

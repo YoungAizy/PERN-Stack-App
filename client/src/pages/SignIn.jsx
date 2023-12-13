@@ -6,23 +6,76 @@ import Button from '../components/styled/Button'
 import authApi from '../apis/auth'
 import { userRequests } from '../utils/requestTypes'
 import requestBody from '../utils/requestBody'
+import SigninOverlay from '../components/SigninOverlay'
+import { useDispatch } from 'react-redux'
+import profileApi from '../apis/profile'
+import { saveProfileDetails } from '../store/actions/profileActions'
 
 const SignIn = () => {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [loginResponse, setLoginResponse] = useState();
-    const history = useHistory()
+    const [fetchingProfile, setFetchingProfile] = useState(false);
+
+    const dispatch = useDispatch();
+    const history = useHistory();
+
+    const fetchProfile = async ()=>{
+        setFetchingProfile(true);
+        try {
+            const {data,status} = await profileApi.fetch();
+            console.log("DATA", data);
+            if(data === "Profile does not exist"){
+                console.log("rerouting...")
+                history.push('/registration?page=3');
+                return;
+            }
+            if(status === 200 && data.user_type){
+                dispatch(saveProfileDetails({payload: data}));
+                localStorage.setItem("user_type", data.user_type);
+                // eslint-disable-next-line default-case
+                switch (data.user_type) {
+                    case "reviewer":
+                        history.push('/dashboard/notifications')
+                        break;
+                
+                    case "restaurateur":
+                        history.push('/dashboard/manage');
+                        break;
+                }
+            }else{
+                console.log("Unable to process request");
+            }
+        } catch (error) {
+            console.log("Something went wrong.", error);
+            setFetchingProfile(false);
+        }
+    }
+
+    const verifyUser = async()=>{
+        await authApi.resendVerificationCode(email);
+        history.push('/registratiion?page=2');
+    }
 
     const login = async () => {
-        loginResponse && setLoginResponse("Attempting Login...");
+        setLoginResponse("Attempting Login...");
+        
         const body = requestBody(userRequests.LOGIN, {email,password});
-        const { data } = await authApi.signIn(body);
-        console.log("Login Results:", data);
-        // setLoginResponse(data);
-        localStorage.setItem("tokens", JSON.stringify(data));
-        if (data) {
-            localStorage.setItem("isAuthenticated", true);
-            window.location.pathname = "/manage";
+        try {
+            const {data, status } = await authApi.signIn(body);
+            console.log("Login Results:", data);
+            // setLoginResponse(data);
+            if(!data.isVerified) verifyUser();
+            if (status === 200 && data.accessTokens) {
+                localStorage.setItem("tokens", JSON.stringify(data.accessTokens));
+                localStorage.setItem("isAuthenticated", true);
+                fetchProfile();
+                return;
+                // window.location.pathname = "/manage";
+            }
+        } catch (error) {
+            console.log("Login Error:",error)
+            setLoginResponse("Login Failed. Something went wrong.");
         }
     }
     return (
@@ -48,8 +101,9 @@ const SignIn = () => {
                         </div>
                     </div>
                 </form>
-                {loginResponse && !loginResponse.accessToken && <p style={{ fontWeight: "600", background: "whitesmoke" }}>{loginResponse}</p>}
+                {loginResponse && !loginResponse.accessToken && <p className='form-margin px-2' style={{ fontWeight: "600", background: "whitesmoke", color:"black" }}>{loginResponse}</p>}
             </div>
+            {fetchingProfile && <SigninOverlay />}
         </div>
     )
 }
@@ -59,7 +113,7 @@ export const LoginHeader = ({ history, LoggedIn }) => {
     return (
         <div className="login-header">
             <button className="nav-btn" onClick={() => history.push('/')}>Home</button>
-            {LoggedIn ? <button className="nav-btn" onClick={() => history.push('/dashboard')}>DashBoard</button> : <button className="nav-btn" onClick={() => history.push('/signup')}>SignUp</button>}
+            {LoggedIn ? <button className="nav-btn" onClick={() => history.push('/dashboard')}>DashBoard</button> : <button className="nav-btn" onClick={() => history.push('/registration')}>SignUp</button>}
         </div>
     )
 }

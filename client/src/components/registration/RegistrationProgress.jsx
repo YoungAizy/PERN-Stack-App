@@ -1,23 +1,6 @@
 import React from 'react';
 
-const stepState = [
-  {
-    step1:{
-      active: false,
-      done:false 
-    },
-    step2:{
-      active: false,
-      done:false 
-    },
-    step3:{
-      active: false,
-      done:false 
-    }
-  }
-]
-
-const RegistrationProgress = ({onPageChange, setBackgroundHeight,state}) => {
+const RegistrationProgress = ({state}) => {
   const step1 = state.step1;
   const step2 = state.step2;
   const step3 = state.step3;

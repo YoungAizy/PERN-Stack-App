@@ -3,7 +3,7 @@ export const newUser = (firstname,surname,email,password)=> ({firstname,surname,
 export const updateProfile = (username,city,d_o_b,gender)=> ({username,city,d_o_b,gender})
 
 export const profileSchema = (username,gender,d_o_b,city,
-    user_role,companyName,companyPosition) => ({username,gender,d_o_b,city,user_role,companyName,companyPosition});
+    user_type,companyName,companyPosition) => ({username,gender,d_o_b,city,user_type,companyName,companyPosition});
 
 export const restaurantSchema = () => ({});
 

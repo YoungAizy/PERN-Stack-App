@@ -2,6 +2,7 @@
 const {RequestType} = require('../utils/constants/RequestType.js');
 const {compare} = require('../utils/checkRequestType.js');
 const {SignIn} = require('../services/signin.service.js');
+const {getUserAttr} = require('../services/getUserAttr.service.js');
 const {signUp} = require('../services/signup.service.js');
 const {verifyAccount} = require('../services/verifyAccount.js');
 const {updateUser, updatePassword} = require('../services/update.service.js');
@@ -14,6 +15,11 @@ const {deleteAccount} = require('../services/deleteAccount.service.js');
 const {redirectToLoginService} = require('../utils/redirectToLogin.js');
 const { unverifiedUsers } = require('../memory/signup_dictionary.js');
 
+const unixHour = 60000 * 60;
+const dayUnix = unixHour * 24;
+const expirationTime = Date.now() + dayUnix;
+console.log("time", expirationTime);
+console.log("Time now", Date.now());
 
 exports.register = async(req,res)=>{
     console.log("Registration controller");
@@ -29,7 +35,7 @@ exports.register = async(req,res)=>{
       res.send(result)
     } catch (error) {
         console.log("Signup Error:",error);
-        res.json({error})
+        res.status(error.statusCode).json({message:error.message})
     }
 }
 
@@ -44,39 +50,75 @@ exports.verifyUser = async(req,res)=>{
         console.log(result);
 
         if(result){
-            const authTokens = redirectToLoginService()
-            console.log("User Verified", authTokens);
-            res.json({tokens: authTokens});
+            const authTokens = await redirectToLoginService(data.email);
+            const {IdToken, ... accessTokens} = authTokens;
+            res.cookie("idToken", IdToken,{httpOnly: true, sameSite: "lax", expires: dayUnix});
+            console.log("User Verified", accessTokens);
+            res.json({accessTokens});
         }
     } catch (error) {
-        console.log("Confirmation Code Incorrect:", err);
-        res.send(error);        
+        console.log("Confirmation Code Incorrect:", error);
+        res.status(error.statusCode).json({message: error.message});        
     }
 }
 
 exports.signIn = async (req,res)=>{
     if(compare(req.body.request_type, RequestType.LOGIN,res)) return;
-
-    // const {hashedPassword,userId} = req.body.credentials;
     
     try {
-        const result = await SignIn(req.body.data.email, req.body.data.password);
-        console.log("LOGIN:",result);
-        res.json(result);
+        
+        const authTokens = await SignIn("USER_PASSWORD_AUTH",{ "USERNAME": req.body.data.email, "PASSWORD": req.body.data.password});
+        const {IdToken, ...accessTokens } = authTokens;
+        console.log("LOGIN:", IdToken);
+        res.cookie("idToken", IdToken,{httpOnly: true, sameSite: "lax", maxAge: expirationTime});
+        res.json({accessTokens});
     } catch (error) {
         console.log("ERR",error);
-        res.send({message:"Login Failed"});
+        res.status(error.statusCode).json({message: error.message});
     }
 
+}
+
+exports.refreshToken = async (req,res)=>{
+    if(compare(req.body.request_type, RequestType.REFRESH,res)) return;
+
+    const {refreshToken} = req.body;
+
+    try {
+        const newTokens = await SignIn("REFRESH_TOKEN_AUTH", {"REFRESH_TOKEN": refreshToken});
+        console.log("newTokens",newTokens);
+        const {IdToken, ...accessToken} = newTokens;
+        res.cookie("idToken". IdToken, {httpOnly: true, sameSite: "lax", maxAge: expirationTime});
+        res.json({accessToken})
+    } catch (error) {
+        console.log("Refresh Error:", error);
+        res.status(error.statusCode).json({message: error.message});
+    }
+}
+
+exports.getUser = async (req,res)=>{
+    if(compare(req.body.request_type, RequestType.GET,res)) return;
+
+    const bearerHeader = req.headers['authorization'];
+    const parts = bearerHeader.split(' ');
+    const accessToken = parts[1];
+
+    try{
+    const result = await getUserAttr(accessToken, req.query.data);
+    console.log("User Attributes:", result); 
+    res.send(result)
+    }catch(error){
+        console.log("Error fetching user:", error);
+        res.send(error);
+    }
 }
 
 exports.update = async(req,res)=>{
     if(compare(req.body.request_type.slice(0,6), RequestType.UPDATE.slice(0,6),res)) return;
 
-    const bearerHeader = req.headers['authorization'];
-    const parts = bearerHeader.split(' ');
-    const accessToken = parts[1]
+    const accessToken = req.body.token;
     const {data} = req.body;
+    console.log(accessToken)
 
     const attr = []
     let result;
@@ -114,7 +156,7 @@ exports.update = async(req,res)=>{
         result && res.json({data:result})//TODO: check result.rowCount == 1
     } catch (error) {
         console.log("Update Error:", error);
-        error && res.send(error);
+        res.status(error.statusCode).json({message: error.message});
     }
 }
 
@@ -123,9 +165,7 @@ exports.verifyUpdate = async (req,res)=>{
     if(req.body.data.attr != "email") return; //don't process the request if the attribute to be verified is not an email
     if(req.body.data.code < 4) return; //return if the code is invalid. Use Joi for this.
 
-    const bearerHeader = req.headers['authorization'];
-    const parts = bearerHeader.split(' ');
-    const accessToken = parts[1]
+    const accessToken = req.body.token;
     const {data} = req.body;
 
     try {
@@ -133,7 +173,7 @@ exports.verifyUpdate = async (req,res)=>{
         result && res.send(result);
     } catch (error) {
         console.log("ERR", error);
-        res.send(error);
+        res.status(error.statusCode).json({message: error.message});
     }
 
 }
@@ -167,30 +207,26 @@ exports.passwordReset = async (req,res)=>{
 exports.signOut = async (req,res)=>{
     if(compare(req.body.request_type, RequestType.LOGOUT,res)) return;
 
-    const bearerHeader = req.headers['authorization'];
-    const parts = bearerHeader.split(' ');
-    const accessToken = parts[1]
+    const {refreshToken} = req.body;
 
     try {
-        const result = await signOut(accessToken);
+        const result = await signOut(refreshToken);
         result && res.send(result);
     } catch (error) {
         console.log("Logout Error:", error);
-        res.send(error);
+        res.status(error.statusCode).send(error);
     }
 }
 exports.deleteUser = async (req,res)=>{
     if(compare(req.body.request_type, RequestType.DELETE,res)) return;
 
-    const bearerHeader = req.headers['authorization'];
-    const parts = bearerHeader.split(' ');
-    const accessToken = parts[1]
+    const accessToken = req.body.token;
 
     try {
         const result = await deleteAccount(accessToken);
         result && res.send(result);
     } catch (error) {
         console.log("Account Deletion Error:",error);
-        res.send(error)
+        res.status(error.statusCode).json({message: error.message});
     }
 }

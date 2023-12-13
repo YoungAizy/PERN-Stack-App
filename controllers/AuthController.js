@@ -14,6 +14,7 @@ const {deleteAccount} = require('../services/deleteAccount.service.js');
 
 const {redirectToLoginService} = require('../utils/redirectToLogin.js');
 const { unverifiedUsers } = require('../memory/signup_dictionary.js');
+const { newSignupCode } = require('../services/newSignupCode.service.js');
 
 const unixHour = 60000 * 60;
 const dayUnix = unixHour * 24;
@@ -35,6 +36,10 @@ exports.register = async(req,res)=>{
       res.send(result)
     } catch (error) {
         console.log("Signup Error:",error);
+        if(error.code === 'UsernameExistsException') {
+            res.status(203).json({ErrorMessage: error.message});
+            return;
+        }
         res.status(error.statusCode).json({message:error.message})
     }
 }
@@ -52,13 +57,29 @@ exports.verifyUser = async(req,res)=>{
         if(result){
             const authTokens = await redirectToLoginService(data.email);
             const {IdToken, ... accessTokens} = authTokens;
-            res.cookie("idToken", IdToken,{httpOnly: true, sameSite: "lax", expires: dayUnix});
+            res.cookie("idToken", IdToken,{httpOnly: true, sameSite: "lax", maxAge: expirationTime});
             console.log("User Verified", accessTokens);
             res.json({accessTokens});
         }
     } catch (error) {
+        if(error.code === 'ExpiredCodeException'){
+            res.status(203).json({ErrorMessage: error.message});
+            return;
+        }
         console.log("Confirmation Code Incorrect:", error);
         res.status(error.statusCode).json({message: error.message});        
+    }
+}
+
+exports.resendVerificationCode = async (req,res)=>{
+    if(compare(req.body.request_type, RequestType.RESEND_VERIFICATION,res)) return;
+
+    try {
+        const {CodeDeliveryDetails} = await newSignupCode(req.body.data.email);
+        res.status(200).json({verified: CodeDeliveryDetails.Destination});
+    } catch (error) {
+        console.log("ERROR RESENDING VERIFICATION CODE", error);
+        res.send(error);
     }
 }
 

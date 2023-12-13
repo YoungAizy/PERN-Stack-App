@@ -1,12 +1,13 @@
 const express = require("express");
 const { register, signIn, deleteUser, update, signOut, 
     verifyUser, verifyUpdate, 
-    forgotPassword, passwordReset, getUser, refreshToken } = require("../controllers/AuthController.js");
+    forgotPassword, passwordReset, getUser, refreshToken, resendVerificationCode } = require("../controllers/AuthController.js");
 const {verifyToken} = require("../middleware/verifyToken.js");
 const AuthRouter = express.Router();
 
 AuthRouter.post('/registration',register);
 AuthRouter.post('/registration/verify', verifyUser);
+AuthRouter.post('/registration/verify/resend', resendVerificationCode);
 AuthRouter.post('/login',signIn);
 AuthRouter.post('/token/refresh', refreshToken);
 // AuthRouter.get('/user',getUser);

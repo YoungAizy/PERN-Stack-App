@@ -1,6 +1,7 @@
 exports.RequestType = {
     REGISTRATION: "new_user",
     VERIFICATION: "verify",
+    RESEND_VERIFICATION: "verify_resend",
     LOGIN: "login",
     REFRESH: "refresh_token",
     GET: "get_user",

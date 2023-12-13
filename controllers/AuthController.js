@@ -222,10 +222,11 @@ exports.passwordReset = async (req,res)=>{
 exports.signOut = async (req,res)=>{
     if(compare(req.body.request_type, RequestType.LOGOUT,res)) return;
 
-    const {refreshToken} = req.body;
+    const {refreshToken} = req.body.data;
 
     try {
         const result = await signOut(refreshToken);
+        res.clearCookie('idToken');
         result && res.send(result);
     } catch (error) {
         console.log("Logout Error:", error);

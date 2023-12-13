@@ -32,8 +32,15 @@ function NewUserForm({onPageChange, setBackgroundHeight, dispatch, signupEmail})
         setTransferingData(true);
         const user = await authApi.createUser(body);
         console.log("New User:",user); //check result.statusText == "OK" and result.status == 200
+        if(user.data.ErrorMessage) {
+          console.log(user.data.ErrorMessage);
+          alert(user.data.ErrorMessage);
+          setTransferingData(false);
+          return;
+        }
+        if(user.status === 200) console.log("OKAY");
       } catch (error) {
-        console.log(error);
+        console.log("Something went wrong.",error);
         setTransferingData(false);
         return;
       }

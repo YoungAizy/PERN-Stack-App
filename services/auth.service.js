@@ -2,13 +2,10 @@ require('dotenv').config();
 const{ CognitoIdentity } = require("../config/cognito.js");
 
 
-exports.SignIn = async(email,password)=>{
+exports.Authenticate = async(authFlow, authParams)=>{
     const params = {
-        AuthFlow: "USER_PASSWORD_AUTH",
-        AuthParameters:{
-            "USERNAME": email,
-            "PASSWORD": password
-        },
+        AuthFlow: authFlow,
+        AuthParameters: authParams,
         ClientId: process.env.COGNITO_POOL_CLIENT_ID,
     }
 

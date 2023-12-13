@@ -1,7 +1,7 @@
 // import User from '../models/User.model.js';
 const {RequestType} = require('../utils/constants/RequestType.js');
 const {compare} = require('../utils/checkRequestType.js');
-const {SignIn} = require('../services/signin.service.js');
+const {Authenticate} = require('../services/auth.service.js');
 const {getUserAttr} = require('../services/getUserAttr.service.js');
 const {signUp} = require('../services/signup.service.js');
 const {verifyAccount} = require('../services/verifyAccount.js');
@@ -66,8 +66,7 @@ exports.signIn = async (req,res)=>{
     if(compare(req.body.request_type, RequestType.LOGIN,res)) return;
     
     try {
-        
-        const authTokens = await SignIn("USER_PASSWORD_AUTH",{ "USERNAME": req.body.data.email, "PASSWORD": req.body.data.password});
+        const authTokens = await Authenticate("USER_PASSWORD_AUTH",{ "USERNAME": req.body.data.email, "PASSWORD": req.body.data.password});
         const {IdToken, ...accessTokens } = authTokens;
         console.log("LOGIN:", IdToken);
         res.cookie("idToken", IdToken,{httpOnly: true, sameSite: "lax", maxAge: expirationTime});
@@ -85,7 +84,7 @@ exports.refreshToken = async (req,res)=>{
     const {refreshToken} = req.body;
 
     try {
-        const newTokens = await SignIn("REFRESH_TOKEN_AUTH", {"REFRESH_TOKEN": refreshToken});
+        const newTokens = await Authenticate("REFRESH_TOKEN_AUTH", {"REFRESH_TOKEN": refreshToken});
         console.log("newTokens",newTokens);
         const {IdToken, ...accessToken} = newTokens;
         res.cookie("idToken". IdToken, {httpOnly: true, sameSite: "lax", maxAge: expirationTime});

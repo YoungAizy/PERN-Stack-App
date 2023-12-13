@@ -5,6 +5,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan'
 import profileRouter from './routes/index.js';
+import cookieParser from 'cookie-parser';
 import 'dotenv/config'
 
 const app = express();
@@ -14,17 +15,8 @@ app.use(helmet())
 app.use(express.json());
 app.use(express.urlencoded({extended: false}))
 app.use(hpp());
+app.use(cookieParser())
 app.use(morgan('dev'))
-
-// app.use(express.static("./public"))
-// app.use(expressjwt({
-//     secret: JwksRsa.expressJwtSecret({
-//         jwksUri: "http://localhost:5079/.well-known/jwks.json",
-//         cache: true,
-//         rateLimit: true
-//     }),
-//     algorithms: ["RS256"]
-// }).unless({path:['/']}))
 
 
 app.use('/api/v1/profile', profileRouter);

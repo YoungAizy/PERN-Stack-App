@@ -1,29 +1,40 @@
-// import fs from 'fs';
-// import path from 'path';
-// import { fileURLToPath } from 'url';
-// import jwt from 'jsonwebtoken'
+require('dotenv').config()
+const jwt = require('jsonwebtoken');
+const jwksClient = require('jwks-rsa');
 
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = path.dirname(__filename);
 
-// const publicKey = fs.readFileSync(path.resolve( __dirname, '../certs/public-key.pem'));
+exports.verifyToken = async (req, res, next) => {
+    const bearerHeader = req.headers['authorization'];
+    const parts = bearerHeader.split(' ');
+    const token = parts[1];
+    
 
-exports.verifyToken = function verifyToken(req, res, next) {
-    // const bearerHeader = req.headers['authorization'];
-    // const parts = bearerHeader.split(' ');
-    // const token = parts[1]
-    // let email,userId;
-    // if (token != null) {
-    //     jwt.verify(token, publicKey, (err, user) => {
-    //         if (err) {
-    //             res.sendStatus(403)
-    //             return;
-    //         }
-    //         email = user.email;
-    //         userId = user.userId;
-    //     })
-    // }
-    // req.body.userId = userId;
-    // req.body.data.email = email;
-    next();
+    if (token != null) {
+        const decoded = jwt.decode(token, {complete: true});
+        
+        const client = jwksClient({
+            jwksUri: `https://cognito-idp.${process.env.AWS_REGION}.amazonaws.com/${process.env.COGNITO_USER_POOL_ID}/.well-known/jwks.json`,
+            cache: true,
+            rateLimit: true,
+        });
+
+
+        const kid = decoded.header.kid;
+        const key = await client.getSigningKey(kid);
+        const signingKey = key.getPublicKey();
+    
+        jwt.verify(token, signingKey, { algorithms: ['RS256'] }, (err,data)=>{
+            if(err) {
+                console.log("Error occured", err);
+                res.status(403).json({message: err.message}).end();
+                return;
+            };
+    
+            req.body.token = token;
+            next();
+        })
+    }else{
+        res.status(400).json({message: "Missing Access Token"});
+        return;
+    }
 }

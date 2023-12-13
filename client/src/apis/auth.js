@@ -1,7 +1,8 @@
 const axios = require('axios');
 
 const databinder = axios.create({
-    baseURL: "http://localhost:7009/api/v1/auth"
+    baseURL: "http://localhost:7009/api/v1/auth",
+    withCredentials: true
 });
 
 const authApi = {

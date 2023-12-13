@@ -1,7 +1,8 @@
 const axios = require('axios');
 
 const databinder = axios.create({
-    baseURL: "http://localhost:6001/api/v1/profile"
+    baseURL: "http://localhost:6001/api/v1/profile",
+    withCredentials: true
 });
 const profileApi= {
     async create(payload) {
@@ -10,11 +11,11 @@ const profileApi= {
         const result = await databinder.post('/create',payload);
         return result;
     },
-    async fetch(accessToken){
-        const result = await databinder.get(`/fetch?access_token=${accessToken}`);
+    async fetch(){
+        const result = await databinder.get(`/fetch`);
         return result;
     },//get request
-    async update(payload,token){
+    async update(payload){
         const result = await databinder.put('/update/',payload);
         return result;
     },//put request
@@ -22,8 +23,8 @@ const profileApi= {
         const result = databinder.put('/update/image', payload);
         return result;
     },
-    async delete(token){
-        const result = await databinder.delete(`/${token}`);
+    async delete(){
+        const result = await databinder.delete(`/delete`);
         return result;
     }//delete request
 }

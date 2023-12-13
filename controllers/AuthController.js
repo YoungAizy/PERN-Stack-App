@@ -15,6 +15,7 @@ const {deleteAccount} = require('../services/deleteAccount.service.js');
 const {redirectToLoginService} = require('../utils/redirectToLogin.js');
 const { unverifiedUsers } = require('../memory/signup_dictionary.js');
 const { newSignupCode } = require('../services/newSignupCode.service.js');
+const { sendTokens } = require('../utils/helper.js');
 
 const unixHour = 60000 * 60;
 const dayUnix = unixHour * 24;
@@ -88,15 +89,11 @@ exports.signIn = async (req,res)=>{
     
     try {
         const authTokens = await Authenticate("USER_PASSWORD_AUTH",{ "USERNAME": req.body.data.email, "PASSWORD": req.body.data.password});
-        const {IdToken, ...accessTokens } = authTokens;
-        console.log("LOGIN:", IdToken);
-        res.cookie("idToken", IdToken,{httpOnly: true, sameSite: "lax", maxAge: expirationTime});
-        res.json({accessTokens});
+        sendTokens(authTokens,res);
     } catch (error) {
         console.log("ERR",error);
         res.status(error.statusCode).json({message: error.message});
     }
-
 }
 
 exports.refreshToken = async (req,res)=>{
@@ -107,9 +104,7 @@ exports.refreshToken = async (req,res)=>{
     try {
         const newTokens = await Authenticate("REFRESH_TOKEN_AUTH", {"REFRESH_TOKEN": refreshToken});
         console.log("newTokens",newTokens);
-        const {IdToken, ...accessToken} = newTokens;
-        res.cookie("idToken". IdToken, {httpOnly: true, sameSite: "lax", maxAge: expirationTime});
-        res.json({accessToken})
+        sendTokens(newTokens,res);
     } catch (error) {
         console.log("Refresh Error:", error);
         res.status(error.statusCode).json({message: error.message});

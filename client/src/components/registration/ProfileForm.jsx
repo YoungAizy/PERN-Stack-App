@@ -11,7 +11,6 @@ import { profileRequests } from '../../utils/requestTypes';
 import { profileSchema } from '../../utils/requestObjects';
 import profileApi from '../../apis/profile';
 import { useDispatch } from 'react-redux';
-import getAccessToken from '../../utils/getAccessToken';
 import { saveProfileDetails } from '../../store/actions/profileActions';
 
 function ProfileForm() {
@@ -23,7 +22,7 @@ function ProfileForm() {
   const [username,setUsername] = useState("");
   const [city, setCity] = useState("Cape Town");
   const [dob,setDob] = useState('');
-  const [gender,setGender] = useState("F");
+  const [gender,setGender] = useState("O");
   //companyName, companyPosition(select)
   const [companyName,setCompanyName] = useState('');
   const [position,setPosition] = useState('');
@@ -38,24 +37,27 @@ function ProfileForm() {
 
     console.log("birthday", dob);
     const dateOfBirth = dob || "2015-09-28";
-    const userRole = isReviewer ? "reviewer":"restaurateur";
+    const userType = isReviewer ? "reviewer":"restaurateur";
     
-    const schema = profileSchema(username,gender,dateOfBirth,city,userRole,companyName,position);
+    const schema = profileSchema(username,gender,dateOfBirth,city,userType,companyName,position);
     const data = requestBody(profileRequests.CREATE, schema);
-    
-    data.accessToken = getAccessToken();
     
     const form = new FormData();
     form.append('avatar', picture);
     form.append('data',JSON.stringify(data));
     try {
       setTransferingData(true);
-      const {data} = await profileApi.create(form);
+      const {data, status} = await profileApi.create(form);
       console.log("Profile Reg Successful", data);
       setTransferingData(false);
-      if(data.data.createdAt){
-        dispatch(saveProfileDetails(data.data));
-        history.push('/manage');
+      if(status === 200 && data.createdAt){
+        dispatch(saveProfileDetails({data}));
+        localStorage.setItem("user_type", data.user_type);
+        if(data.user_type === "reviewer") {
+          history.push('/dashboard/notifications');
+        }else{
+          history.push('/dashboard/manage');
+        }
       }
     } catch (error) {
       setTransferingData(false);
@@ -68,7 +70,7 @@ function ProfileForm() {
         <form action="" method="post" className="container mb-4 login-page">
             <Avatar initials={"AM"} bg_color={"orange"} imgId={'reg_img'} setPictureData={setPictureData}/>
             <FloatingInputField value={username} label={"Username"} placeholder={"username"} inputType={"text"} inputId={"reg_username"} onInputChanged={setUsername} />
-            <GenderOptions onGenderChange={setGender} />
+            <GenderOptions val={gender} onGenderChange={setGender} />
             <DOB monthCol='col-3' yearCol='col-3' setDOB={setDob} />
             <DoubleSwitch LeftTag={'Reviewer'} RightTag={'Restaurateur'} leftClick={setIsReviewer} rightClick={setIsReviewer}/>
             {!isReviewer && <AdminFields companyName={companyName} setCompanyName={setCompanyName} position={position} setPosition={setPosition} /> }

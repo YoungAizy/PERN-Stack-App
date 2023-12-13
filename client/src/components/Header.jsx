@@ -65,7 +65,7 @@ const LoggedInBtns = ({ history}) => {
 const SignInButtons = ({ setShow, history}) => {
     return (
         <div style={{ float: "right" }}>
-            <nav className="signin bg-primary"><button onClick={() => history.push('/signup')} >Signup</button></nav>|
+            <nav className="signin bg-primary"><button onClick={() => history.push('/registration')} >Signup</button></nav>|
             <nav className="signin bg-primary"><button onClick={() => setShow(true)}>Login</button></nav>
         </div>
     )

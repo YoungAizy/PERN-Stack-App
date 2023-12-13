@@ -14,17 +14,18 @@ import RegistrationPage from './pages/RegistrationPage';
 const queryClient = new QueryClient();
 
 const App = ()=> {
+
   return (
     <QueryClientProvider client={queryClient} >
     <div>
         <Router>
           <Route exact path="/" component={Landing} />
-          <Route exact path="/signup" component={RegistrationPage}/>
-          <ProtectedRoute exact path="/dashboard" component={Home}/>
-          <Route path="/signin" component={ SignIn}/>
+          <Route exact path="/registration" component={RegistrationPage}/>
+          <Route exact path="/signin" component={ SignIn}/>
           <Route exact path="/restaurant/:id" component={ DetailsPage }/>
           <Route exact path="/restaurant/:id/update" component={ UpdatePage }/>
-          <Route exact path="/manage" component={DashboardPage}/>
+          <Route exact path="/dashboard/manage" component={DashboardPage}/>
+          <Route exact path="/dashboard/:page" component={Home}/>
         </Router>
     </div>
     </QueryClientProvider>

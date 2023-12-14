@@ -41,6 +41,7 @@ function RegistrationPage() {
 
     useEffect(()=>{
       console.log(parseInt(query.get("page")))
+      query.get("page") === '2' && setHeight('100vh');
       setPage(parseInt(query.get("page")))
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])

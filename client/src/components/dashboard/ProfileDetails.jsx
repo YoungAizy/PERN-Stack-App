@@ -9,6 +9,7 @@ import { updateProfile } from '../../utils/requestObjects';
 import requestBody from '../../utils/requestBody';
 import { profileRequests } from '../../utils/requestTypes';
 import profileApi from '../../apis/profile';
+import { saveProfileDetails } from '../../store/actions/profileActions';
 
 const ProfileDetails = ({ isReviewer = false, inputClasses,dobClasses, genderClasses}) => {
     const dispatch = useDispatch();
@@ -42,20 +43,15 @@ const ProfileDetails = ({ isReviewer = false, inputClasses,dobClasses, genderCla
         console.log(dob)
         return;
       }
-      
       console.log("updating....")
 
       const schema = updateProfile(username,city,dob,gender);
       const body = requestBody(profileRequests.UPDATE, schema);
 
-      const tokens = JSON.parse(localStorage.getItem("tokens"));
-      console.log("tokens:", tokens);
-      const accessToken = tokens.AccessToken;
-      body.accessToken = accessToken;
-
       try {
-        const result = await profileApi.update(body);
-        console.log(result);
+        const {data} = await profileApi.update(body);
+        console.log(data);
+        dispatch(saveProfileDetails({data: data.data}));
       } catch (error) {
         console.log(error);
       }
@@ -68,8 +64,8 @@ const ProfileDetails = ({ isReviewer = false, inputClasses,dobClasses, genderCla
           <Avatar initials={"AMD"} bg_color={"orange"} />
           <TextInput label="Username" inputId="username" val={username} inputType="text" onChangeEvent={trackChanges("username")} fieldName="user_name" additionalClasses={inputClasses} />
           <TextInput label={"City"} inputId={"city"} val={city} inputType={"text"} fieldName={"city"} onChangeEvent={trackChanges("city")} additionalClasses={inputClasses} />
-          <GenderOptions onGenderChange={setGender} val={profile.gender} optionalClasses={genderClasses} />
-          <DOB setDOB={setDob} parentStyling={dobClasses && dobClasses.parent} 
+          <GenderOptions onGenderChange={setGender} val={gender} optionalClasses={genderClasses} />
+          <DOB setDOB={setDob} dob={dob} parentStyling={dobClasses && dobClasses.parent} 
             yearCol={dobClasses && dobClasses.year} monthCol={dobClasses && dobClasses.month} dayCol={dobClasses && dobClasses.day} />
           <div className={`col-6 text-center mt-4 ${inputClasses}`}>
             <Button btnType={"submit"} text={"update"} onBtnClick={onUpdateUser}/>

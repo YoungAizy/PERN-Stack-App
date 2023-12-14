@@ -10,17 +10,17 @@ export default class ProfileService{
         this.profileRepo = profileRepo;
     }
 
-    async createProfile(req){
-        console.log("service:", req.file);
-        const {data,request_type, accessToken} = req.body;
-        console.log(req.body);
+    async createProfile(body,file,userid){
+        console.log("service:", file);
+        const {data} = body;
+        console.log(data);
         const payload = mapNewkeys(data);
+        payload.userid = userid;
         validateProfile(payload);
 
-        payload.userid = await getUserId({body:{accessToken, request: request_type}});
         console.log("New Payload:", payload)
         
-        if(req.file) payload.img_url = await uploadImage(req.file, payload.userid);
+        if(file) payload.img_url = await uploadImage(file, payload.userid);
         
         const response= {}
         
@@ -40,6 +40,7 @@ export default class ProfileService{
         console.log(id)
 
         const profile = await this.profileRepo.getProfile(id);
+        console.log(profile)
         return profile;
 
     }

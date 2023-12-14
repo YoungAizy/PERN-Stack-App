@@ -1,4 +1,4 @@
-require('dotenv').config()
+import 'dotenv/config'
 import jwt from 'jsonwebtoken';
 import jwksClient from 'jwks-rsa';
 import requestType from '../utils/requestType.js';
@@ -8,10 +8,11 @@ export const getUserId = async(req,res,next)=>{
     // abort function if request is not from the registration process
     // 
 
-    const token = req.cookies.idToken;
+    console.log("COOKIES:",req.cookies)
+    const token = req.cookies?.idToken;
 
     let userId;
-    if (token != null) {
+    if (token) {
         const decoded = jwt.decode(token, {complete: true});
         
         const client = jwksClient({
@@ -38,7 +39,7 @@ export const getUserId = async(req,res,next)=>{
         return;
     }
     
-    if((req.body.request === requestType.CREATE)) return data[0].Value;
+    // if((req.body.request === requestType.CREATE)) return data[0].Value;
     req.body.userid = userId;
     next();
 }

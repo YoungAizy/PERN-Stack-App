@@ -1,6 +1,7 @@
 export const userRequests = {
     REGISTRATION: "new_user",
     VERIFICATION: "verify",
+    RESEND_VERIFICATION: "verify_resend",
     LOGIN: "login",
     GET: "get_user",
     UPDATE: "update_user",

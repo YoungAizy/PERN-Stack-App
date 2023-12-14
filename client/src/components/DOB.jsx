@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Months from '../utils/Months';
-import { useSelector } from 'react-redux';
 
-const DOB = ({setDOB, dayCol = "col-2", monthCol = "col-2", yearCol= "col-2", parentStyling}) => {
-    const profile = useSelector(state => state.profile.profile);
+const DOB = ({setDOB, dayCol = "col-2", monthCol = "col-2", yearCol= "col-2", parentStyling, dob}) => {
+
     const [days,setDays] = useState([1])
-    const [dayOfBirth,setDayOfBirth] = useState(profile.d_o_b.slice(-2));
-    const [_month,setMonth] = useState(profile.d_o_b.slice(5,7));
+    const [dayOfBirth,setDayOfBirth] = useState(dob?.slice(-2) || '30' );
+    const [_month,setMonth] = useState(dob?.slice(5,7) || '01');
     const [years,setYears] = useState([2023]);
-    const [selectedYear, setYear] = useState(profile.d_o_b.slice(0,4));
+    const [selectedYear, setYear] = useState(dob?.slice(0,4) || '2000' );
 
     const populateDays = ()=>{
         const _days = Months.filter(month => month.val === _month);

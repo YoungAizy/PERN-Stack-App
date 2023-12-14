@@ -48,14 +48,18 @@ function ProfileForm() {
     try {
       setTransferingData(true);
       const {data, status} = await profileApi.create(form);
-      console.log("Profile Reg Successful", data);
+      console.log("Profile Reg Successful", data.data);
+      console.log("Status", status);
       setTransferingData(false);
-      if(status === 200 && data.createdAt){
-        dispatch(saveProfileDetails({data}));
-        localStorage.setItem("user_type", data.user_type);
+      if(status === 200 && data.data.createdAt){
+        dispatch(saveProfileDetails({data: data.data}));
+        localStorage.setItem("user_type", data.data.user_type);
+        console.log("hello")
         if(data.user_type === "reviewer") {
-          history.push('/dashboard/notifications');
+          console.log("is reviewer");
+          history.push('/home/notifications');
         }else{
+          console.log("ndiyahamba")
           history.push('/dashboard/manage');
         }
       }

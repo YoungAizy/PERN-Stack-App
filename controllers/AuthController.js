@@ -14,6 +14,8 @@ const {deleteAccount} = require('../services/deleteAccount.service.js');
 
 const {redirectToLoginService} = require('../utils/redirectToLogin.js');
 const { unverifiedUsers } = require('../memory/signup_dictionary.js');
+const { newSignupCode } = require('../services/newSignupCode.service.js');
+const { sendTokens } = require('../utils/helper.js');
 
 const unixHour = 60000 * 60;
 const dayUnix = unixHour * 24;
@@ -35,6 +37,10 @@ exports.register = async(req,res)=>{
       res.send(result)
     } catch (error) {
         console.log("Signup Error:",error);
+        if(error.code === 'UsernameExistsException') {
+            res.status(203).json({ErrorMessage: error.message});
+            return;
+        }
         res.status(error.statusCode).json({message:error.message})
     }
 }
@@ -52,13 +58,31 @@ exports.verifyUser = async(req,res)=>{
         if(result){
             const authTokens = await redirectToLoginService(data.email);
             const {IdToken, ... accessTokens} = authTokens;
-            res.cookie("idToken", IdToken,{httpOnly: true, sameSite: "lax", expires: dayUnix});
+            res.cookie("idToken", IdToken,{httpOnly: true, sameSite: "lax", maxAge: expirationTime});
             console.log("User Verified", accessTokens);
             res.json({accessTokens});
         }
     } catch (error) {
+        if(error.code === 'ExpiredCodeException'){
+            res.status(203).json({ErrorMessage: error.message});
+            return;
+        }
         console.log("Confirmation Code Incorrect:", error);
         res.status(error.statusCode).json({message: error.message});        
+    }
+}
+
+exports.resendVerificationCode = async (req,res)=>{
+    if(compare(req.body.request_type, RequestType.RESEND_VERIFICATION,res)) return;
+
+    console.log("req.body.data", req.body .data);
+
+    try {
+        const {CodeDeliveryDetails} = await newSignupCode(req.body.data.email);
+        res.status(200).json({verified: CodeDeliveryDetails.Destination});
+    } catch (error) {
+        console.log("ERROR RESENDING VERIFICATION CODE", error);
+        res.send(error);
     }
 }
 
@@ -67,15 +91,29 @@ exports.signIn = async (req,res)=>{
     
     try {
         const authTokens = await Authenticate("USER_PASSWORD_AUTH",{ "USERNAME": req.body.data.email, "PASSWORD": req.body.data.password});
-        const {IdToken, ...accessTokens } = authTokens;
-        console.log("LOGIN:", IdToken);
-        res.cookie("idToken", IdToken,{httpOnly: true, sameSite: "lax", maxAge: expirationTime});
-        res.json({accessTokens});
+        sendTokens(authTokens,res);
     } catch (error) {
-        console.log("ERR",error);
-        res.status(error.statusCode).json({message: error.message});
+        switch (error.code) {
+            case "UserNotConfirmedException":
+                unverifiedUsers[req.body.data.email] = req.body.data.password;
+                await newSignupCode(req.body.data.email);
+                res.status(203).json({isVerified: false});
+                break;
+            case "UserNotFoundException":
+                res.status(203).json({notFound: true});
+                break;
+            case "InternalErrorException":
+                res.status(error.statusCode).json({internalError: true});
+                break;
+            case "NotAuthorizedException":
+                res.status(203).json({unAuthorized: true, message: error.message});
+                break;
+            default:
+                console.log("ERR",error);
+                res.status(error.statusCode).json({message: error.message});
+                break;
+        }
     }
-
 }
 
 exports.refreshToken = async (req,res)=>{
@@ -86,9 +124,7 @@ exports.refreshToken = async (req,res)=>{
     try {
         const newTokens = await Authenticate("REFRESH_TOKEN_AUTH", {"REFRESH_TOKEN": refreshToken});
         console.log("newTokens",newTokens);
-        const {IdToken, ...accessToken} = newTokens;
-        res.cookie("idToken". IdToken, {httpOnly: true, sameSite: "lax", maxAge: expirationTime});
-        res.json({accessToken})
+        sendTokens(newTokens,res);
     } catch (error) {
         console.log("Refresh Error:", error);
         res.status(error.statusCode).json({message: error.message});
@@ -206,10 +242,11 @@ exports.passwordReset = async (req,res)=>{
 exports.signOut = async (req,res)=>{
     if(compare(req.body.request_type, RequestType.LOGOUT,res)) return;
 
-    const {refreshToken} = req.body;
+    const {refreshToken} = req.body.data;
 
     try {
         const result = await signOut(refreshToken);
+        res.clearCookie('idToken');
         result && res.send(result);
     } catch (error) {
         console.log("Logout Error:", error);

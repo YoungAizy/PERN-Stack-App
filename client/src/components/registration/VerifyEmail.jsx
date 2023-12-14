@@ -9,7 +9,7 @@ import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 
 const VerifyEmail = ({onPageChange, setBackgroundHeight, dispatch}) => {
     
-    const email = useSelector(state=> state.user.email);
+    const email = useSelector(state=> state.user.verificationEmail);
     const [verificationCode, setVerificationCode] = useState("");
     const [invalid, setInvalid] = useState(false);
     const history = useHistory();
@@ -17,8 +17,7 @@ const VerifyEmail = ({onPageChange, setBackgroundHeight, dispatch}) => {
     // if the email to be verified is not stored in redux, 
     // reroute user to login page to ptompt for an email and reroute them back for verification
     if(!email){
-        history.push('/login');
-        return;
+        history.push('/signin');
     }
     
     const getNewCode = async e=>{

@@ -22,7 +22,8 @@ export const PROFILE ={
 }
 
 export const USER_TYPES = {
-    STORE_VERIFICATION_EMAIL: "REGISTRATION/ temporarily store verification email"
+    STORE_VERIFICATION_EMAIL: "REGISTRATION/ temporarily store verification email",
+    SAVE_USER_DETAILS: "store user information"
 }
 
 export const REVIEWER_TYPES = {

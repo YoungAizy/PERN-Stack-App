@@ -24,6 +24,10 @@ app.post('/api/v1/auth/test',(req,res)=>{
     res.send("Test 1 hit")
 })
 
+app.get('/',(req,res)=>{
+    res.send('Hello from home route')
+})
+
 app.get('/test2', (req,res)=>{
     // var pem = fs.readFileSync('./private-key.pem',"utf8");
     // const user = {name: "ayanda"}

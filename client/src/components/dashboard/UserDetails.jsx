@@ -1,23 +1,29 @@
 import React, { useState } from 'react'
 import { TextInput } from '../styled/TextInput'
 import Button from '../styled/Button';
-import PasswordConfirmationModal from '../PasswordConfirmationModal';
+// import PasswordConfirmationModal from '../PasswordConfirmationModal';
+import getAccessToken from '../../utils/getAccessToken';
 import UpdatePasswordModal from '../UpdatePasswordModal';
 import authApi from '../../apis/auth';
 import requestBody from '../../utils/requestBody';
 import { userRequests } from '../../utils/requestTypes';
+import { useSelector } from 'react-redux';
 
 const UserDetails = ({ isReviewer, inputClasses}) => {
-  const [firstName, setFirstName] = useState("");
-  const [surname, setSurname] = useState("");
+  const User = useSelector(state => state.user.user);
+
+  const [firstName, setFirstName] = useState(User.firstname);
+  const [surname, setSurname] = useState(User.surname);
   const [showNameUpdate, setShowNameUpdate] = useState(false);
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(User.email);
   const [showEmailUpdate,setShowEmailUpdate] = useState(false)
-  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  // const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
 
-  const onNameChange = value =>{
-    // setFullName(value);
+  console.log("USER", User);
+
+  const onNameChange = (value,method) =>{
+    method(value);
     setShowNameUpdate(true);
   }
 
@@ -39,7 +45,15 @@ const UserDetails = ({ isReviewer, inputClasses}) => {
     setShowEmailUpdate(true);
   }
 
-  const onEmailUpdate = ()=>{
+  const onEmailUpdate = async()=>{
+    const accessToken = getAccessToken();
+    const body = requestBody(userRequests.updateName, {firstname: firstName, surname});
+    try {
+      const {data} = await authApi.updateUser(body, accessToken);
+      console.log(data);
+    } catch (error) {
+      console.log(error)
+    }
 
   }
   
@@ -58,8 +72,8 @@ const UserDetails = ({ isReviewer, inputClasses}) => {
         {!isReviewer && <h4 >User:</h4>}
         <div className='d-flex flex-row align-items-center'>
           <div className={`d-flex ${inputClasses}`}>
-              <TextInput value={firstName} label={"First Name(s)"} inputType="text" inputId="update_firstName" placeholder='John Doe' onChangeEvent={setFirstName}/>
-              <TextInput value={surname} label={"Last Name"} inputType="text" inputId="update_surname" placeholder='Smith' onChangeEvent={setSurname}/>
+              <TextInput val={firstName} label={"First Name(s)"} inputType="text" inputId="update_firstName" placeholder='John Doe' onChangeEvent={(val)=>onNameChange(val,setFirstName)}/>
+              <TextInput val={surname} label={"Last Name"} inputType="text" inputId="update_surname" placeholder='Smith' onChangeEvent={(val)=>onNameChange(val,setSurname)}/>
           
           </div>
           {showNameUpdate && <UpdateBtn updateClick={onNameUpdate} />}

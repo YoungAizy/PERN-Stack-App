@@ -151,8 +151,8 @@ exports.getUser = async (req,res)=>{
 exports.update = async(req,res)=>{
     if(compare(req.body.request_type.slice(0,6), RequestType.UPDATE.slice(0,6),res)) return;
 
-    const accessToken = req.body.token;
-    const {data} = req.body;
+    // const accessToken = req.body.token;
+    const {data, token: accessToken} = req.body;
     console.log(accessToken)
 
     const attr = []
@@ -180,9 +180,17 @@ exports.update = async(req,res)=>{
             attr.push({Name: "email", Value: data.email});
             break;
         case RequestType.updatePassword:
-            console.log("update password")
-            result = await updatePassword(data.oldPassword, data.newPassword, accessToken);
-            result && res.send(result);
+            console.log("update password");
+            try {
+                result = await updatePassword(data.oldPassword, data.newPassword, accessToken);
+                result && res.send(result);
+            } catch (error) {
+                console.log("password update error:", error)
+                if(error.code === "NotAuthorizedException"){
+                    res.status(203).json({message: error.message, unAuthorized: true});
+                    return;
+                }
+            }
             return;
     }
     try {
@@ -191,6 +199,10 @@ exports.update = async(req,res)=>{
         result && res.json({data:result})//TODO: check result.rowCount == 1
     } catch (error) {
         console.log("Update Error:", error);
+        if(error.code === "NotAuthorizedException"){
+            res.status(203).json({message: error.message});
+            return;
+        }
         res.status(error.statusCode).json({message: error.message});
     }
 }

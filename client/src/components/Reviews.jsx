@@ -3,7 +3,7 @@ import StarRating from './StarRating'
 
 function Reviews({ reviews }) {
     return (
-        <div className="row row-cols-3 mb-2 m-3">
+        <div className="d-flex justify-content-center row row-cols-3 mb-2 m-3 ">
             {reviews && reviews.map((review) => {
                 return (
                     <div key={review.id} className="card text-white bg-primary mb-3" style={{ maxWidth: "30%", margin: "8px" }}>

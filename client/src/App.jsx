@@ -23,9 +23,9 @@ const App = ()=> {
           <Route exact path="/registration" component={RegistrationPage}/>
           <Route exact path="/signin" component={ SignIn}/>
           <Route exact path="/restaurant/:id" component={ DetailsPage }/>
-          <Route exact path="/restaurant/:id/update" component={ UpdatePage }/>
-          <Route exact path="/dashboard/manage" component={DashboardPage}/>
-          <Route exact path="/home/:page" component={Home}/>
+          <ProtectedRoute exact path="/restaurant/:id/update" component={ UpdatePage }/>
+          <ProtectedRoute exact path="/dashboard/manage" component={DashboardPage}/>
+          <ProtectedRoute exact path="/home/:page" component={Home}/>
         </Router>
     </div>
     </QueryClientProvider>

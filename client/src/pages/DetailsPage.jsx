@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
-import AddReview from '../components/addReview';
+import AddReview from '../components/AddReview';
 import Reviews from '../components/Reviews';
 import StarRating from '../components/StarRating';
 import { useSelector, useDispatch } from 'react-redux';
@@ -50,8 +50,8 @@ const DetailsPage = () => {
     const fetchData = async () => {
         const { data } = await _public.singlePartial(id);
         console.log(data)
-        dispatch(addSelectedData({data:data.restaurant}))
-        dispatch(saveSelectedRestaurantReviews({data:data.reviews}))
+        dispatch(addSelectedData({data:data.restaurant}));
+        dispatch(saveSelectedRestaurantReviews({data:data.reviews}));
         // const type = data.data.restaurant.mimetype;
         // const buffer = data.data.restaurant.pic && Buffer.from(data.data.restaurant.pic).toString("base64");
         // data.data.restaurant.pic && setImgSrc(`data:${type};base64, ${buffer}`);

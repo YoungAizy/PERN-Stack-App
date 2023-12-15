@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import profileApi from '../apis/profile';
 import { saveProfileDetails } from '../store/actions/profileActions';
 import Header from '../components/Header';
+import { saveUser } from '../store/actions/userActions';
 
 const myStyle= {
     height: "100vh"
@@ -49,7 +50,8 @@ export default function DashboardPage(){
             try {
                 const {data} = await profileApi.fetch();
                 console.log("Fetch results", data);
-                dispatch(saveProfileDetails({data}));
+                dispatch(saveProfileDetails({data:data.profile}));
+                dispatch(saveUser({data:data.user}));
             } catch (error) {
                 console.log("Fetch Error:",error);
             }

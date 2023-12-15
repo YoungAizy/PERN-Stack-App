@@ -55,7 +55,7 @@ function ProfileForm() {
         dispatch(saveProfileDetails({data: data.data}));
         localStorage.setItem("user_type", data.data.user_type);
         console.log("hello")
-        if(data.user_type === "reviewer") {
+        if(data.data.user_type === "reviewer") {
           console.log("is reviewer");
           history.push('/home/notifications');
         }else{

@@ -33,13 +33,16 @@ export const getUserId = async(req,res,next)=>{
             };
     
             userId = data['custom:userid'];
-        })
+            req.body.user = {email: data.email, firstname: data.given_name, surname: data.family_name};            }
+        //     if((req.body.request === requestType.GET)){
+        // }
+        )
     }else{
         res.status(400).json({message: "Missing Access Token"});
         return;
     }
     
-    // if((req.body.request === requestType.CREATE)) return data[0].Value;
+        
     req.body.userid = userId;
     next();
 }

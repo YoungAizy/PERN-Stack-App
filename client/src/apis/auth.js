@@ -27,7 +27,7 @@ const authApi = {
         return result;
     },
     async updateUser(payload,accessToken) {
-        databinder.defaults.headers.common['Authorization'] = accessToken;
+        databinder.defaults.headers.common['Authorization'] = "Bearer " + accessToken;
         const result = await databinder.patch('/update',payload);
         return result;
     },

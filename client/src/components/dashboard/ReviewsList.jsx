@@ -14,7 +14,7 @@ const ReviewsList = ({reviewer, reviews}) => {
                         <th>review</th>
                         <th>rating</th>
                         <th>popularity</th>
-                        {reviewer ? <><th scope="col">visit page</th><th scope="col">delete</th></> :
+                        {reviewer ? <><th scope="col">visit page</th><th scope="col-1">X</th></> :
                                 <th scope="col">Posted by</th>}
                     </tr>
                 </thead>

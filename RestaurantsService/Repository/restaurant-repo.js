@@ -5,39 +5,45 @@ const client = db.getConnection();
 
 class Repository{
 
-
-    async save(data,cb){
-        try {
-            const result = await client.query(Query.add,data);
-            cb(null,result);
-        } catch (error) {
-            console.log("ERROR OCCURED: ----",error)
-            cb(error);
-        }
+    async save(data){
+        const result = await client.query(Query.add,data);
+        console.log(result.rowCount)
+        return result;
     }
 
-    async retrieve(id,cb){
-        try {
-            const result = await client.query(Query.get,id);
-            cb(null,result);
-        } catch (error) {
-            console.log("ERROR OCCURED: ----",error)
-            cb(error);
-        }
+    async retrieveOne(id,cb){
+        const result = await client.query(Query.getOne, id);
+        return result;
     }
 
     async retrieveAll(limit_param){
-        try {
-            const result = await client.query(Query.getAll,limit_param)
-        } catch (error) {
-            console.log("ERROR OCCURED: ----",error);
-            cb(error);
-        }
+        const result = await client.query(Query.getAll,limit_param);
+        return result;
     }
     
-    async update(id){}
+    async update(payload){
+        const result = await client.query(Query.update,payload);
+        return result;
+    }
+
+    async updateLike(id,req_type){
+        let result;
+        switch (req_type) {
+            case "REMOVE":
+                result = await client.query(Query.removeLike,id);
+                break;
+        
+            default:
+                result = await client.query(Query.newLike,id);
+                break;
+        }
+        return result;
+    }
     
-    async delete(id){}
+    async delete(id){
+        const result = await client.query(Query.delete,id);
+        return result;
+    }
 }
 
 export default Repository;

@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import Postgres from 'pg';
 const { Pool } = Postgres;
 

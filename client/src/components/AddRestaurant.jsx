@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import UploadNotification from './UploadNotification'
 import { useDispatch } from 'react-redux';
+import { _protected as restaurantApi } from '../apis/restaurants';
+import { restaurantSchema } from '../utils/requestObjects';
+import { addToUserListings} from '../store/actions/restaurantActions';
 
 const AddRestaurant = () => {
     const dispatch = useDispatch()
@@ -24,26 +27,27 @@ const AddRestaurant = () => {
             setInvalid(false);
             form.append('image', picture);
             form.append('data',
-                JSON.stringify({ phone, website, name, location, price, about, user: "aizy", email, city }))
-            const response = "";
-            // addRestaurant(response.data.data)
+                JSON.stringify(restaurantSchema(name, location, price, about, "aizy", null, null, null, null, city)));
 
-            if (response) {
-            //console.log(response); 
+            const {data}=  await restaurantApi.post(form);
+            console.log("BACK",data);
+
+            
+            if (data.data) {
+            dispatch(addToUserListings({data: data.data}))
             setAbout("");
             setPhone("");
             setName("")
             setLocation("")
             setPrice("Price Range");
-            setWebsite()
-            setCity()
-            setEmail()
-                if (response.data.status === "success")
+            setWebsite("")
+            setCity("")
+            setEmail("")
+                if (data.successful)
                     setIsSuccessful(true);
                 else
                     setIsSuccessful(false);
-
-                notification.classList.add("show-notification");
+                    notification.classList.add("show-notification");
 
                 // After 3 seconds, remove the show class from DIV
                 setTimeout(() => notification.classList.remove("show-notification"), 3000);

@@ -16,8 +16,11 @@ const tabs = {display:'contents'}
 const SidePanel = ({ onPageChanged, active, setActive })=>{
     const history = useHistory()
 
-    const onTabChange = (tab)=>{
+    const onTabChange = (tab,qs)=>{
         setActive(tab);
+        history.push({
+            search: `?window=${qs}`
+          })
         onPageChanged(tab);
         return;
     }
@@ -60,15 +63,15 @@ const SidePanel = ({ onPageChanged, active, setActive })=>{
             </div>
             <div id='sidepanel' style={tabs}>
                 <button className={`d-block btn rounded-pill mt-3 ${active === pageList[1] ? 'btn-secondary' : 'btn-bg' }`}
-                onClick={()=> onTabChange(pageList[1])}><span><i className="fas fa-bell"></i></span> Notifications</button>
+                onClick={()=> onTabChange(pageList[1],'notifications')}><span><i className="fas fa-bell"></i></span> Notifications</button>
                 <button className={`d-block btn rounded-pill mt-4 ${active === pageList[2] ? 'btn-secondary' : 'btn-bg' }`}
-                onClick={()=> onTabChange(pageList[2])}><span><i className="fas fa-comment-alt"></i></span> Reviews</button>
+                onClick={()=> onTabChange(pageList[2],'reviews')}><span><i className="fas fa-comment-alt"></i></span> Reviews</button>
                 <button className={`d-block btn rounded-pill mt-4 ${active === pageList[3] ? 'btn-secondary' : 'btn-bg' }`}
-                onClick={()=>onTabChange(pageList[3]) }><span><i className="fas fa-folder"></i></span> My Listings</button>
+                onClick={()=>onTabChange(pageList[3],'listings') }><span><i className="fas fa-folder"></i></span> My Listings</button>
                 <button className={`d-block btn rounded-pill mt-4 ${active === pageList[4] ? 'btn-secondary' : 'btn-bg' }`}
-                onClick={()=> onTabChange(pageList[4])}><span><i className="fas fa-chart-line"></i></span> Analytics</button>
+                onClick={()=> onTabChange(pageList[4], 'analytics')}><span><i className="fas fa-chart-line"></i></span> Analytics</button>
                 <button className={`d-block btn rounded-pill mt-4 ${active === pageList[0] ? 'btn-secondary' : 'btn-bg' }`}
-                onClick={()=> onTabChange(pageList[0])}><span><i className="fas fa-user-alt"></i></span> Profile</button>
+                onClick={()=> onTabChange(pageList[0],'profile')}><span><i className="fas fa-user-alt"></i></span> Profile</button>
             </div>
             <button className='mt-5 btn btn-primary rounded-3 bg-dark logout-btn' onClick={signOut}>Logout</button>
             </div>

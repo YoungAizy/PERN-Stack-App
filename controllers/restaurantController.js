@@ -4,14 +4,19 @@ import constants from '../utils/constants/index.js';
 import { onError, onSucess } from '../utils/helper.js';
 
 export const addRestaurant = async (req,res)=>{
-    const payload = [req.body.name,req.body.addr_,req.body.price,req.body.description,req.body.created_by,req.body.tel,
-        req.body.email,req.body.web,req.body.city,req.body.tel_ext,req.body.img_url]
+    const body = JSON.parse(req.body.data)
+    let img_url;
+    const imageId = uuidv4();
+    if(file) img_url = await uploadImage(file, imageId);
+
+    const payload = [body.name,body.addr_,body.price,body.description,body.created_by,body.tel,
+        body.email,body.web,body.city,body.tel_ext, img_url, imageId];
     try {
         const result = await (new Repo()).save(payload);
         onSucess(res,result.rows[0]);
         
     } catch (error) {
-        onError(res,error,constants.upload)
+        onError(res,error,constants.upload);
     }
 }
 

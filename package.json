@@ -1,7 +1,7 @@
 {
-  "name": "server",
+  "name": "restaurants-service",
   "version": "1.0.0",
-  "description": "backend api for fetching restaurants",
+  "description": "backend microservice for doing crude operations on the restaurants database",
   "main": "index.js",
   "engines": {
     "node": "14.5.0",
@@ -9,7 +9,8 @@
   },
   "scripts": {
     "start": "node server",
-    "heroku-postbuild": "cd client && npm install && npm run build"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "nodemon main.js"
   },
   "keywords": [],
   "author": "",

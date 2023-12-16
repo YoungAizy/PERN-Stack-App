@@ -16,11 +16,11 @@ class RestauranstDB{
     connect(){
         try {
             this.#db = new Pool({
-                user: "postgres",
-                host: "localhost",
+                user: process.env.DB.USER,
+                host: process.env.DB_HOST,
                 port:5437,
-                database: 'test_db',
-                password: "restaurant_App"
+                database: process.env.DB_NAME,
+                password: Process.env.DB_PASSWORD
             })
             
         } catch (error) {

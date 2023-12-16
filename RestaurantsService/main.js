@@ -13,4 +13,6 @@ app.use('/api/v1/reviews', reviewsRouter);
 //TODO: create an auth middleware
 app.use('/api/v1/restaurants/protected', privateRouter);
 
-app.listen(8001, () => console.log(`Server is up and running on ${8001}`));
+const port = process.env.PORT;
+
+app.listen(port, () => console.log(`Server is up and running on ${port}`));

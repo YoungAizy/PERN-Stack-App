@@ -1,9 +1,14 @@
-const axios = require('axios');
+import axios from 'axios';
+// import jwtDecode from 'jwt-decode';
+import getAccessToken from '../utils/getAccessToken';
 
+const accessToken = getAccessToken();
 const databinder = axios.create({
     baseURL: "http://localhost:7009/api/v1/auth",
-    withCredentials: true
+    withCredentials: true,
+    headers: {Authorization: "Bearer " + accessToken || ""}
 });
+console.log("oop", accessToken);
 
 const authApi = {
     async createUser(payload) {
@@ -26,8 +31,19 @@ const authApi = {
         const result = await databinder.get('/account');
         return result;
     },
-    async updateUser(payload,accessToken) {
-        databinder.defaults.headers.common['Authorization'] = "Bearer " + accessToken;
+    async updateUser(payload) {
+        // databinder.defaults.headers.common['Authorization'] = "Bearer " + accessToken;
+        console.log(payload);
+        console.log("header", databinder.head());
+        // databinder.interceptors.request.use(async req=>{
+        //     const decoded = jwtDecode(accessToken);
+        //     if(decoded.exp < Date.now()/1000){
+        //         return req;
+        //     }
+        //     const accessTokens = await databinder.post('/token/refresh');
+        //     localStorage.setItem("tokens", JSON.stringify(accessTokens));
+        //     accessToken = accessTokens.AccessToken;
+        // });
         const result = await databinder.patch('/update',payload);
         return result;
     },
@@ -51,6 +67,13 @@ const authApi = {
     async deleteUser() {
         const result = await databinder.delete('/delete');
         return result;
+    },
+    setAccessToken(accessToken){
+        databinder.defaults.headers.common['Authorization'] = "Bearer " + accessToken;
+        console.log("auth tokens set")
+    },
+    getInstance(){
+        return databinder;
     }
 }
 

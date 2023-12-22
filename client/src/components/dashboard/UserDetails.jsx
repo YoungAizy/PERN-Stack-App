@@ -1,35 +1,39 @@
 import React, { useState } from 'react'
 import { TextInput } from '../styled/TextInput'
 import Button from '../styled/Button';
-// import PasswordConfirmationModal from '../PasswordConfirmationModal';
-import getAccessToken from '../../utils/getAccessToken';
+import PasswordConfirmationModal from '../PasswordConfirmationModal';
 import UpdatePasswordModal from '../UpdatePasswordModal';
 import authApi from '../../apis/auth';
 import requestBody from '../../utils/requestBody';
 import { userRequests } from '../../utils/requestTypes';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom';
+import { storeVerification } from '../../store/actions/userActions';
 
 const UserDetails = ({ isReviewer, inputClasses}) => {
   const User = useSelector(state => state.user.user);
+  const dispatch = useDispatch();
 
   const [firstName, setFirstName] = useState(User.firstname);
   const [surname, setSurname] = useState(User.surname);
-  const [showNameUpdate, setShowNameUpdate] = useState(false);
+  const [showNameUpdateBtn, setShowNameUpdateBtn] = useState(false);
   const [email, setEmail] = useState(User.email);
-  const [showEmailUpdate,setShowEmailUpdate] = useState(false)
-  // const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [showEmailUpdateBtn ,setShowEmailUpdateBtn] = useState(false)
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
+
+  const history = useHistory();
 
   console.log("USER", User);
 
   const onNameChange = (value,method) =>{
     method(value);
-    setShowNameUpdate(true);
+    setShowNameUpdateBtn(true);
   }
 
   const onNameUpdate = async()=>{
 
-    const body = requestBody(userRequests.updateName,{fisrtname:firstName,surname});
+    const body = requestBody(userRequests.updateName,{firstname:firstName,surname});
     
     try {
 
@@ -42,29 +46,33 @@ const UserDetails = ({ isReviewer, inputClasses}) => {
 
   const onEmailChange = value =>{
     setEmail(value);
-    setShowEmailUpdate(true);
+    setShowEmailUpdateBtn(true);
   }
 
-  const onEmailUpdate = async()=>{
-    const accessToken = getAccessToken();
-    const body = requestBody(userRequests.updateName, {firstname: firstName, surname});
+  const onEmailUpdate = async(password)=>{
+
+    if (email === User.email) {
+      console.log("Value is unchanged");
+      setShowEmailUpdateBtn(false);
+      return
+    }
+
+    const body = requestBody(userRequests.updateEmail, {email, password});
     try {
-      const {data} = await authApi.updateUser(body, accessToken);
+      console.log("TRYIIINGGG...", password);
+      const {data} = await authApi.updateUser(body);
       console.log(data);
+      if(!data.message){
+        dispatch(storeVerification({data:{email,password}}));
+        history.push({
+          pathname:'/registration',
+          search: '?page=2&verification_type=email_update'
+      })
+      }
     } catch (error) {
       console.log(error)
     }
 
-  }
-  
-  const verifyEmail = (value,state,cb)=>{
-    console.log("Clicked")
-    if(value === state){
-      console.log("Value is unchanged");
-      cb(false)
-      return;
-    }
-    // setShowConfirmationModal(true);
   }
 
   return (
@@ -76,13 +84,13 @@ const UserDetails = ({ isReviewer, inputClasses}) => {
               <TextInput val={surname} label={"Last Name"} inputType="text" inputId="update_surname" placeholder='Smith' onChangeEvent={(val)=>onNameChange(val,setSurname)}/>
           
           </div>
-          {showNameUpdate && <UpdateBtn updateClick={onNameUpdate} />}
+          {showNameUpdateBtn && <UpdateBtn updateClick={onNameUpdate} />}
         </div>
         <div className="d-flex flex-row align-items-center">
           <TextInput val={email} label="Email" inputId={"profile_email"} inputType={"email"} onChangeEvent={onEmailChange} additionalClasses={inputClasses}/>
-          {showEmailUpdate && <UpdateBtn updateClick={onEmailUpdate} />}
+          {showEmailUpdateBtn && <UpdateBtn updateClick={()=> setShowConfirmationModal(true)} />}
         </div>
-        {/* {showConfirmationModal && <PasswordConfirmationModal closeModal={setShowConfirmationModal} />} */}
+        {showConfirmationModal && <PasswordConfirmationModal submit={onEmailUpdate} closeModal={setShowConfirmationModal} />}
         <div className={`col-6 text-center mt-4 ${inputClasses}`}>
             <Button btnType={"button"} text={"update password"} onBtnClick={()=> setShowPasswordModal(true)}/>
         </div>

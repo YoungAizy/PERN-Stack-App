@@ -9,8 +9,10 @@ import requestBody from '../utils/requestBody'
 import SigninOverlay from '../components/SigninOverlay'
 import { useDispatch } from 'react-redux'
 import profileApi from '../apis/profile'
+import { saveAuth } from '../utils/getAccessToken'
 import { saveProfileDetails } from '../store/actions/profileActions'
-import { storeVerificationEmail } from '../store/actions/userActions';
+import { storeVerification } from '../store/actions/userActions';
+import useCheckType from '../hooks/useCheckType'
 
 const SignIn = () => {
     const [email, setEmail] = useState();
@@ -20,43 +22,38 @@ const SignIn = () => {
 
     const dispatch = useDispatch();
     const history = useHistory();
+    const checkUserType = useCheckType();
 
     const fetchProfile = async ()=>{
         setFetchingProfile(true);
         try {
             const {data,status} = await profileApi.fetch();
             console.log("DATA", data);
+            console.log(status)
             if(data === "Profile does not exist"){
                 console.log("rerouting...")
                 history.push('/registration?page=3');
                 return;
             }
-            if(status === 200 && data.user_type){
+            if(status === 200 && data.profile.user_type){
                 dispatch(saveProfileDetails({data}));
-                localStorage.setItem("user_type", data.user_type);
-                // eslint-disable-next-line default-case
-                switch (data.user_type) {
-                    case "reviewer":
-                        history.push('/home/notifications')
-                        break;
-                
-                    case "restaurateur":
-                        history.push('/dashboard/manage');
-                        break;
-                }
+                localStorage.setItem("user_type", data.profile.user_type);
+                checkUserType(data.profile.user_type);
             }else{
                 console.log("Unable to process request");
+                setFetchingProfile(false);
             }
         } catch (error) {
             console.log("Something went wrong.", error);
             setFetchingProfile(false);
+            alert(error.message);
         }
     }
 
     const verifyUser = async()=>{
         try {
             await authApi.resendVerificationCode(email);
-            dispatch(storeVerificationEmail({email}));
+            dispatch(storeVerification({data:{email}}));
             history.push('/registratiion?page=2');
         } catch (error) {
             console.log("Error while resending verification code.");
@@ -72,13 +69,19 @@ const SignIn = () => {
             const {data, status } = await authApi.signIn(body);
             console.log("Login Results:", data);
             // setLoginResponse(data);
+            if(data.notFound) {
+                alert("User Not found. Signup instead");
+                return;
+            }
+            if(data.unAuthorized) {
+                alert(data.message);
+                return;
+            }
             if(!data.isVerified) verifyUser();
             if (status === 200 && data.accessTokens) {
-                localStorage.setItem("tokens", JSON.stringify(data.accessTokens));
-                localStorage.setItem("isAuthenticated", true);
+                saveAuth(data.accessTokens);
                 fetchProfile();
                 return;
-                // window.location.pathname = "/manage";
             }
         } catch (error) {
             console.log("Login Error:",error)

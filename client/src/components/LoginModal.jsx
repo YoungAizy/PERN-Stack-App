@@ -8,7 +8,9 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import { saveProfileDetails } from '../store/actions/profileActions';
 import SigninOverlay from './SigninOverlay';
-import { storeVerificationEmail } from '../store/actions/userActions';
+import { storeVerification } from '../store/actions/userActions';
+import useCheckType from '../hooks/useCheckType';
+import { saveAuth } from '../utils/getAccessToken';
 
 
 function SignInModal(props) {
@@ -19,6 +21,7 @@ function SignInModal(props) {
 
     const dispatch = useDispatch();
     const history = useHistory();
+    const checkUserType = useCheckType();
 
     if (!props.show) {
         return null;
@@ -35,22 +38,16 @@ function SignInModal(props) {
                 history.push('/registration?page=3');
                 return;
             }
-            if(status === 200 && data.user_type){
+            if(status === 200 && data.profile.user_type){
+                console.log("hello", data.profile.user_type)
                 dispatch(saveProfileDetails({data}));
-
-                localStorage.setItem("tokens", JSON.stringify(data.accessTokens));
-                localStorage.setItem("isAuthenticated", true);
-                localStorage.setItem("user_type", data.user_type);
-
-                if(data.user_type === "reviewer") {
-                    history.push('/home/notifications');
-                    return;
-                }else{
-                    history.push('/dashboard/manage');
-                    return;
-                }
+                // const tokens ={accessToken: data.accessTokens.AccessToken, refreshToken: data.accessTokens.RefreshToken}
+                // dispatch(saveTokens({data: tokens}))
+                localStorage.setItem("user_type", data.profile.user_type);
+                checkUserType(data.profile.user_type);
             }else{
                 alert("Unable to process request");
+                setFetchingProfile(false);
             }
         } catch (error) {
             console.log("Something went wrong.", error);
@@ -60,12 +57,18 @@ function SignInModal(props) {
     }
 
       const verifyUser = async()=>{
-        dispatch(storeVerificationEmail({email}));
-        history.push('/registration?page=2');
+        try {
+            await authApi.resendVerificationCode(email);
+            dispatch(storeVerification({data:{email}}));
+            history.push('/registratiion?page=2');
+        } catch (error) {
+            console.log("Error while resending verification code.");
+            console.log("EERR:", error);
+        }
     }
 
     const Login = async () => {
-        serverResponse && setServerResponse("Attempting Registration...");
+        serverResponse && setServerResponse("Attempting Login...");
 
         const body = requestBody(userRequests.LOGIN, {email,password});
         try {
@@ -82,8 +85,8 @@ function SignInModal(props) {
             }
             if(!data.isVerified) verifyUser();
             if (status === 200 && data.accessTokens) {
-                fetchProfile().then(res => {return})
-                // window.location.pathname = "/dashboard/notifications";
+                saveAuth(data.accessTokens);
+                fetchProfile().then( () => {return})
             }
         } catch (error) {
             console.log("Something went wrong.", error);

@@ -13,7 +13,7 @@ export const HintedLabelInput = ({inputId, label, val, inputType, fieldName, onC
 
     return(
         <div className="form-margin form-floating">
-            <input value={val || ""} type={inputType} name={fieldName} id={inputId} className="form-control" onChange={onChangeEvent} />
+            <input value={val || ""} type={inputType} name={fieldName} id={inputId} className="form-control" onChange={e=>onChangeEvent(e.target.value)} />
             <label htmlFor={inputId} >{label}</label>
         </div>
     )

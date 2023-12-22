@@ -8,17 +8,26 @@ import { useDispatch, useSelector } from 'react-redux';
 import { saveProfileDetails } from '../store/actions/profileActions';
 import { saveUser } from '../store/actions/userActions';
 import profileApi from '../apis/profile';
+import { Redirect} from 'react-router-dom'
+import userTypes from '../utils/UserTypes';
 
 const Home = () => {
+    const userType = localStorage.getItem("user_type");
     const history = useHistory();
     const {page} = useParams();
 
+    
     const profile = useSelector(state=> state.profile.profile);
     const dispatch = useDispatch();
-
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(()=> checkProfile() ,[])
-
+    useEffect(()=> checkProfile() ,[]);
+    
+    if( userType !== userTypes.reviewer){
+        return(
+            <Redirect to="/"/>
+        )
+    }
     async function checkProfile(){
         if(!profile.username){
             //we want to fetch profile from server
@@ -53,11 +62,8 @@ const Home = () => {
     return (
         <div>
             <Header />
-            
             {/* <RestaurantList myRestaurants={true} /> */}
-            
             {checkPage()}
-            
             
         </div>
     )

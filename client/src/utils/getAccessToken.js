@@ -1,9 +1,21 @@
 /* eslint-disable import/no-anonymous-default-export */
 
-export default ()=>{
-    const tokens = JSON.parse(localStorage.getItem("tokens"));
-    console.log("create function tokens:", tokens);
-    const accessToken = tokens.AccessToken;
-    
-    return accessToken;
+import authApi from "../apis/auth";
+
+let tokens = JSON.parse(localStorage.getItem("tokens"));
+
+
+const getAccessToken = ()=> tokens?.AccessToken;
+
+export const getRefreshToken = ()=> tokens?.RefreshToken;
+
+export const saveAuth = (accessTokens)=>{
+    localStorage.setItem("tokens", JSON.stringify(accessTokens));
+    tokens = accessTokens;
+    localStorage.setItem("isAuthenticated", true);
+    authApi.setAccessToken(getAccessToken());
 }
+
+export const saveAcessTokens = (accessTokens)=> localStorage.setItem("tokens", JSON.stringify(accessTokens));
+
+export default getAccessToken;

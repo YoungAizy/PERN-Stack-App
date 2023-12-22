@@ -10,29 +10,47 @@ import profileApi from '../apis/profile';
 import { saveProfileDetails } from '../store/actions/profileActions';
 import Header from '../components/Header';
 import { saveUser } from '../store/actions/userActions';
+import useQuery from '../hooks/useQuery';
+import { Redirect} from 'react-router-dom'
+import userTypes from '../utils/UserTypes';
 
 const myStyle= {
     height: "100vh"
 }
 
 export const pageList ={
-    0: "Profile",
+    0: "profile",
     1: "notifications",
     2: "reviews",
     3: "Listings",
     4: "stats"
 }
+const reverseMap ={
+    notifications: 1,
+    reviews: 2,
+    listings: 3,
+    analytics: 4,
+    profile: 0
+}
 
 export default function DashboardPage(){
+    const userType = localStorage.getItem("user_type");
     const [mobileScreen, setMobileScreen] = useState(false);
     const [page, setPage] = useState(pageList[1]);
-    const [activeTab, setActiveTab] = useState("notifications");
+    const [activeTab, setActiveTab] = useState();
+    const query = useQuery();
 
     const profile = useSelector(state=> state.profile.profile);
     const dispatch = useDispatch();
 
     console.log("PROFILE:", profile);
 
+    useEffect(()=>{
+        console.log("window", reverseMap[query.get('window')]);
+        setPage(pageList[reverseMap[query.get('window')]]);
+        setActiveTab(pageList[reverseMap[query.get('window')]]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[])
 
     useEffect(() => {
         const screen = window.innerWidth;
@@ -41,9 +59,17 @@ export default function DashboardPage(){
         }
     }, []);
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(()=> checkProfile() ,[])
 
+    if( userType !== userTypes.lister){
+        return(
+            <Redirect to="/"/>
+        )
+    }
 
     async function checkProfile(){
+        console.log("fetching...")
         if(mobileScreen) return;
         if(!profile.username){
             //we want to fetch profile from server
@@ -58,8 +84,6 @@ export default function DashboardPage(){
         }
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(()=> checkProfile() ,[])
 
     if (mobileScreen) {
         return (

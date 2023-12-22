@@ -6,7 +6,7 @@ import requestBody from '../../utils/requestBody';
 import { userRequests } from '../../utils/requestTypes';
 import { newUser } from '../../utils/requestObjects';
 import { useDispatch } from 'react-redux';
-import { storeVerificationEmail } from '../../store/actions/userActions';
+import { storeVerification } from '../../store/actions/userActions';
 
 function NewUserForm({onPageChange, setBackgroundHeight, dispatch}) {
     const [firstName, setFirstName] = useState();
@@ -48,7 +48,7 @@ function NewUserForm({onPageChange, setBackgroundHeight, dispatch}) {
         setTransferingData(false);
         return;
       }
-      signupEmail(storeVerificationEmail({email}));
+      signupEmail(storeVerification({data:{email}}));
       dispatch({type:"Done", step: "step1"});
       dispatch({type:"Active", step: "step2"});
       setBackgroundHeight("100vh")

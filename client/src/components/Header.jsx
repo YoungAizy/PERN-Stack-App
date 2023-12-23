@@ -19,7 +19,7 @@ const Header = ({ setShow }) => {
             <h1 className="font-weight-light display-1 text-center" style={{ color: "#ef8a64" }}>Restaurant Reviewer</h1>
 
             <>
-                {isAuthenticated && userType === "reviewer" ? <LoggedInBtns history={history} />
+                {isAuthenticated ? (userType === "reviewer" ? <LoggedInBtns history={history} /> : <DashboardBtn history={history} />)
                     : <SignInButtons setShow={setShow} history={history} />}
             </>
         </header>
@@ -95,6 +95,22 @@ const HomeNavBtn = ({history})=>{
 
     return(
         <nav className="signin bg-primary"><button onClick={homeClick } ><i className="fas fa-home me-1"></i> Home</button></nav> 
+    )
+}
+
+const DashboardBtn = ({history})=>{
+
+    const gotToManageDashboard = ()=>{
+        history.push({
+            pathname:'/dashboard/manage',
+            search: '?window=notifications'
+        })
+    }
+
+    return(
+        <div style={{ float: "right" }}>
+            <nav className="me-2 nav-btn bg-dark"><button className="btn" style={{color:"inherit"}} onClick={gotToManageDashboard } ><i className="fas fa-home me-1"></i> Dashboard</button></nav> 
+        </div>
     )
 }
 

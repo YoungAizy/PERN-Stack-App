@@ -34,6 +34,7 @@ function SignInModal(props) {
             const {data,status} = await profileApi.fetch();
             console.log("DATA", data);
             if(data === "Profile does not exist"){
+                setFetchingProfile(false);
                 console.log("rerouting...")
                 history.push('/registration?page=3');
                 return;

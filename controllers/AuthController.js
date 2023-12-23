@@ -17,14 +17,12 @@ const { unverifiedUsers } = require('../memory/signup_dictionary.js');
 const { newSignupCode } = require('../services/newSignupCode.service.js');
 const { sendTokens } = require('../utils/helper.js');
 
-const unixHour = 60000 * 60;
-const dayUnix = unixHour * 24;
-const expirationTime = Date.now() + dayUnix;
-console.log("time", expirationTime);
-console.log("Time now", Date.now());
+
+// console.log("time", expirationTime);
+// console.log("Time now", Date.now());
 
 exports.register = async(req,res)=>{
-    console.log("Registration controller");
+    console.log("Registration controller:", req.body.data.password);
     if(compare(req.body.request_type, RequestType.REGISTRATION,res)) return;
     console.log("continuing");
     const {data} = req.body;
@@ -56,10 +54,7 @@ exports.verifyUser = async(req,res)=>{
         console.log(result);
 
         if(result){
-            const authTokens = await redirectToLoginService(data.email);
-            const {IdToken, ... accessTokens} = authTokens;
-            res.cookie("idToken", IdToken,{httpOnly: true, sameSite: "lax", maxAge: expirationTime});
-            console.log("User Verified", accessTokens);
+            const accessTokens = await redirectToLoginService(res, data.email);
             res.json({accessTokens});
         }
     } catch (error) {
@@ -67,7 +62,7 @@ exports.verifyUser = async(req,res)=>{
             res.status(203).json({ErrorMessage: error.message});
             return;
         }
-        console.log("Confirmation Code Incorrect:", error);
+        console.log("Confirmation Code Error:", error);
         res.status(error.statusCode).json({message: error.message});        
     }
 }
@@ -183,7 +178,7 @@ exports.update = async(req,res)=>{
             console.log("update password");
             try {
                 result = await updatePassword(data.oldPassword, data.newPassword, accessToken);
-                result && res.send(result);
+                result && res.json({successful: result});
             } catch (error) {
                 console.log("password update error:", error)
                 if(error.code === "NotAuthorizedException"){
@@ -210,14 +205,17 @@ exports.update = async(req,res)=>{
 exports.verifyUpdate = async (req,res)=>{
     if(compare(req.body.request_type, RequestType.updateEmailVerification,res)) return;
     if(req.body.data.attr != "email") return; //don't process the request if the attribute to be verified is not an email
-    if(req.body.data.code < 4) return; //return if the code is invalid. Use Joi for this.
+    if(req.body.data.confirmationCode < 4) return; //return if the code is invalid. Use Joi for this.
 
     const accessToken = req.body.token;
+    console.log("Hello: ", accessToken);
     const {data} = req.body;
 
     try {
-        const result = await verifyUpdate(data.attr, accessToken, data.code);
-        result && res.send(result);
+        await verifyUpdate(data.attr, accessToken, data.confirmationCode);
+        console.log("Done verifying, Redirect")
+        const accessTokens = await redirectToLoginService(res, data.email, data.password);
+        res.json({accessTokens});
     } catch (error) {
         console.log("ERR", error);
         res.status(error.statusCode).json({message: error.message});

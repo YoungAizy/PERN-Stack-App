@@ -22,8 +22,8 @@ export const _public = {
 
 //PROTECTED ROUTES
 export const _protected = {
-    async post() {
-        const result = await databinder.post('/protected/publish');
+    async post(payload) {
+        const result = await databinder.post('/protected/publish',payload);
         return result;
     },
     async fetchListings(user){
@@ -36,7 +36,7 @@ export const _protected = {
         return result;
     },
     async delete(id){
-        const result = await databinder.delete(`/protected/update/${id}`);
+        const result = await databinder.delete(`/protected/del/${id}`);
         return result;
     }
 }

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useQuery } from 'react-query';
 import { _protected as restaurantsApi } from '../../../apis/restaurants';
-import RestaurantListings from '../RestaurantsList';
+import RestaurantListings from '../RestaurantListings';
 import { saveUserListings } from '../../../store/actions/restaurantActions';
 import AddRestaurant from '../../AddRestaurant';
 
@@ -16,11 +16,12 @@ function ListingsWindow() {
 
     useQuery("listings", ()=>{
         if(userListings.length > 0) return;
+        console.log("fetching listings...")
 
         restaurantsApi.fetchListings("aizy")
-        .then(result=>{
-          console.log(result.data)
-          dispatch(saveUserListings({data:result.data.data}))
+        .then(({data})=>{
+          console.log("ListingsFetch results:",data)
+          dispatch(saveUserListings({data:data.data}))
         })
         
     })

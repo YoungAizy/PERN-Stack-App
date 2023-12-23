@@ -30,7 +30,7 @@ const DetailsHeader = (props) => {
                 </div>
                 <div className='col-1' style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <Link to="/">
-                        <i class="fas fa-home fa-lg" style={{color:'white',fontSize:'xx-large'}}></i>
+                        <i className="fas fa-home fa-lg" style={{color:'white',fontSize:'xx-large'}}></i>
                     </Link>
                 </div>
             </header>
@@ -52,9 +52,7 @@ const DetailsPage = () => {
         console.log(data)
         dispatch(addSelectedData({data:data.restaurant}));
         dispatch(saveSelectedRestaurantReviews({data:data.reviews}));
-        // const type = data.data.restaurant.mimetype;
-        // const buffer = data.data.restaurant.pic && Buffer.from(data.data.restaurant.pic).toString("base64");
-        // data.data.restaurant.pic && setImgSrc(`data:${type};base64, ${buffer}`);
+        setImgSrc(data.restaurant.img_url);
 
     }
     useEffect(() => {
@@ -67,7 +65,7 @@ const DetailsPage = () => {
 
             {selected && (
                 <>
-                    <DetailsHeader image={imgsrc && imgsrc} restaurant={selected._name} street={selected["_str/sub"]} suburb={selected._city}
+                    <DetailsHeader image={imgsrc && imgsrc} restaurant={selected.name} street={selected["_str/sub"]} suburb={selected.city}
                         rating={selected.avg_rating} count={selected.total_reviews} />
                     <div className="d-flex">
 

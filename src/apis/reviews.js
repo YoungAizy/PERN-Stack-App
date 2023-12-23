@@ -5,7 +5,7 @@ const databinder = axios.create({
 });
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default {
+const reviewsApi = {
     async post(payload) {
         const result = await databinder.post('/add',payload);
         return result;
@@ -27,3 +27,5 @@ export default {
         return result;
     }
 }
+
+export default reviewsApi;

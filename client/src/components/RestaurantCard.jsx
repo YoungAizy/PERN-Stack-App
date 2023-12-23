@@ -21,10 +21,8 @@ const RestaurantCard = ({restaurant}) => {
     const dispatch = useDispatch();
     const history = useHistory();
 
-    const location = restaurant["_str/sub"] + ", " + restaurant._city;
-    const type = restaurant.mimetype;
-    const buffer = restaurant.pic && Buffer.from(restaurant.pic).toString("base64");
-    const imgSrc = restaurant.pic && (`data:${type};base64, ${buffer}`);
+    const location = restaurant["str/sub"] + ", " + restaurant.city;
+    const imgSrc = restaurant.img_url;
 
     const cardClicked = e =>{
         e.stopPropagation();
@@ -40,7 +38,7 @@ const RestaurantCard = ({restaurant}) => {
                                 </div>
                                 <div className="col-md-7">
                                     <div className="card-body">
-                                        <h4 className="card-title">{restaurant._name}</h4>
+                                        <h4 className="card-title">{restaurant.name}</h4>
                                         <p className="card-text">{location} </p>
                                         <p className="card-text"><RenderRating total_reviews={restaurant.total_reviews} avg_rating={restaurant.avg_rating} /> </p>
                                         <p >Price Range: {"$".repeat(restaurant.price_range)}</p>

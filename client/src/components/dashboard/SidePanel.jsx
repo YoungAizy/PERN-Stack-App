@@ -6,6 +6,7 @@ import '../../styling/dashboard/sidePanel.css';
 import authApi from '../../apis/auth';
 import requestBody from '../../utils/requestBody';
 import { userRequests } from '../../utils/requestTypes';
+import { getRefreshToken } from '../../utils/getAccessToken';
 
 const imageStyle ={ marginLeft: 10}
 const nameStyle ={marginTop:6}
@@ -33,8 +34,7 @@ const SidePanel = ({ onPageChanged, active, setActive })=>{
     const signOut = async e =>{
         e.preventDefault();
 
-        const tokens = JSON.parse(localStorage.getItem("tokens"));
-        const refreshToken = tokens.RefreshToken;
+        const refreshToken = getRefreshToken();
 
         const body = requestBody(userRequests.LOGOUT, {refreshToken});
 

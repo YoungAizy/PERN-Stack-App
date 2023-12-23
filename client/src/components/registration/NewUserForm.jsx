@@ -19,8 +19,16 @@ function NewUserForm({onPageChange, setBackgroundHeight, dispatch}) {
 
     const signupEmail = useDispatch();
 
+    const updatePage = ()=>{
+      setBackgroundHeight("100vh");
+      dispatch({type:"Done", step: "step1"});
+      dispatch({type:"Active", step: "step2"});
+      onPageChange(2);
+    }
+
     const btnClick = async (e)=>{
       e.preventDefault();
+
       if(transferingData) return;
       if(!(firstName && surname && email && password && confirmPassword)) {
         setInvalidSubmit(true);
@@ -42,17 +50,13 @@ function NewUserForm({onPageChange, setBackgroundHeight, dispatch}) {
           setTransferingData(false);
           return;
         }
-        if(user.status === 200) console.log("OKAY");
+        if(user.status === 200) signupEmail(storeVerification({data:{email}}));
       } catch (error) {
         console.log("Something went wrong.",error);
         setTransferingData(false);
         return;
       }
-      signupEmail(storeVerification({data:{email}}));
-      dispatch({type:"Done", step: "step1"});
-      dispatch({type:"Active", step: "step2"});
-      setBackgroundHeight("100vh")
-      onPageChange(2);
+      updatePage()
     }
 
   return (

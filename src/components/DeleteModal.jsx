@@ -10,7 +10,7 @@ const DeleteModal = ({ openModal, setOpenModal, onDelete, isRestaurant, id, rest
     const Delete = (e) => {
         e.preventDefault();
         //  console.log("modal", id)
-        isRestaurant ? onDelete(id) : onDelete();
+        isRestaurant ? onDelete() : onDelete();
     }
     return (
         <div className='modal'>

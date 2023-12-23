@@ -26,8 +26,8 @@ function LandingPage() {
     useQuery('restaurants', async()=>{
         if(restaurants.length > 0) return;
 
-        const result = await _public.all;
-        console.log(result)
+        const result = await _public.all();
+        console.log("all restaurants",result)
         dispatch(saveRestaurants({data:result.data.restaurants}));
         dispatch(saveTopRated({data:result.data.top_rated}));
  

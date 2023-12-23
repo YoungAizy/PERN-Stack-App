@@ -11,7 +11,7 @@ import authApi from '../apis/auth';
 const Header = ({ setShow }) => {
 
     const history = useHistory();
-    const isAuthenticated = localStorage.getItem("isAuthenticated");
+    // const isAuthenticated = localStorage.getItem("isAuthenticated");
     const userType = localStorage.getItem("user_type");
 
     return (
@@ -19,7 +19,7 @@ const Header = ({ setShow }) => {
             <h1 className="font-weight-light display-1 text-center" style={{ color: "#ef8a64" }}>Restaurant Reviewer</h1>
 
             <>
-                {isAuthenticated ? (userType === "reviewer" ? <LoggedInBtns history={history} /> : <DashboardBtn history={history} />)
+                {userType ? (userType === "reviewer" ? <LoggedInBtns history={history} /> : <DashboardBtn history={history} />)
                     : <SignInButtons setShow={setShow} history={history} />}
             </>
         </header>

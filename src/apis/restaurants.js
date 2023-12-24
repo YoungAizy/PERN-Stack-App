@@ -31,8 +31,8 @@ export const _protected = {
         const listings = await databinder.get(`/protected/listings?createdby=${user}`);
         return listings;
     },
-    async update(id){
-        const result = await databinder.put(`/protected/update/${id}`);
+    async update(id,payload){
+        const result = await databinder.put(`/protected/update/${id}`,payload);
         return result;
     },
     async delete(id){

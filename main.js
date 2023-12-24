@@ -10,7 +10,11 @@ require('dotenv').config();
 
 const app = express();
 
-app.use(cors({origin:['http://localhost:3000',"http://192.168.91.1:3000"], credentials: true}))
+app.options('*', cors());
+app.use(cors({
+    origin:['http://192.168.91.1:3000'], 
+    credentials: true
+}));
 app.use(helmet())
 app.use(express.json());
 app.use(hpp());

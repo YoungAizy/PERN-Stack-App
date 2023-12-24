@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+// import { useHistory, useLocation } from 'react-router-dom';
+import reviewsApi from '../apis/reviews';
+import { useDispatch, useSelector } from 'react-redux';
+import { addReview } from '../store/actions/reviewsActions';
+// import Button from './styled/Button';
 
 const AddReview = ({ id }) => {
+    const username = useSelector(state => state.profile.profile?.username);
+    const dispatch = useDispatch();
     // Gives us acces to our entire current URL
-    const location = useLocation(),
-        history = useHistory();
+    // const location = useLocation(),
+    //     history = useHistory();
 
     const [rating, setRating] = useState("Rating");
     const [review, setReview] = useState("");
@@ -12,12 +18,16 @@ const AddReview = ({ id }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // const response = await databinder.post(`/restaurants/${id}/reviews`, {
-        //     rating, review,
-        // });
-        // console.log(response);
-        // history.push("/");
-        // history.push(location.pathname);
+        try {
+            const {data }= await reviewsApi.post({username: "Mindy", rating,review, restaurant_id: id});
+            console.log(data);
+            dispatch(addReview({data: data.data[0]}));
+            // history.push(location.pathname);
+            
+        } catch (error) {
+            console.log("Add Review Error:", error);
+        }
+
     }
 
     return (
@@ -40,7 +50,8 @@ const AddReview = ({ id }) => {
                     <label htmlFor="review">Review:</label>
                     <textarea value={review} id="review" rows={4} className="form-control" onChange={e => setReview(e.target.value)}></textarea>
                 </div>
-                <button onClick={handleSubmit} className="btn btn-primary">Submit</button>
+                {/* <Button text={"Submit"} btnType={"button"} onBtnClick={handleSubmit} /> */}
+                <button onClick={handleSubmit} className="btn bg-primary text-white">Submit</button>
             </form>
         </div>
     )

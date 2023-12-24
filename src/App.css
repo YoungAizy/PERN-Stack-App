@@ -177,12 +177,12 @@ h2 {
 #description {
     display: flex;
     flex-direction: row;
-    border: 1px solid gray;
+    border: 1px solid coral;
     border-radius: 16px;
 }
 
 #contact-details {
-    border: 1px solid gray;
+    border: 1px solid coral;
     border-radius: 16px;
     padding: .2rem .4rem;
 }

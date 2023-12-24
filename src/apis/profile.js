@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 const databinder = axios.create({
-    baseURL: "http://localhost:6001/api/v1/profile",
+    baseURL: `${process.env.REACT_APP_API_GATEWAY}/profile/api/v1/profile`,
     withCredentials: true
 });
 const profileApi= {

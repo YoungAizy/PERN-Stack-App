@@ -5,7 +5,7 @@ const initialState = {
     //ann Array of objects where the key is an id of each restaurant
     All: [],
     //This state holds the object of a single restaurant queried from scratch without any partial data passed to it
-    Single: {},
+    SingleListing: {},
     //Holds the partial data to be shown on single page
     Selected:  {},
 
@@ -40,6 +40,19 @@ const restaurantReducer = (state = initialState, action)=>{
             return{
                 ...state,
                 MyListings: [...state.MyListings, action.payload.data]
+            };
+        case RESTAURANTS_TYPES.LISTING_TO_EDIT:
+            return{
+                ...state,
+                SingleListing: action.payload.data
+            };
+        case RESTAURANTS_TYPES.UPDATE_LISTINGS:
+            return{
+                ...state,
+                MyListings: state.MyListings.map(listing =>{
+                    if(listing.id === action.payload.data.id) return action.payload.data;
+                    return listing;
+                })
             }
         case RESTAURANTS_TYPES.REMOVE_LISTING:
             return{

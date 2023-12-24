@@ -19,7 +19,7 @@ const AddReview = ({ id }) => {
         e.preventDefault();
 
         try {
-            const {data }= await reviewsApi.post({username: "Mindy", rating,review, restaurant_id: id});
+            const {data }= await reviewsApi.post({username, rating,review, restaurant_id: id});
             console.log(data);
             dispatch(addReview({data: data.data[0]}));
             // history.push(location.pathname);

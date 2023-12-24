@@ -1,56 +1,49 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useParams } from 'react-router'
 import Upload from '../assets/upload-icon.png'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useQuery } from 'react-query';
+import { _protected as restaurantApi } from '../apis/restaurants';
+import { restaurantSchema } from '../utils/requestObjects';
+import { storeEditingListing } from '../store/actions/restaurantActions';
 
 function UpdateRestaurant(props) {
     let { id } = useParams();
+    const listing = useSelector(state => state.restaurants.SingleListing);
     const dispatch = useDispatch();
-    const [name, setName] = useState("");
-    const [location, setLocation] = useState("");
-    const [price, setPrice] = useState("");
-    const [city, setCity] = useState("");
+    
+    const [name, setName] = useState(listing.name);
+    const [location, setLocation] = useState(listing["str/sub"]);
+    const [price, setPrice] = useState(listing.price_range);
+    const [city, setCity] = useState(listing.city);
     const [picture, setPicture] = useState("");
-    const [about, setAbout] = useState("");
-    const [email, setEmail] = useState("");
+    const [about, setAbout] = useState(listing.description);
+    const [email, setEmail] = useState(listing.email_addr);
     const [phone, setPhone] = useState("");
-    const [website, setWebsite] = useState("");
+    const [website, setWebsite] = useState(listing.web_addr);
     const [responseStatus, setResponseStatus] = useState("");
 
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         try {
-    //             let { data } = await databinder.get(`/restaurants/${id}`);
-    //             setName(data.data.restaurant.name);
-    //             setLocation(data.data.restaurant.street);
-    //             setCity(data.data.restaurant.city);
-    //             setAbout(data.data.restaurant.description);
-    //             setEmail(data.data.restaurant.email_address);
-    //             setPhone(data.data.restaurant.telephone);
-    //             setWebsite(data.data.restaurant.website);
-    //             setPrice(data.data.restaurant.price_range);
-    //             const type = data.data.restaurant.mimetype;
-    //             const buffer = data.data.restaurant.pic && Buffer.from(data.data.restaurant.pic).toString("base64");
-    //             data.data.restaurant.pic && setPicture(`data:${type};base64, ${buffer}`);
-    //         } catch (error) {
-    //             console.log(error)
-    //         }
-    //     }
+    useQuery('update_restaurant', async()=>{
+        if(listing.name) return;
 
-    //     fetchData();
-    //     // eslint-disable-next-line
-    // }, []);
-
+        try {
+            const {data} = await restaurantApi.fetchListing(id);
+            console.log("updated restaurants",data);
+            dispatch(storeEditingListing({data}));
+        } catch (error) {
+            console.log("An error occured:", error);
+        }
+ 
+    }, {cacheTime:"Infinity"});
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const form = new FormData()
-        form.append('image', picture);
-        form.append('data',
-            JSON.stringify({ phone, website, name, location, price, about, user:"aizy", email, city }))
-        const updateResponse ="";
-        // console.log("Update Response", updateResponse)
-        setResponseStatus(updateResponse.data.status);
 
+        const schema = restaurantSchema(name, location, price, about, "aizy", null, null, null, null, city);
+        const {data}= await restaurantApi.update(id,schema);
+        console.log("Update Response", data);
+        dispatch(storeEditingListing({data:data.data}));
+        setResponseStatus(data.status);
     }
 
     const getPictureData = (target) => {

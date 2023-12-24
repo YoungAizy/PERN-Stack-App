@@ -31,6 +31,11 @@ export const _protected = {
         const listings = await databinder.get(`/protected/listings?createdby=${user}`);
         return listings;
     },
+    async fetchListing(id){
+        console.log("fetching listing", id);
+        const listings = await databinder.get(`/protected/listing/${id}`);
+        return listings;
+    },
     async update(id,payload){
         const result = await databinder.put(`/protected/update/${id}`,payload);
         return result;

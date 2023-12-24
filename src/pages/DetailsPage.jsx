@@ -41,12 +41,12 @@ const DetailsHeader = ({restaurant, street, city, image, rating, count}) => {
 
 const DetailsPage = () => {
     const { id } = useParams();
-    console.log(id)
     const dispatch =useDispatch()
     const selected = useSelector(state => state.restaurants.Selected);
     const reviews = useSelector(state => state.reviews.reviews);
     const [imgsrc, setImgSrc] = useState();
     console.log("selected reviews", reviews)
+    const isAuthenticated = localStorage.getItem("isAuthenticated");
 
     const fetchData = async () => {
         let data;
@@ -86,7 +86,7 @@ const DetailsPage = () => {
                                 <Reviews reviews={reviews} />
                             </div>
                             <h2 className='text-center mb-5 mt-4'>Add Review</h2>
-                            <AddReview id={id} />
+                            {isAuthenticated ? <AddReview id={id} />: <Link to="/signin">Sign-in to add reviews</Link>}
                         </div>
                     </div>
                         <div className='my-4 col-3 pe-3'>

@@ -4,9 +4,8 @@ import getAccessToken from '../utils/getAccessToken';
 
 const accessToken = getAccessToken();
 const databinder = axios.create({
-    baseURL: "http://localhost:7009/api/v1/auth",
-    withCredentials: true,
-    headers: {Authorization: "Bearer " + accessToken || ""}
+    baseURL: `${process.env.REACT_APP_API_GATEWAY}/api/v1/auth`,
+
 });
 console.log("oop", accessToken);
 

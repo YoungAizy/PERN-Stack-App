@@ -7,3 +7,4 @@ export const saveRestaurants = payload => ({type: RESTAURANTS_TYPES.SAVE_ALL, pa
 export const saveTopRated = payload => ({type: RESTAURANTS_TYPES.SAVE_TOP_RATED, payload});
 export const setSelected = payload => ({type: RESTAURANTS_TYPES.SAVE_SELECTED_PARTIAL, payload});
 export const addSelectedData = payload => ({type: RESTAURANTS_TYPES.ADD_TO_PARTIAL, payload});
+export const storeEditingListing = payload => ({type: RESTAURANTS_TYPES.LISTING_TO_EDIT, payload});

@@ -4,11 +4,14 @@ import {usePopper} from 'react-popper';
 import DeleteModal from '../DeleteModal';
 import { _protected as restaurantsApi } from '../../apis/restaurants';
 import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router';
 import { deleteUserListing } from '../../store/actions/restaurantActions';
 
 const RestaurantCard = ({listing})=>{
     const [openModal, setOpenModal] = useState(false);
     const [toDelete, setToDelete] = useState("KFC");
+    
+    const history = useHistory()
 
     const dispatch = useDispatch()
 
@@ -16,6 +19,8 @@ const RestaurantCard = ({listing})=>{
         e.preventDefault();
         
     }
+
+    const updateListing = ()=> history.push(`/restaurant/${listing.id}/update`);
 
     const showModal = ()=>{
         setToDelete(listing.name);
@@ -49,7 +54,7 @@ const RestaurantCard = ({listing})=>{
                         </div>
                     </div>
                 </div>
-                <Tooltip onDelete={showModal} />
+                <Tooltip onDelete={showModal} onUpdate={updateListing} />
             </div>
             <DeleteModal openModal={openModal} setOpenModal={setOpenModal} onDelete={handleDelete} isRestaurant={true} restaurant={toDelete} />
 
@@ -57,13 +62,14 @@ const RestaurantCard = ({listing})=>{
     )
 }
 
-const Tooltip = ({onDelete})=>{
+const Tooltip = ({onUpdate, onDelete})=>{
     const [referenceElement, setReferenceElement] = useState(null);
     const [popperElement, setPopperElement] = useState(null);
     const [showTooltip,setShowTooltip] = useState(true)
     const { styles, attributes } = usePopper(referenceElement, popperElement, {placemenet:"right" });
 
-    const toggleTooltip = ()=>{
+    const toggleTooltip = (e)=>{
+        e.stopPropagation();
         
         if (showTooltip) {
             popperElement.setAttribute("data-show", true);
@@ -81,7 +87,7 @@ const Tooltip = ({onDelete})=>{
                     <i className="fas fa-ellipsis-h"></i>
             </button>
             <div ref={setPopperElement} className='d-flex flex-column p-2 hidden' style={styles.popper} {...attributes.popper}>
-                <button type='button' className='btn rounded-circle text-bg-primary' ><i className="fas fa-pen"></i></button>
+                <button type='button' className='btn rounded-circle text-bg-primary' onClick={onUpdate} ><i className="fas fa-pen"></i></button>
                 <button type='button' className='btn rounded-circle mt-2' onClick={onDelete} style={{backgroundColor:"red", color:"ghostwhite"}}><i style={{ borderRadius:"100%"}} className="fas fa-times fa-lg"></i></button>
             </div>
         </>

@@ -25,7 +25,7 @@ const App = ()=> {
             <Route exact path="/registration" component={RegistrationPage}/>
             <Route exact path="/signin" component={ SignIn}/>
             <Route exact path="/restaurant/:id" component={ DetailsPage }/>
-            <ProtectedRoute exact strict path="/restaurant/:id/update" component={ UpdatePage }/>
+            <ProtectedRoute exact strict path="/listing/:id/update" component={ UpdatePage }/>
             <ProtectedRoute exact path="/dashboard/manage" component={DashboardPage}/>
             <ProtectedRoute exact path="/home/:page" component={Home}/>
           </Switch>

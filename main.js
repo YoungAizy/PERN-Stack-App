@@ -10,16 +10,17 @@ require('dotenv').config();
 
 const app = express();
 
-app.options('*', cors());
 app.use(cors({
-    origin:['http://192.168.91.1:3000'], 
-    credentials: true
+    origin:['http://192.168.91.1:3000','http://localhost:3000',], 
+    credentials: true,
+    methods: [ 'POST', 'PUT', 'PATCH', 'GET', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Origin', 'X-Api-Key', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization']
 }));
 app.use(helmet())
 app.use(express.json());
 app.use(hpp());
 
-app.use(express.static("./public"))
+app.use(express.static("./public"));
 
 app.use('/api/v1/auth',AuthRouter);
 

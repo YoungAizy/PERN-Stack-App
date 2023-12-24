@@ -45,6 +45,14 @@ const restaurantReducer = (state = initialState, action)=>{
             return{
                 ...state,
                 SingleListing: action.payload.data
+            };
+        case RESTAURANTS_TYPES.UPDATE_LISTINGS:
+            return{
+                ...state,
+                MyListings: state.MyListings.map(listing =>{
+                    if(listing.id === action.payload.data.id) return action.payload.data;
+                    return listing;
+                })
             }
         case RESTAURANTS_TYPES.REMOVE_LISTING:
             return{

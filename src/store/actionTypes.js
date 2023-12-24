@@ -6,7 +6,8 @@ export const RESTAURANTS_TYPES = {
     SAVE_TOP_RATED: "Save Top Rated Restaurants",
     SAVE_SELECTED_PARTIAL: "Save Selected restaurant data",
     ADD_TO_PARTIAL: "Save additional information to Selected Partial data",
-    LISTING_TO_EDIT: "store the listing to be edited"
+    LISTING_TO_EDIT: "store the listing to be edited",
+    UPDATE_LISTINGS: "update user listings"
 }
 
 export const REVIEWS_TYPES = {

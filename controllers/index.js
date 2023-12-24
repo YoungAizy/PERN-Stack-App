@@ -34,8 +34,12 @@ export const fetchProfile = async (req,res)=>{
     try {
         const result = await profileService.getProfile(req);
         if(result.createdAt){
-            res.json({username:result.username, gender: result.sex, d_o_b: result.dob, city: result.city, img_url: result.img_url,
-            companyName: result.company, companyPosition: result.position, user_type: result.account_type, createdAt: result.createdAt })
+            res.json(
+                {profile:
+                    {username:result.username, gender: result.sex, d_o_b: result.dob, city: result.city, img_url: result.img_url,
+                    companyName: result.company, companyPosition: result.position, user_type: result.account_type, createdAt: result.createdAt },
+                     user: req.body.user}
+                     )
         }else {
             res.send(result);
         }

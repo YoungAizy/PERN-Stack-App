@@ -8,7 +8,7 @@ exports.sendTokens = (tokens, res)=>{
     const {IdToken, ...accessTokens} = tokens;
     const decoded = jwt.decode(IdToken);
     const isVerified = decoded.email_verified;
-    res.cookie("idToken", IdToken, {httpOnly: true, sameSite: "lax", expires: expirationTime});
+    res.cookie("idToken", IdToken, {httpOnly: true, sameSite: "none", secure:true, expires: expirationTime});
     
     res.json({accessTokens,isVerified});
 }

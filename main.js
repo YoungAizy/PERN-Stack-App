@@ -15,6 +15,7 @@ app.use(cors({
     credentials: true,
     methods: [ 'POST', 'PUT', 'PATCH', 'GET', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Origin', 'X-Api-Key', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'Cache-Control'],
+    exposedHeaders: ['set-cookie']
 }));
 app.use(helmet())
 app.use(express.json());

@@ -11,7 +11,7 @@ require('dotenv').config();
 const app = express();
 
 app.use(cors({
-    origin:['http://192.168.91.1:3000','http://localhost:3000',], 
+    origin:['http://192.168.91.1:3000','http://localhost:3000', 'https://feed-reviewer.netlify.app/'], 
     credentials: true,
     methods: [ 'POST', 'PUT', 'PATCH', 'GET', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Origin', 'X-Api-Key', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization']

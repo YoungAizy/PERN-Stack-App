@@ -5,9 +5,9 @@ import getAccessToken from '../utils/getAccessToken';
 const accessToken = getAccessToken();
 const databinder = axios.create({
     baseURL: `${process.env.REACT_APP_API_GATEWAY}/api/v1/auth`,
-
+    withCredentials: true,
+    headers: {Authorization: "Bearer " + accessToken || ""}
 });
-console.log("oop", accessToken);
 
 const authApi = {
     async createUser(payload) {

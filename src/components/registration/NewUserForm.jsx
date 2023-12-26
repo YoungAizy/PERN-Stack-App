@@ -7,17 +7,28 @@ import { userRequests } from '../../utils/requestTypes';
 import { newUser } from '../../utils/requestObjects';
 import { useDispatch } from 'react-redux';
 import { storeVerification } from '../../store/actions/userActions';
+import TooltipInput from '../styled/TooltipInput';
+import { checkEmail, checkPassword } from '../../hooks/useFormValidator';
 
 function NewUserForm({onPageChange, setBackgroundHeight, dispatch}) {
     const [firstName, setFirstName] = useState();
     const [surname, setSurname] = useState();
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
+    const [passwordValidationError, setPasswordValidationError] = useState(false);
     const [confirmPassword, setConfirmPassword] = useState();
     const [invalidSubmit, setInvalidSubmit] = useState(false);
     const [transferingData, setTransferingData] = useState(false);
 
     const signupEmail = useDispatch();
+
+    const onPasswordBlur= ()=>{
+      if(!checkPassword(password)){
+        setPasswordValidationError(true);
+      }else if(checkPassword(password)){
+        setPasswordValidationError(false);
+      }
+    }
 
     const updatePage = ()=>{
       setBackgroundHeight("100vh");
@@ -30,6 +41,14 @@ function NewUserForm({onPageChange, setBackgroundHeight, dispatch}) {
       e.preventDefault();
 
       if(transferingData) return;
+      if(!checkEmail(email)){
+        alert("Invalid email");
+        return;
+      }
+      if(passwordValidationError) {
+        alert("Your password doesn't meet the requirements.");
+        return;
+      }
       if(!(firstName && surname && email && password && confirmPassword)) {
         setInvalidSubmit(true);
         return;
@@ -71,7 +90,13 @@ function NewUserForm({onPageChange, setBackgroundHeight, dispatch}) {
             </div>
           </div>
             <FloatingInputField value={email} inputId="newUserEmail" inputType="email" label={"E-Mail"} placeholder="example@host.com" onInputChanged={setEmail} />
-            <FloatingInputField value={password} inputId="reg_password" inputType="password" label={"Password"} placeholder='abc' onInputChanged={setPassword} />
+            <TooltipInput value={password} inputId="reg_password" inputType="password" label={"Password"} placeholder='abc' onInputChanged={setPassword} inputBlur={onPasswordBlur} validationError={passwordValidationError} >
+              <p>Must have 1 number</p>
+              <p>Must include ( _-.*$! )</p>
+              <p>Must have 1 Uppercase</p>
+              <p>Must have 1 Lowercase</p>
+              <p>Must be between 7 and 19 characters</p>
+            </TooltipInput>
             <FloatingInputField value={confirmPassword} inputId="confirm_passwrd" label={"Confirm Password"} inputType="password" placeholder='abc' onInputChanged={setConfirmPassword} />
             {invalidSubmit && <p className='form-margin ps-2' style={{backgroundColor:"crimson", color:"ghostwhite", textTransform:"uppercase"}}>Fill in all the fields</p>}
             <Button text={transferingData ? "Wait...":"Next"} btnType={"submit"} placement={"flex-end"} onBtnClick={btnClick} disabled={transferingData} />

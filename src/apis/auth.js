@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const tokens = localStorage.getItem("tokens");
 const databinder = axios.create({
-    baseURL: `${process.env.REACT_APP_API_GATEWAY}/api/v1/auth`,
+    baseURL: `${process.env.REACT_APP_API_GATEWAY_URL}/api/v1/auth`,
     withCredentials: true,
     headers: {Authorization: "Bearer " + tokens?.AccessToken || ""}
 });

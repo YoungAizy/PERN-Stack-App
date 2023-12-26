@@ -10,7 +10,7 @@ import { saveProfileDetails } from '../store/actions/profileActions';
 import SigninOverlay from './SigninOverlay';
 import { storeVerification } from '../store/actions/userActions';
 import useCheckType from '../hooks/useCheckType';
-import { saveAuth } from '../utils/getAccessToken';
+import useTokens from '../hooks/useTokens';
 
 
 function SignInModal(props) {
@@ -22,6 +22,7 @@ function SignInModal(props) {
     const dispatch = useDispatch();
     const history = useHistory();
     const checkUserType = useCheckType();
+    const tokens = useTokens();
 
     if (!props.show) {
         return null;
@@ -86,7 +87,7 @@ function SignInModal(props) {
             }
             if(!data.isVerified) verifyUser();
             if (status === 200 && data.accessTokens) {
-                saveAuth(data.accessTokens);
+                tokens.saveAuth(data.accessTokens, data.idToken);
                 fetchProfile().then( () => {return})
             }
         } catch (error) {

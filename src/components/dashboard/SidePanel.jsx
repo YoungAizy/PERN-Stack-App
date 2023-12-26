@@ -6,7 +6,7 @@ import '../../styling/dashboard/sidePanel.css';
 import authApi from '../../apis/auth';
 import requestBody from '../../utils/requestBody';
 import { userRequests } from '../../utils/requestTypes';
-import { getRefreshToken } from '../../utils/getAccessToken';
+import useTokens from '../../hooks/useTokens';
 
 const imageStyle ={ marginLeft: 10}
 const nameStyle ={marginTop:6}
@@ -15,7 +15,8 @@ const tabs = {display:'contents'}
 // TODO: wrap component with useMemo to prevent re-rendering each time a different page is selected
 
 const SidePanel = ({ onPageChanged, active, setActive })=>{
-    const history = useHistory()
+    const history = useHistory();
+    const tokens = useTokens();
 
     const onTabChange = (tab,qs)=>{
         setActive(tab);
@@ -34,7 +35,7 @@ const SidePanel = ({ onPageChanged, active, setActive })=>{
     const signOut = async e =>{
         e.preventDefault();
 
-        const refreshToken = getRefreshToken();
+        const refreshToken = tokens.getRefreshToken();
 
         const body = requestBody(userRequests.LOGOUT, {refreshToken});
 

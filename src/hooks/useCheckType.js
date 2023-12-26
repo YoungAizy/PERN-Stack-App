@@ -1,6 +1,5 @@
 import { useHistory } from "react-router-dom/cjs/react-router-dom";
 
-
 const useCheckType = ()=>{
     const history = useHistory();
 

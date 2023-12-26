@@ -4,7 +4,7 @@ import FloatingInputField from './styled/FloatingInput';
 import requestBody from '../utils/requestBody';
 import { userRequests } from '../utils/requestTypes';
 import authApi from '../apis/auth';
-import getAccessToken from '../utils/getAccessToken';
+import useTokens from '../hooks/useTokens';
 
 
 const UpdatePasswordModal = ({closeModal}) => {
@@ -12,10 +12,12 @@ const UpdatePasswordModal = ({closeModal}) => {
   const [newPassword, setNewPassword] = useState("");
   const [updating, setUpdating] = useState(false);
 
+  const tokens = useTokens();
+
   const changePassword = async ()=>{
     setUpdating(true);
 
-    const accessToken = getAccessToken();
+    const accessToken = tokens.getAccessToken();
     const body = requestBody(userRequests.updatePassword, {oldPassword,newPassword});
     try {
       const result = await authApi.updateUser(body,accessToken);

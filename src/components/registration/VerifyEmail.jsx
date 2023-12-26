@@ -9,7 +9,7 @@ import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import useQuery from '../../hooks/useQuery';
 import useCheckType from '../../hooks/useCheckType';
 import { deleteVerification } from '../../store/actions/userActions';
-import { saveAcessTokens, saveAuth } from '../../utils/getAccessToken';
+import useTokens from '../../hooks/useTokens';
 
 const VerifyEmail = ({onPageChange, setBackgroundHeight, dispatch}) => {
     const reduxDispatch = useDispatch()
@@ -26,6 +26,7 @@ const VerifyEmail = ({onPageChange, setBackgroundHeight, dispatch}) => {
     const history = useHistory();
     const query = useQuery();
     const checkUserType = useCheckType();
+    const tokens = useTokens();
 
     // if the email to be verified is not stored in redux, 
     // reroute user to login page to ptompt for an email and reroute them back for verification
@@ -75,7 +76,7 @@ const VerifyEmail = ({onPageChange, setBackgroundHeight, dispatch}) => {
             console.log("verified",data)
             if(data.accessTokens){
                 cleanup();
-                saveAcessTokens(data.accessTokens);
+                tokens.saveAcessTokens(data.accessTokens);
                 checkUserType(localStorage.getItem("user_type"));
             }
             
@@ -123,7 +124,7 @@ const VerifyEmail = ({onPageChange, setBackgroundHeight, dispatch}) => {
                     checkUserType(userType);
                     return;
                 }
-                saveAuth(data.accessTokens)
+                tokens.saveAuth(data.accessTokens, data.idTokens)
                 console.log("Verification results:",data);// check result.status==200 and result.statusText == "OK"
                 
             }

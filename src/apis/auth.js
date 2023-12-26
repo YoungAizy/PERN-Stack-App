@@ -1,12 +1,11 @@
 import axios from 'axios';
 // import jwtDecode from 'jwt-decode';
-import getAccessToken from '../utils/getAccessToken';
 
-const accessToken = getAccessToken();
+const tokens = localStorage.getItem("tokens");
 const databinder = axios.create({
     baseURL: `${process.env.REACT_APP_API_GATEWAY}/api/v1/auth`,
     withCredentials: true,
-    headers: {Authorization: "Bearer " + accessToken || ""}
+    headers: {Authorization: "Bearer " + tokens?.AccessToken || ""}
 });
 
 const authApi = {

@@ -8,3 +8,8 @@ export const checkPassword = (password)=>{
 
 const emailCheck =  /^\w+@\w+\.[a-zA-Z]{2,4}$/
 export const checkEmail = email=> emailCheck.test(email);
+
+const checkwhiteSpace = /\s+/
+export const checkWhiteSpace = username => checkwhiteSpace.test(username);
+const usernameCheck = /\w{4,20}/
+export const checkUsername = username => usernameCheck.test(username);

@@ -12,6 +12,7 @@ import { profileSchema } from '../../utils/requestObjects';
 import profileApi from '../../apis/profile';
 import { useDispatch } from 'react-redux';
 import { saveProfileDetails } from '../../store/actions/profileActions';
+import { checkUsername, checkWhiteSpace } from '../../hooks/useFormValidator';
 
 function ProfileForm() {
   const dispatch = useDispatch();
@@ -35,6 +36,15 @@ function ProfileForm() {
     e.preventDefault();
     if(transferingData) return;
 
+    if(checkWhiteSpace(username)){
+      alert("Username can't contain whitespaces");
+      return;
+    }
+    console.log(checkUsername(username))
+    if(!checkUsername(username)){
+      alert("Username must be between 4 and 20 characters long");
+      return;
+    }
     console.log("birthday", dob);
     const dateOfBirth = dob || "2015-09-28";
     const userType = isReviewer ? "reviewer":"restaurateur";
@@ -73,7 +83,7 @@ function ProfileForm() {
     <div className="pb-4">
         <form action="" method="post" className="container mb-4 login-page">
             <Avatar initials={"AM"} bg_color={"orange"} imgId={'reg_img'} setPictureData={setPictureData}/>
-            <FloatingInputField value={username} label={"Username"} placeholder={"username"} inputType={"text"} inputId={"reg_username"} onInputChanged={setUsername} />
+            <FloatingInputField value={username} label={"Username (max 20 chars)"} placeholder={"username"} inputType={"text"} inputId={"reg_username"} onInputChanged={setUsername} />
             <GenderOptions val={gender} onGenderChange={setGender} />
             <DOB monthCol='col-3' yearCol='col-3' setDOB={setDob} />
             <DoubleSwitch LeftTag={'Reviewer'} RightTag={'Restaurateur'} leftClick={setIsReviewer} rightClick={setIsReviewer}/>

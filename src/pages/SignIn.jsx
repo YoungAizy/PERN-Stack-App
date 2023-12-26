@@ -9,7 +9,7 @@ import requestBody from '../utils/requestBody'
 import SigninOverlay from '../components/SigninOverlay'
 import { useDispatch } from 'react-redux'
 import profileApi from '../apis/profile'
-import { saveAuth } from '../utils/getAccessToken'
+import useTokens from '../hooks/useTokens'
 import { saveProfileDetails } from '../store/actions/profileActions'
 import { storeVerification } from '../store/actions/userActions';
 import useCheckType from '../hooks/useCheckType'
@@ -23,6 +23,7 @@ const SignIn = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     const checkUserType = useCheckType();
+    const tokens = useTokens();
 
     const fetchProfile = async ()=>{
         setFetchingProfile(true);
@@ -79,7 +80,8 @@ const SignIn = () => {
             }
             if(!data.isVerified) verifyUser();
             if (status === 200 && data.accessTokens) {
-                saveAuth(data.accessTokens);
+                tokens.saveAuth(data.accessTokens, data.idToken)
+                // saveAuth(data.accessTokens);
                 fetchProfile();
                 return;
             }

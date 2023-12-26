@@ -2,7 +2,7 @@ const axios = require('axios');
 
 const idToken = localStorage.getItem("idtoken");
 const databinder = axios.create({
-    baseURL: `${process.env.REACT_APP_API_GATEWAY}/profile/api/v1/profile`,
+    baseURL: `${process.env.REACT_APP_API_GATEWAY_URL}/profile/api/v1/profile`,
     withCredentials: true,
     headers: {Authorization: "Bearer " + idToken || ""}
 });

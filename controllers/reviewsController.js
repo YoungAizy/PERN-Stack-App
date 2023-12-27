@@ -2,10 +2,36 @@ import Repo from "../Repository/reviews_repo.js";
 import constants from "../utils/constants/index.js";
 import { onError, onSucess } from '../utils/helper.js';
 
+export const user_reviews = async (req,res)=>{
+    console.log("user is", req.query.createdby)
+    try {
+        const results = await Repo.getUserReviews([req.query.createdby]);
+        console.log(results)
+        onSucess(res,results.rows);
+    } catch (error) {
+        console.log(error);
+        onError(res,error);
+    }
+}
+
+export const listingReviews = async (req,res)=>{
+    let {payload} = req.query;
+    payload = JSON.parse(payload)
+    console.log("Listing reviews")
+
+    try {
+        const result = await Repo.getListingsReviews(payload);
+        onSucess(res,result);
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export const new_review = async (req,res)=>{
     const payload = [ req.body.username, req.body.rating, req.body.review,req.body.restaurant_id]
     try {
         const result = await Repo.add_review(payload);
+        console.log(result);
         onSucess(res,result.rows);
     } catch (error) {
         console.log(error)

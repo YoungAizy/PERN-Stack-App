@@ -1,5 +1,6 @@
 import db from "../config/index.js";
 import Query from "../config/queries.js"
+import constants from '../utils/constants/index.js'
 
 const client = db.getConnection();
 
@@ -11,32 +12,44 @@ class Repository{
         return result;
     }
 
-    async retrieveOne(id,cb){
-        const result = await client.query(Query.getOne, id);
+    async retrieveOne(id,request){
+        let result;
+        switch (request) {
+            case constants.partial.toLowerCase():
+                result = await client.query(Query.getPartial,id);
+                break;
+        
+            default:
+                result = await client.query(Query.getOne, id);
+                break;
+        }
         return result;
     }
 
-    async retrieveAll(limit_param){
-        const result = await client.query(Query.getAll,limit_param);
+    async retrieveAll(limit_param = 6){
+        console.log("limit",limit_param);
+        const result = await client.query(Query.getAll,[limit_param]);
+        return result;
+    }
+
+    async retrieveTopRated(){
+        const result = await client.query(Query.best_rated);
+        return result;
+    }
+    //TODO: implement userListing method
+    async getUserListings(user){
+        const result = await client.query(Query.getListings,[user]);
+        return result;
+    }
+
+    async getUserListing(id){
+        const result = await client.query(Query.getListing, [id]);
         return result;
     }
     
     async update(payload){
+        console.log("hello", payload);
         const result = await client.query(Query.update,payload);
-        return result;
-    }
-
-    async updateLike(id,req_type){
-        let result;
-        switch (req_type) {
-            case "REMOVE":
-                result = await client.query(Query.removeLike,id);
-                break;
-        
-            default:
-                result = await client.query(Query.newLike,id);
-                break;
-        }
         return result;
     }
     

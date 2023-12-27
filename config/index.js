@@ -17,13 +17,13 @@ class RestauranstDB{
     connect(){
         try {
             this.#db = new Pool({
-                user: process.env.DB.USER,
+                user: process.env.DB_USER,
                 host: process.env.DB_HOST,
-                port:5437,
+                port:5432,
                 database: process.env.DB_NAME,
-                password: Process.env.DB_PASSWORD
+                password: process.env.DB_PASSWORD
             })
-            
+            console.log("CONNECTED TO DB")
         } catch (error) {
             console.log("COULDN'T CONNECT TO THE DATABASE!");
             console.log(error);

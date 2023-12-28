@@ -4,6 +4,7 @@ import constants from '../utils/constants/index.js';
 import { onError, onSucess } from '../utils/helper.js';
 import { v4 as uuidv4 } from 'uuid';
 import { mapNewkeys } from '../utils/mapKeys.js';
+import { uploadImage } from '../utils/helper.js';
 
 export const addRestaurant = async (req,res)=>{
     const body = JSON.parse(req.body.data)

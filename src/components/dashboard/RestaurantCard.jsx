@@ -5,7 +5,7 @@ import DeleteModal from '../DeleteModal';
 import { _protected as restaurantsApi } from '../../apis/restaurants';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
-import { deleteUserListing } from '../../store/actions/restaurantActions';
+import { deleteUserListing, storeEditingListing } from '../../store/actions/restaurantActions';
 
 const RestaurantCard = ({listing})=>{
     const [openModal, setOpenModal] = useState(false);
@@ -20,7 +20,10 @@ const RestaurantCard = ({listing})=>{
         
     }
 
-    const updateListing = ()=> history.push(`/restaurant/${listing.id}/update`);
+    const updateListing = ()=> {
+        dispatch(storeEditingListing({data:listing}));
+        history.push(`/listing/${listing.id}/update`);
+    }
 
     const showModal = ()=>{
         setToDelete(listing.name);
@@ -30,7 +33,7 @@ const RestaurantCard = ({listing})=>{
     const handleDelete = async ()=>{
         try {
             const result = await restaurantsApi.delete(listing.id);
-            console.log(result);
+            console.log("deleted",result);
             setOpenModal(false);
             dispatch(deleteUserListing({id: listing.id}));   
         } catch (error) {
@@ -40,10 +43,10 @@ const RestaurantCard = ({listing})=>{
 
     return(
         <>
-            <div className="col-3 d-flex flex-column position-relative">
+            <div className="col-3 mb-4 d-flex flex-column position-relative">
                 <div className="card border border-primary rounded-3" style={{height:360}} onClick={triggerPopup}>
-                    <div className="" style={{borderRadius:"8px 8px 0 0"}}>
-                        <img style={{ width: "100%",borderRadius:"8px 8px 0 0" }} src={DefaultImage} alt="molo" />
+                    <div className="" style={{borderRadius:"8px 8px 0 0", height: "50%"}}>
+                        <img style={{ width: "100%",borderRadius:"8px 8px 0 0", height:"100%", objectFit: "cover" }} src={listing.img_url || DefaultImage} alt="molo" />
                     </div>
                     <div className="">
                         <div className="card-body">

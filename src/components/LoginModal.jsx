@@ -41,7 +41,7 @@ function SignInModal(props) {
     }
 
     const Login = async () => {
-        serverResponse && setServerResponse("Attempting Login...");
+        setServerResponse("Attempting Login...");
 
         const body = requestBody(userRequests.LOGIN, {email,password});
         try {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import AddReview from '../components/AddReview';
@@ -10,6 +10,7 @@ import { saveSelectedRestaurantReviews } from '../store/actions/reviewsActions';
 import Default from "../assets/default.jpg";
 import { _public } from '../apis/restaurants';
 import { useQuery } from 'react-query';
+import "../styling/detailsPage.css";
 
 
 const DetailsHeader = ({restaurant, street, city, image, rating, count}) => {
@@ -44,33 +45,37 @@ const DetailsPage = () => {
     const dispatch =useDispatch()
     const selected = useSelector(state => state.restaurants.Selected);
     const reviews = useSelector(state => state.reviews.reviews);
-    const [imgsrc, setImgSrc] = useState();
-    console.log("selected reviews", reviews)
+    const username = useSelector(state => state.profile.profile?.username);
+    console.log("selected", selected)
     const isAuthenticated = localStorage.getItem("isAuthenticated");
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(()=> dispatch(saveSelectedRestaurantReviews({data:[]})),[]);
+    
     const fetchData = async () => {
+        if(selected.description) return;
         let data;
         if(selected.name){
             console.log("K", selected);
-            ({ data } = await _public.singlePartial(id))
+            ({ data } = await _public.singlePartial(id));
         }else{
             console.log("HPJ");
-            ({ data } = await _public.singleAll(id))
+            ({ data } = await _public.singleAll(id));
         }
         console.log("Returned data:", data)
         dispatch(addSelectedData({data:data.restaurant}));
         dispatch(saveSelectedRestaurantReviews({data:data.reviews}));
-        setImgSrc(data.restaurant.img_url);
 
     }
-    useQuery('restaurant_page',fetchData);
+   
+    useQuery('restaurant_page',fetchData, {cacheTime:"Infinity"});
 
     return (
         <div>
 
             {selected && (
                 <>
-                    <DetailsHeader image={imgsrc && imgsrc} restaurant={selected.name} street={selected["str/sub"]} city={selected.city}
+                    <DetailsHeader image={selected.img_url} restaurant={selected.name} street={selected["str/sub"]} city={selected.city}
                         rating={selected.avg_rating} count={selected.total_reviews} />
                     <div className="d-flex">
 
@@ -86,16 +91,17 @@ const DetailsPage = () => {
                                 <Reviews reviews={reviews} />
                             </div>
                             <h2 className='text-center mb-5 mt-4'>Add Review</h2>
-                            {isAuthenticated ? <AddReview id={id} />: <Link to="/signin">Sign-in to add reviews</Link>}
+                            {isAuthenticated ? (selected.created_by === username ? null : <AddReview id={id} />) : 
+                            <Link to="/signin">Sign-in to add reviews</Link>}
                         </div>
                     </div>
                         <div className='my-4 col-3 pe-3'>
                             <div id="contact-details">
                             <h5>Contact Information</h5>
                             <hr/>
-                            <p><strong>Address: </strong> </p>
-                            <p><strong>E-mail: </strong>{selected.email_addr ? <a href={`mailto:${selected.email_addr}`}>{selected.email_addr}</a>: " Not Supplied" }</p>
+                            {/* <p><strong>Address: </strong> </p> */}
                             <p><strong>Telephone: </strong>{selected.telephone ? <a href={`tel:${selected.telephone}`}>{selected.telephone}</a>: " Not Supplied" }</p>
+                            <p><strong>E-mail: </strong>{selected.email_addr ? <a href={`mailto:${selected.email_addr}`}>{selected.email_addr}</a>: " Not Supplied" }</p>
                             <p><strong>Web: </strong>{ <a href={selected.web_addr} target="_blank" rel="noopener noreferrer">{selected.web_addr}</a> } </p>
                             </div>
                         </div>

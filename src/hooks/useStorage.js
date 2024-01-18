@@ -1,7 +1,19 @@
 import authApi from "../apis/auth";
-import profileApi from "../apis/profile";
+import {setIdToken} from "../apis/profile";
 
 let tokens = JSON.parse(localStorage.getItem("tokens"));
+
+export const useSession =()=>{
+    const storeUser = (fullName = null)=>{
+        fullName && sessionStorage.setItem("name", fullName);
+        return (imgUrl, username) =>{
+            sessionStorage.setItem("img", imgUrl);   
+            sessionStorage.setItem("username", username);   
+        }
+    }
+
+    return storeUser;
+}
 
 const useTokens = ()=>{
     const getAccessToken = ()=> tokens?.AccessToken;
@@ -9,12 +21,12 @@ const useTokens = ()=>{
     const getRefreshToken = ()=> tokens?.RefreshToken;
     
     const saveAuth = (accessTokens, idToken)=>{
-        localStorage.setItem("tokens", JSON.stringify(accessTokens));
-        localStorage.setItem("idToken", idToken);
         tokens = accessTokens;
+        localStorage.setItem("idToken", idToken);
+        setIdToken(idToken)
+        saveAcessTokens(accessTokens);
         localStorage.setItem("isAuthenticated", true);
         authApi.setAccessToken(getAccessToken());
-        profileApi.setIdToken(idToken)
     }
     
     const saveAcessTokens = (accessTokens)=> localStorage.setItem("tokens", JSON.stringify(accessTokens));

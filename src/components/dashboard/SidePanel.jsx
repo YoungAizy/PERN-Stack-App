@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {useHistory} from 'react-router-dom'
 import DefaultImage from '../../assets/default.jpg';
 import { pageList } from '../../pages/DashboardPage';
@@ -6,7 +6,7 @@ import '../../styling/dashboard/sidePanel.css';
 import authApi from '../../apis/auth';
 import requestBody from '../../utils/requestBody';
 import { userRequests } from '../../utils/requestTypes';
-import useTokens from '../../hooks/useTokens';
+import useTokens from '../../hooks/useStorage';
 
 const imageStyle ={ marginLeft: 10}
 const nameStyle ={marginTop:6}
@@ -17,6 +17,7 @@ const tabs = {display:'contents'}
 const SidePanel = ({ onPageChanged, active, setActive })=>{
     const history = useHistory();
     const tokens = useTokens();
+    const [loggingOut, setLoggingOut] = useState(true);
 
     const onTabChange = (tab,qs)=>{
         setActive(tab);
@@ -35,6 +36,7 @@ const SidePanel = ({ onPageChanged, active, setActive })=>{
     const signOut = async e =>{
         e.preventDefault();
 
+        setLoggingOut(true)
         const refreshToken = tokens.getRefreshToken();
 
         const body = requestBody(userRequests.LOGOUT, {refreshToken});
@@ -45,6 +47,7 @@ const SidePanel = ({ onPageChanged, active, setActive })=>{
             history.push('/');
         } catch (error) {
             console.log("Error while signing out", error);
+            setLoggingOut(false);
         }
 
     }
@@ -74,7 +77,7 @@ const SidePanel = ({ onPageChanged, active, setActive })=>{
                 <button className={`d-block btn rounded-pill mt-4 ${active === pageList[0] ? 'btn-secondary' : 'btn-bg' }`}
                 onClick={()=> onTabChange(pageList[0],'profile')}><span><i className="fas fa-user-alt"></i></span> Profile</button>
             </div>
-            <button className='mt-5 btn btn-primary rounded-3 bg-dark logout-btn' onClick={signOut}>Logout</button>
+            <button className='mt-5 btn btn-primary rounded-3 bg-dark logout-btn' onClick={signOut} disabled={loggingOut}>Logout</button>
             </div>
         </div>
     )

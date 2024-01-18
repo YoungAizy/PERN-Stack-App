@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import {useHistory} from 'react-router-dom'
 import DoubleSwitch from '../DoubleSwitch';
 import DOB from '../DOB';
 import FloatingInputField from '../styled/FloatingInput';
@@ -13,6 +12,9 @@ import profileApi from '../../apis/profile';
 import { useDispatch } from 'react-redux';
 import { saveProfileDetails } from '../../store/actions/profileActions';
 import { checkUsername, checkWhiteSpace } from '../../hooks/useFormValidator';
+import userTypes from '../../utils/UserTypes';
+import useCheckType from '../../hooks/useCheckType';
+import { useSession } from '../../hooks/useStorage';
 
 function ProfileForm() {
   const dispatch = useDispatch();
@@ -30,7 +32,9 @@ function ProfileForm() {
   
   const [transferingData, setTransferingData] = useState(false);
 
-  const history = useHistory();
+  const storeUser = useSession();
+
+  const checkUserType = useCheckType();
 
   const createProfile = async (e)=>{
     e.preventDefault();
@@ -63,15 +67,10 @@ function ProfileForm() {
       setTransferingData(false);
       if(status === 200 && data.data.createdAt){
         dispatch(saveProfileDetails({data: data.data}));
+        storeUser()(data.data.img_url,data.data.username);
         localStorage.setItem("user_type", data.data.user_type);
-        console.log("hello")
-        if(data.data.user_type === "reviewer") {
-          console.log("is reviewer");
-          history.push('/home/notifications');
-        }else{
-          console.log("ndiyahamba")
-          history.push('/dashboard/manage');
-        }
+        console.log("hello");
+        checkUserType(data.data.user_type);
       }
     } catch (error) {
       setTransferingData(false);
@@ -86,7 +85,7 @@ function ProfileForm() {
             <FloatingInputField value={username} label={"Username (max 20 chars)"} placeholder={"username"} inputType={"text"} inputId={"reg_username"} onInputChanged={setUsername} />
             <GenderOptions val={gender} onGenderChange={setGender} />
             <DOB monthCol='col-3' yearCol='col-3' setDOB={setDob} />
-            <DoubleSwitch LeftTag={'Reviewer'} RightTag={'Restaurateur'} leftClick={setIsReviewer} rightClick={setIsReviewer}/>
+            <DoubleSwitch LeftTag={userTypes.reviewer} RightTag={userTypes.lister} leftClick={setIsReviewer} rightClick={setIsReviewer}/>
             {!isReviewer && <AdminFields companyName={companyName} setCompanyName={setCompanyName} position={position} setPosition={setPosition} /> }
             <p className='form-margin'>Location:</p>
             <FloatingInputField value={city} inputId={"reg_city"} inputType={"text"} label={"City"} placeholder={"city"} onInputChanged={setCity} />

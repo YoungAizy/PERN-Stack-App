@@ -1,0 +1,35 @@
+#details-header {
+    max-height: 180px;
+    background-color: rgb(75, 73, 73);
+    color: white;
+    box-shadow: 0 2px 3px rgba(26, 25, 25, 0.8);
+    text-transform: capitalize;
+}
+
+.detail-img {
+    max-height: 100%;
+}
+
+.detail-img img {
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    object-fit: cover;
+}
+
+#description {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid coral;
+    border-radius: 16px;
+}
+
+#description p{
+    font-size: large;
+}
+
+#contact-details {
+    border: 1px solid coral;
+    border-radius: 16px;
+    padding: .2rem .4rem;
+}

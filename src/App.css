@@ -157,36 +157,6 @@ h2 {
     font-weight: bold;
 }
 
-#details-header {
-    max-height: 180px;
-    background-color: rgb(75, 73, 73);
-    color: white;
-    box-shadow: 0 2px 3px rgba(26, 25, 25, 0.8);
-    text-transform: capitalize;
-}
-
-.detail-img {
-    max-height: 100%;
-}
-
-.detail-img img {
-    max-height: 100%;
-    object-fit: contain;
-}
-
-#description {
-    display: flex;
-    flex-direction: row;
-    border: 1px solid coral;
-    border-radius: 16px;
-}
-
-#contact-details {
-    border: 1px solid coral;
-    border-radius: 16px;
-    padding: .2rem .4rem;
-}
-
 .add-form {
     border: 0 solid whitesmoke;
     border-radius: 16px;
@@ -286,10 +256,14 @@ h2 {
     bottom: 10px;
     transform: translateY(0);
 }
-
-.card-body {
-    text-transform: capitalize;
+.btn:disabled {
+    cursor: wait;
+    pointer-events: all;
 }
+
+/* .card-body {
+    text-transform: capitalize;
+} */
 
 .card-text {
     margin-bottom: 8px;

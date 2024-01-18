@@ -8,11 +8,10 @@ import { userRequests } from '../utils/requestTypes'
 import requestBody from '../utils/requestBody'
 import SigninOverlay from '../components/SigninOverlay'
 import { useDispatch } from 'react-redux'
-import profileApi from '../apis/profile'
-import useTokens from '../hooks/useTokens'
-import { saveProfileDetails } from '../store/actions/profileActions'
-import { storeVerification } from '../store/actions/userActions';
+import useTokens, { useSession } from '../hooks/useStorage'
+import {  storeVerification } from '../store/actions/userActions';
 import useCheckType from '../hooks/useCheckType'
+import useFetch from '../hooks/useFetch'
 
 const SignIn = () => {
     const [email, setEmail] = useState();
@@ -22,34 +21,11 @@ const SignIn = () => {
 
     const dispatch = useDispatch();
     const history = useHistory();
-    const checkUserType = useCheckType();
-    const tokens = useTokens();
 
-    const fetchProfile = async ()=>{
-        setFetchingProfile(true);
-        try {
-            const {data,status} = await profileApi.fetch();
-            console.log("DATA", data);
-            console.log(status)
-            if(data === "Profile does not exist"){
-                console.log("rerouting...")
-                history.push('/registration?page=3');
-                return;
-            }
-            if(status === 200 && data.profile.user_type){
-                dispatch(saveProfileDetails({data}));
-                localStorage.setItem("user_type", data.profile.user_type);
-                checkUserType(data.profile.user_type);
-            }else{
-                console.log("Unable to process request");
-                setFetchingProfile(false);
-            }
-        } catch (error) {
-            console.log("Something went wrong.", error);
-            setFetchingProfile(false);
-            alert(error.message);
-        }
-    }
+    const tokens = useTokens();
+    let storeUser = useSession();
+    const fetchProfile = useFetch();
+
 
     const verifyUser = async()=>{
         try {
@@ -80,9 +56,9 @@ const SignIn = () => {
             }
             if(!data.isVerified) verifyUser();
             if (status === 200 && data.accessTokens) {
-                tokens.saveAuth(data.accessTokens, data.idToken)
-                // saveAuth(data.accessTokens);
-                fetchProfile();
+                tokens.saveAuth(data.accessTokens, data.idToken,data.fullName)
+                storeUser = storeUser(data.fullName);
+                fetchProfile(setFetchingProfile,storeUser);
                 return;
             }
         } catch (error) {
@@ -121,11 +97,17 @@ const SignIn = () => {
 }
 
 export const LoginHeader = ({ history, LoggedIn }) => {
+    const checkType = useCheckType()
+
+    const dashboardClick = ()=>{
+        const user = localStorage.getItem("user_type");
+        checkType(user);
+    }
 
     return (
         <div className="login-header">
             <button className="nav-btn" onClick={() => history.push('/')}>Home</button>
-            {LoggedIn ? <button className="nav-btn" onClick={() => history.push('/dashboard')}>DashBoard</button> : <button className="nav-btn" onClick={() => history.push('/registration')}>SignUp</button>}
+            {LoggedIn ? <button className="nav-btn" onClick={dashboardClick} >DashBoard</button> : <button className="nav-btn" onClick={() => history.push('/registration')}>SignUp</button>}
         </div>
     )
 }

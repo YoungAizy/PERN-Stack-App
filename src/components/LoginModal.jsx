@@ -3,14 +3,12 @@ import FloatingInputField from './styled/FloatingInput';
 import { userRequests } from '../utils/requestTypes';
 import requestBody from '../utils/requestBody';
 import authApi from '../apis/auth';
-import profileApi from '../apis/profile';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom';
-import { saveProfileDetails } from '../store/actions/profileActions';
 import SigninOverlay from './SigninOverlay';
 import { storeVerification } from '../store/actions/userActions';
-import useCheckType from '../hooks/useCheckType';
-import useTokens from '../hooks/useTokens';
+import useTokens, { useSession } from '../hooks/useStorage';
+import useFetch from '../hooks/useFetch';
 
 
 function SignInModal(props) {
@@ -21,41 +19,14 @@ function SignInModal(props) {
 
     const dispatch = useDispatch();
     const history = useHistory();
-    const checkUserType = useCheckType();
+
     const tokens = useTokens();
+    let storeUser = useSession();
+
+    const fetchProfile = useFetch();
 
     if (!props.show) {
         return null;
-    }
-
-    const fetchProfile = async ()=>{
-        setFetchingProfile(true);
-
-        try {
-            const {data,status} = await profileApi.fetch();
-            console.log("DATA", data);
-            if(data === "Profile does not exist"){
-                setFetchingProfile(false);
-                console.log("rerouting...")
-                history.push('/registration?page=3');
-                return;
-            }
-            if(status === 200 && data.profile.user_type){
-                console.log("hello", data.profile.user_type)
-                dispatch(saveProfileDetails({data}));
-                // const tokens ={accessToken: data.accessTokens.AccessToken, refreshToken: data.accessTokens.RefreshToken}
-                // dispatch(saveTokens({data: tokens}))
-                localStorage.setItem("user_type", data.profile.user_type);
-                checkUserType(data.profile.user_type);
-            }else{
-                alert("Unable to process request");
-                setFetchingProfile(false);
-            }
-        } catch (error) {
-            console.log("Something went wrong.", error);
-            setFetchingProfile(false);
-            alert(error.message);
-        }
     }
 
       const verifyUser = async()=>{
@@ -87,8 +58,9 @@ function SignInModal(props) {
             }
             if(!data.isVerified) verifyUser();
             if (status === 200 && data.accessTokens) {
+                storeUser = storeUser(data.fullName);
                 tokens.saveAuth(data.accessTokens, data.idToken);
-                fetchProfile().then( () => {return})
+                fetchProfile(setFetchingProfile, storeUser, props.onClose).then( () => {return})
             }
         } catch (error) {
             console.log("Something went wrong.", error);

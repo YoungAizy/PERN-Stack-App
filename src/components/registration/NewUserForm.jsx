@@ -9,8 +9,9 @@ import { useDispatch } from 'react-redux';
 import { storeVerification } from '../../store/actions/userActions';
 import TooltipInput from '../styled/TooltipInput';
 import { checkEmail, checkPassword } from '../../hooks/useFormValidator';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 
-function NewUserForm({onPageChange, setBackgroundHeight, dispatch}) {
+function NewUserForm({ setBackgroundHeight, dispatch}) {
     const [firstName, setFirstName] = useState();
     const [surname, setSurname] = useState();
     const [email, setEmail] = useState();
@@ -21,6 +22,7 @@ function NewUserForm({onPageChange, setBackgroundHeight, dispatch}) {
     const [transferingData, setTransferingData] = useState(false);
 
     const signupEmail = useDispatch();
+    const history = useHistory();
 
     const onPasswordBlur= ()=>{
       if(!checkPassword(password)){
@@ -34,7 +36,7 @@ function NewUserForm({onPageChange, setBackgroundHeight, dispatch}) {
       setBackgroundHeight("100vh");
       dispatch({type:"Done", step: "step1"});
       dispatch({type:"Active", step: "step2"});
-      onPageChange(2);
+      history.push({search:"?page=2"});
     }
 
     const btnClick = async (e)=>{

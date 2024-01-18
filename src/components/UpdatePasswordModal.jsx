@@ -4,7 +4,7 @@ import FloatingInputField from './styled/FloatingInput';
 import requestBody from '../utils/requestBody';
 import { userRequests } from '../utils/requestTypes';
 import authApi from '../apis/auth';
-import useTokens from '../hooks/useTokens';
+import useTokens from '../hooks/useStorage';
 
 
 const UpdatePasswordModal = ({closeModal}) => {

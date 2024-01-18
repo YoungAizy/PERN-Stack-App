@@ -37,26 +37,27 @@ function RegistrationPage() {
     const [height,setHeight] = useState("fit-content");
     const [page,setPage] = useState(1);
     const [state, dispatch] = useReducer(reducer, stepState);
-    const query = useQuery();
+    const query = useQuery().get("page");
 
     useEffect(()=>{
-      console.log(parseInt(query.get("page")))
-      query.get("page") === '2' && setHeight('100vh');
-      setPage(parseInt(query.get("page")))
+      console.log(parseInt(query))
+      if(query === page) return;
+      query === '2' && setHeight('100vh');
+      setPage(parseInt(query))
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[])
+    },[query])
 
     const getPage = ()=>{
       console.log("page",page);
         switch (page) {
             case 1:
-                return <NewUserForm onPageChange={setPage} setBackgroundHeight={setHeight} dispatch={dispatch} />
+              return <NewUserForm setBackgroundHeight={setHeight} dispatch={dispatch} />
             case 2:
-                return <VerifyEmail onPageChange={setPage} setBackgroundHeight={setHeight} dispatch={dispatch} />
+              return <VerifyEmail setBackgroundHeight={setHeight} dispatch={dispatch} />
             case 3:
-                return <ProfileForm />
+              return <ProfileForm />
             default:
-                return <NewUserForm onPageChange={setPage} setBackgroundHeight={setHeight} dispatch={dispatch} />
+                return <NewUserForm setBackgroundHeight={setHeight} dispatch={dispatch} />
         }
     }
 

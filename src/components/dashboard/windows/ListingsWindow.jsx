@@ -4,7 +4,7 @@ import { useQuery } from 'react-query';
 import { _protected as restaurantsApi } from '../../../apis/restaurants';
 import RestaurantListings from '../RestaurantListings';
 import { saveUserListings } from '../../../store/actions/restaurantActions';
-import AddRestaurant from '../../AddRestaurant';
+import AddRestaurant from '../AddRestaurant';
 
 function ListingsWindow() {
     const dispatch = useDispatch();
@@ -12,19 +12,17 @@ function ListingsWindow() {
 
     const [showAddRestaurant, setShowAddRestaurant] = useState(false);
 
-
-
     useQuery("listings", ()=>{
-        if(userListings.length > 0) return;
+      console.log("T")
+        if(userListings?.length > 0) return;
         console.log("fetching listings...")
 
         restaurantsApi.fetchListings("aizy")
         .then(({data})=>{
           console.log("ListingsFetch results:",data)
           dispatch(saveUserListings({data:data.data}))
-        })
-        
-    })
+        })  
+    },{cacheTime:"Infinity"})
 
 
   return (

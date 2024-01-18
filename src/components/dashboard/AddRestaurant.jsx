@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import UploadNotification from './UploadNotification'
+import UploadNotification from '../UploadNotification'
 import { useDispatch } from 'react-redux';
-import { _protected as restaurantApi } from '../apis/restaurants';
-import { restaurantSchema } from '../utils/requestObjects';
-import { addToUserListings} from '../store/actions/restaurantActions';
+import { _protected as restaurantApi } from '../../apis/restaurants';
+import { restaurantSchema } from '../../utils/requestObjects';
+import { addToUserListings} from '../../store/actions/restaurantActions';
 
 const AddRestaurant = () => {
     const dispatch = useDispatch()

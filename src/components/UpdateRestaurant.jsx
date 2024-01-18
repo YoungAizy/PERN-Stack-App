@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import Upload from '../assets/upload-icon.png'
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,15 +16,35 @@ function UpdateRestaurant(props) {
     const [location, setLocation] = useState(listing["str/sub"]);
     const [price, setPrice] = useState(listing.price_range);
     const [city, setCity] = useState(listing.city);
-    const [picture, setPicture] = useState("");
+    const [picture, setPicture] = useState(listing.img_url);
     const [about, setAbout] = useState(listing.description);
     const [email, setEmail] = useState(listing.email_addr);
     const [phone, setPhone] = useState("");
     const [website, setWebsite] = useState(listing.web_addr);
+    const[updateImgBtn, showUpdateImgBtn] = useState(false);
+
+    const [isUpdating, setIsUpdating] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
+
     const [responseStatus, setResponseStatus] = useState("");
 
+    const populateData = ()=>{
+        setName(listing.name);
+        setLocation(listing["str/sub"]);
+        setPrice(listing.price_range);
+        setCity(listing.city);
+        setPicture(listing.img_url);
+        setAbout(listing.description);
+        setEmail(listing.email_addr);
+        setWebsite(listing.web_addr);
+    }
+
+    useEffect(populateData,[listing]);
+
     useQuery('update_restaurant', async()=>{
+        console.log("steff");
         if(listing.name) return;
+        console.log("sick")
 
         try {
             const {data} = await restaurantApi.fetchListing(id);
@@ -39,6 +59,7 @@ function UpdateRestaurant(props) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        setIsUpdating(true);
         const schema = restaurantSchema(name, location, price, about, "aizy", null, null, null, null, city);
         const {data}= await restaurantApi.update(id,schema);
         console.log("Update Response", data);
@@ -46,8 +67,27 @@ function UpdateRestaurant(props) {
         setResponseStatus(data.status);
     }
 
+    const uploadImg = async()=>{
+        setIsUploading(true);
+        
+        const form = new FormData();
+        form.append('image', picture);
+        form.append('data',listing.img_id);
+        try {
+            const {data} = await restaurantApi.updateImg(id,form);
+            console.log("Image update result", data);
+            setIsUploading(false);
+            data.img_url && showUpdateImgBtn(false);
+        } catch (error) {
+            console.log(error);
+            setIsUploading(false);
+        }
+        
+    }
+
     const getPictureData = (target) => {
         const file = target.files[0];
+        file && showUpdateImgBtn(true);
         setPicture(file);
         const img = document.getElementById("input-img");
         const reader = new FileReader();
@@ -62,15 +102,15 @@ function UpdateRestaurant(props) {
                     <div className="form-group row mb-4">
                         <div className='col'>
                             <label htmlFor="name">Name</label>
-                            <input id="name" className="form-control" value={name} onChange={e => setName(e.target.value.toLowerCase())} type="text" />
+                            <input id="name" className="form-control" value={name || ""} onChange={e => setName(e.target.value.toLowerCase())} type="text" />
                         </div>
                         <div className="col">
                             <label htmlFor="streetLocation">Street and Suburb</label>
-                            <input id="streetLocation" value={location} onChange={e => setLocation(e.target.value.toLowerCase())} type="text" className="form-control" placeholder="Street name and surburb" />
+                            <input id="streetLocation" value={location || ""} onChange={e => setLocation(e.target.value.toLowerCase())} type="text" className="form-control" placeholder="Street name and surburb" />
                         </div>
                         <div className="col">
                             <label htmlFor="cityLocation">City</label>
-                            <input id="cityLocation" value={city} onChange={e => setCity(e.target.value.toLowerCase())} type="text" className="form-control" placeholder="City" />
+                            <input id="cityLocation" value={city || ""} onChange={e => setCity(e.target.value.toLowerCase())} type="text" className="form-control" placeholder="City" />
                         </div>
                     </div>
                     <div className="row mb-2">
@@ -81,7 +121,10 @@ function UpdateRestaurant(props) {
                         <div style={{ paddingLeft: "0" }} className="col-4 mb-3">
                             <input className="form-control" type="file" id="formImg" accept="image/*"
                                 onChange={e => getPictureData(e.target)} style={{ display: 'none' }} />
-                            <label htmlFor="formImg"><img id="input-img" style={{ width: "180px", cursor: 'pointer', marginLeft: "2rem" }} src={picture ? picture : Upload} alt='' /></label>
+                            <label htmlFor="formImg">
+                                <img id="input-img" style={{ width: "160px", cursor: 'pointer', marginLeft: "2rem" }} src={picture ? picture : Upload} alt='' />
+                            </label>
+                            {updateImgBtn && <button className='btn bg-primary ms-5' type="submit" onClick={uploadImg} disabled={isUploading}>Upload</button>}
                         </div>
 
                     </div>
@@ -100,15 +143,15 @@ function UpdateRestaurant(props) {
                     <div className="form-group row">
                         <div className="col">
                             <label htmlFor="price">Price Range (max is 5)</label>
-                            <input value={price} onChange={e => setPrice(e.target.value)} id="price" className="form-control" type="number" />
+                            <input value={price || ""} onChange={e => setPrice(e.target.value)} id="price" className="form-control" type="number" min={1} max={5} />
                         </div>
                         <div className='col mt-4'>
-                            <button type='submit' onClick={(e) => handleSubmit(e)} className="btn bg-primary">Submit</button>
+                            <button type='submit' onClick={(e) => handleSubmit(e)} className="btn bg-primary" disabled={isUpdating}>Submit</button>
                         </div>
                     </div>
                 </form>
                 {responseStatus && <div>
-                    {responseStatus === 'success' ? <h4 className="text-success">Successfuly Updated!</h4> :
+                    {responseStatus === 'Successful' ? <h4 className="text-success">Successfuly Updated!</h4> :
                         <h4 className="text-danger">{responseStatus === 'Incomplete' ? "Failed to Upload Image" : "Failed to Update Restaurant"}</h4>}
                 </div>}
             </div>

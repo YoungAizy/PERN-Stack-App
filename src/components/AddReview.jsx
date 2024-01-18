@@ -3,29 +3,46 @@ import React, { useState } from 'react';
 import reviewsApi from '../apis/reviews';
 import { useDispatch, useSelector } from 'react-redux';
 import { addReview } from '../store/actions/reviewsActions';
+import { useQuery } from 'react-query';
+import profileApi from '../apis/profile';
+import { saveProfileDetails } from '../store/actions/profileActions';
 // import Button from './styled/Button';
 
 const AddReview = ({ id }) => {
     const username = useSelector(state => state.profile.profile?.username);
     const dispatch = useDispatch();
-    // Gives us acces to our entire current URL
-    // const location = useLocation(),
-    //     history = useHistory();
 
     const [rating, setRating] = useState("Rating");
     const [review, setReview] = useState("");
+    const [submitting, setSubmitting] = useState(!username);
+
+    console.log("redux username", username);
+    useQuery('fetch_username',async ()=>{
+        if(username) return;
+        try {
+            const {data} = await profileApi.getUsername();
+            console.log("username result:", data);
+            setSubmitting(!data.username);
+            dispatch(saveProfileDetails({data:{username: data.username}}));
+        } catch (error) {
+            console.log("Error occured", error)
+        }
+    },{cacheTime:"Infinity"})
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        setSubmitting(true);
         try {
             const {data }= await reviewsApi.post({username, rating,review, restaurant_id: id});
-            console.log(data);
-            dispatch(addReview({data: data.data[0]}));
-            // history.push(location.pathname);
+            console.log("review added",data);
+            dispatch(addReview({data: data.data}));
+            setRating("Rating");
+            setReview("");
             
         } catch (error) {
             console.log("Add Review Error:", error);
+            setSubmitting(false)
         }
 
     }
@@ -51,7 +68,7 @@ const AddReview = ({ id }) => {
                     <textarea value={review} id="review" rows={4} className="form-control" onChange={e => setReview(e.target.value)}></textarea>
                 </div>
                 {/* <Button text={"Submit"} btnType={"button"} onBtnClick={handleSubmit} /> */}
-                <button onClick={handleSubmit} className="btn bg-primary text-white">Submit</button>
+                <button onClick={handleSubmit} className="btn bg-primary text-white" disabled={submitting}>Submit</button>
             </form>
         </div>
     )

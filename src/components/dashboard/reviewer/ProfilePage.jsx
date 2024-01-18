@@ -1,6 +1,7 @@
 import React from 'react'
 import ProfileDetails from '../ProfileDetails';
 import UserDetails from '../UserDetails';
+import useProfile from '../../../hooks/useProfile';
 
 const dobStyling = {
     parent: 'col-5 mx-auto',
@@ -10,7 +11,9 @@ const dobStyling = {
 }
 
 export default function ProfilePage() {
- 
+  
+  useProfile()
+  
   return (
     <div className='col-8 mx-auto pb-3'>
       <h2 className='mt-4 mb-5' >Account</h2>

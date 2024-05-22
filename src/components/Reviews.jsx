@@ -8,11 +8,11 @@ function Reviews({ reviews }) {
                 return (
                     <div key={review.id} className="card text-white bg-primary mb-3" style={{ maxWidth: "30%", margin: "8px" }}>
                         <div className="card-header d-flex px-0 justify-content-between">
-                            <span>@{review.username}</span>
+                            <span>@{review.reviewer_username}</span>
                             <span><StarRating rating={review.rating} /></span>
                         </div>
                         <div className="card-body">
-                            <p className="card-text">{review.review}</p>
+                            <p className="card-text">{review.review_text}</p>
                         </div>
                     </div>
                 )

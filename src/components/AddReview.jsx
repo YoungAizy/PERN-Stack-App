@@ -20,10 +20,10 @@ const AddReview = ({ id }) => {
     useQuery('fetch_username',async ()=>{
         if(username) return;
         try {
-            const {data} = await profileApi.getUsername();
-            console.log("username result:", data);
-            setSubmitting(!data.username);
-            dispatch(saveProfileDetails({data:{username: data.username}}));
+            const {data} = await profileApi.getUser();
+            console.log("User result:", data);
+            setSubmitting(!data.username); //data.user holds firstrname + surname
+            dispatch(saveProfileDetails({data: data.profile}));
         } catch (error) {
             console.log("Error occured", error)
         }
@@ -39,11 +39,10 @@ const AddReview = ({ id }) => {
             dispatch(addReview({data: data.data}));
             setRating("Rating");
             setReview("");
-            
         } catch (error) {
             console.log("Add Review Error:", error);
-            setSubmitting(false)
         }
+        setSubmitting(false)
 
     }
 

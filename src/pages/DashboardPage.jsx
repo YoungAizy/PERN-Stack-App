@@ -7,12 +7,13 @@ import ReviewsWindow from '../components/dashboard/windows/ReviewsWindow';
 import ListingsWindow from '../components/dashboard/windows/ListingsWindow';
 import { useDispatch, useSelector } from 'react-redux';
 import profileApi from '../apis/profile';
-import { saveProfileDetails } from '../store/actions/profileActions';
-import Header from '../components/Header';
-import { saveUser } from '../store/actions/userActions';
+import Header from '../components/home-header/Header';
 import useQuery from '../hooks/useQuery';
+import { useQuery as fetch } from 'react-query';
 import { Redirect} from 'react-router-dom'
 import userTypes from '../utils/UserTypes';
+import { useSession } from '../hooks/useStorage';
+import { saveUser } from '../store/actions/userActions';
 
 const myStyle= {
     height: "100vh"
@@ -40,10 +41,11 @@ export default function DashboardPage(){
     const [activeTab, setActiveTab] = useState();
     const query = useQuery();
 
-    const profile = useSelector(state=> state.profile.profile);
+    const user = useSelector(state=> state.user.user);
     const dispatch = useDispatch();
 
-    console.log("PROFILE:", profile);
+    const sessionStorage = useSession();
+    console.log("PROFILE:", user.fullName, user);
 
     useEffect(()=>{
         console.log("window", reverseMap[query.get('window')]);
@@ -59,9 +61,6 @@ export default function DashboardPage(){
         }
     }, []);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(()=> checkProfile() ,[])
-
     if( userType !== userTypes.lister){
         return(
             <Redirect to="/"/>
@@ -69,20 +68,22 @@ export default function DashboardPage(){
     }
 
     async function checkProfile(){
+        if(user.fullName) return;
         console.log("fetching...")
-        if(mobileScreen) return;
-        if(!profile.username){
             //we want to fetch profile from server
             try {
-                const {data} = await profileApi.fetch();
+                const {data} = await profileApi.getUser();
                 console.log("Fetch results", data);
-                dispatch(saveProfileDetails({data:data.profile}));
-                dispatch(saveUser({data:data.user}));
+                sessionStorage(data.user.firstname+" "+data.user.surname)(data.profile.img_url,data.profile.username);
+                // dispatch(saveProfileDetails({data:data.profile}));
+                dispatch(saveUser({data:{fullName: data.user.firstname+" "+data.user.surname, username: data.profile.username, imgUrl: data.profile.img_url}}));
             } catch (error) {
                 console.log("Fetch Error:",error);
             }
-        }
+
     }
+
+    fetch("fetchUser", checkProfile, {cacheTime:"Infinity"});
 
 
     if (mobileScreen) {
@@ -110,7 +111,7 @@ export default function DashboardPage(){
     return(
         <div>
             <div className="row g-0" style={myStyle}>
-                <SidePanel onPageChanged={setPage} active={activeTab} setActive={setActiveTab} />
+                <SidePanel User ={user} onPageChanged={setPage} active={activeTab} setActive={setActiveTab} />
                 <div className="content col p-2">
                     {onPageChanged()}
                 </div>

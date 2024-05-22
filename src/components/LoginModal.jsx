@@ -14,7 +14,7 @@ import useFetch from '../hooks/useFetch';
 function SignInModal(props) {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
-    const [serverResponse, setServerResponse] = useState();
+    const [serverResponse, setServerResponse] = useState(null);
     const [fetchingProfile, setFetchingProfile] = useState(false);
 
     const dispatch = useDispatch();
@@ -50,10 +50,12 @@ function SignInModal(props) {
 
             if(data.notFound) {
                 alert("User Not found. Signup instead");
+                setServerResponse(false);
                 return;
             }
             if(data.unAuthorized) {
                 alert(data.message);
+                setServerResponse(false);
                 return;
             }
             if(!data.isVerified) verifyUser();
@@ -64,8 +66,8 @@ function SignInModal(props) {
             }
         } catch (error) {
             console.log("Something went wrong.", error);
-            setServerResponse(false);
         }
+        setServerResponse(false);
     }
 
     return (
@@ -81,7 +83,7 @@ function SignInModal(props) {
                             <FloatingInputField value={email} inputId="eMail" inputType="email" label={"eMail"} placeholder="name@example.com" onInputChanged={setEmail} />
                             <FloatingInputField value={password} inputId="signin_password" inputType="password" label={"Password"} placeholder='abc' onInputChanged={setPassword} />
                             <button type="button" className="btn btn-dark form-margin" onClick={Login} disabled={serverResponse}>SignIn</button>
-                            {serverResponse && !serverResponse.accessToken && <p style={{ fontWeight: "600" }}>{serverResponse}</p>}
+                            {serverResponse && !serverResponse.accessToken && <p className='ms-3' style={{ fontWeight: "600" }}>{serverResponse}</p>}
                         </div>
                     </form>
                 </div>

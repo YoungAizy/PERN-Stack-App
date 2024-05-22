@@ -4,7 +4,6 @@ import Upload from '../assets/upload-icon.png'
 import { useDispatch, useSelector } from 'react-redux';
 import { useQuery } from 'react-query';
 import { _protected as restaurantApi } from '../apis/restaurants';
-import { restaurantSchema } from '../utils/requestObjects';
 import { storeEditingListing } from '../store/actions/restaurantActions';
 
 function UpdateRestaurant(props) {
@@ -12,15 +11,16 @@ function UpdateRestaurant(props) {
     const listing = useSelector(state => state.restaurants.SingleListing);
     const dispatch = useDispatch();
     
-    const [name, setName] = useState(listing.name);
-    const [location, setLocation] = useState(listing["str/sub"]);
-    const [price, setPrice] = useState(listing.price_range);
-    const [city, setCity] = useState(listing.city);
-    const [picture, setPicture] = useState(listing.img_url);
-    const [about, setAbout] = useState(listing.description);
-    const [email, setEmail] = useState(listing.email_addr);
+    const [name, setName] = useState(listing?.name);
+    const [location, setLocation] = useState(listing["str_sub"]);
+    const [price, setPrice] = useState(listing?.price_range);
+    const [city, setCity] = useState(listing?.city);
+    const [picture, setPicture] = useState({img:listing?.img_url,file:{mimetype:null,image:null}});
+    const [about, setAbout] = useState(listing?.description);
+    const [email, setEmail] = useState(listing?.email_addr);
     const [phone, setPhone] = useState("");
-    const [website, setWebsite] = useState(listing.web_addr);
+    const [website, setWebsite] = useState(listing?.web_addr);
+    const [schema, setSchema] = useState({});
     const[updateImgBtn, showUpdateImgBtn] = useState(false);
 
     const [isUpdating, setIsUpdating] = useState(false);
@@ -30,10 +30,14 @@ function UpdateRestaurant(props) {
 
     const populateData = ()=>{
         setName(listing.name);
-        setLocation(listing["str/sub"]);
+        setLocation(listing["str_sub"]);
         setPrice(listing.price_range);
         setCity(listing.city);
-        setPicture(listing.img_url);
+        setPicture(state=>{
+            return {
+                ...state,
+                img: listing.img_url}
+        });
         setAbout(listing.description);
         setEmail(listing.email_addr);
         setWebsite(listing.web_addr);
@@ -49,7 +53,7 @@ function UpdateRestaurant(props) {
         try {
             const {data} = await restaurantApi.fetchListing(id);
             console.log("updated restaurants",data);
-            dispatch(storeEditingListing({data}));
+            dispatch(storeEditingListing({data: data.getListing}));
         } catch (error) {
             console.log("An error occured:", error);
         }
@@ -58,28 +62,29 @@ function UpdateRestaurant(props) {
     
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         setIsUpdating(true);
-        const schema = restaurantSchema(name, location, price, about, "aizy", null, null, null, null, city);
-        const {data}= await restaurantApi.update(id,schema);
-        console.log("Update Response", data);
-        dispatch(storeEditingListing({data:data.data}));
-        setResponseStatus(data.status);
+        try{
+            const {data}= await restaurantApi.update(id,schema);
+            console.log("Update Response", data);
+            data.updateRestaurant && setResponseStatus("Update Successful");
+            setIsUpdating(false);
+        }catch(error){
+            console.log("Update Error:", error);
+            setResponseStatus("Update Failed");
+            setIsUpdating(false);
+        }
     }
 
-    const uploadImg = async()=>{
+    const uploadImg = async(e)=>{
+        e.preventDefault();
         setIsUploading(true);
-        
-        const form = new FormData();
-        form.append('image', picture);
-        form.append('data',listing.img_id);
         try {
-            const {data} = await restaurantApi.updateImg(id,form);
+            const {data} = await restaurantApi.updateImg(id,JSON.stringify(listing.img_id), JSON.stringify(picture.file));
             console.log("Image update result", data);
             setIsUploading(false);
-            data.img_url && showUpdateImgBtn(false);
+            data.updateImage.img_url && showUpdateImgBtn(false);
         } catch (error) {
-            console.log(error);
+            console.log("Error updating image:",error);
             setIsUploading(false);
         }
         
@@ -88,11 +93,30 @@ function UpdateRestaurant(props) {
     const getPictureData = (target) => {
         const file = target.files[0];
         file && showUpdateImgBtn(true);
-        setPicture(file);
+      
         const img = document.getElementById("input-img");
         const reader = new FileReader();
-        reader.onload = (e) => img.src = e.target.result;
+        reader.onload = (e) => {
+            setPicture(state=>{
+                return {
+                    ...state,
+                    file:{
+                        image: e.target.result, mimetype: file.type
+                    }
+                }
+            });
+            img.src = e.target.result;
+        }
         reader.readAsDataURL(file);
+    }
+
+    const onInputChange = (state, value)=>{
+        if(listing[state] !== value) setSchema(prevState=>({...prevState, [state]: value}));
+        if(listing[state] === value && schema[state]) setSchema(prevState=>{
+            const copyState = prevState;
+            delete copyState[state]
+            return copyState;
+        });
     }
 
     return (
@@ -102,27 +126,27 @@ function UpdateRestaurant(props) {
                     <div className="form-group row mb-4">
                         <div className='col'>
                             <label htmlFor="name">Name</label>
-                            <input id="name" className="form-control" value={name || ""} onChange={e => setName(e.target.value.toLowerCase())} type="text" />
+                            <input id="name" className="form-control" value={name || ""} onChange={e =>{onInputChange("name", name); setName(e.target.value.toLowerCase())}} type="text" />
                         </div>
                         <div className="col">
                             <label htmlFor="streetLocation">Street and Suburb</label>
-                            <input id="streetLocation" value={location || ""} onChange={e => setLocation(e.target.value.toLowerCase())} type="text" className="form-control" placeholder="Street name and surburb" />
+                            <input id="streetLocation" value={location || ""} onChange={e =>{onInputChange("str_sub", location); setLocation(e.target.value.toLowerCase())}} type="text" className="form-control" placeholder="Street name and surburb" />
                         </div>
                         <div className="col">
                             <label htmlFor="cityLocation">City</label>
-                            <input id="cityLocation" value={city || ""} onChange={e => setCity(e.target.value.toLowerCase())} type="text" className="form-control" placeholder="City" />
+                            <input id="cityLocation" value={city || ""} onChange={e =>{onInputChange("city", city); setCity(e.target.value.toLowerCase())}} type="text" className="form-control" placeholder="City" />
                         </div>
                     </div>
                     <div className="row mb-2">
                         <div className="col-7">
                             <textarea style={{ marginTop: '.7rem' }} className="form-control" placeholder="Write about you restaurant..." rows="4"
-                                value={about || ""} onChange={e => setAbout(e.target.value)}></textarea>
+                                value={about || ""} onChange={e =>{onInputChange("description", about); setAbout(e.target.value)}}></textarea>
                         </div>
                         <div style={{ paddingLeft: "0" }} className="col-4 mb-3">
                             <input className="form-control" type="file" id="formImg" accept="image/*"
                                 onChange={e => getPictureData(e.target)} style={{ display: 'none' }} />
                             <label htmlFor="formImg">
-                                <img id="input-img" style={{ width: "160px", cursor: 'pointer', marginLeft: "2rem" }} src={picture ? picture : Upload} alt='' />
+                                <img id="input-img" style={{ width: "160px", cursor: 'pointer', marginLeft: "2rem" }} src={picture.img ? picture.img : Upload} alt='' />
                             </label>
                             {updateImgBtn && <button className='btn bg-primary ms-5' type="submit" onClick={uploadImg} disabled={isUploading}>Upload</button>}
                         </div>
@@ -130,13 +154,13 @@ function UpdateRestaurant(props) {
                     </div>
                     <div className="row mb-3">
                         <div className="col">
-                            <input value={email || ""} onChange={e => setEmail(e.target.value)} type="email" className="form-control" placeholder="E-Mail" />
+                            <input value={email || ""} onChange={e =>{onInputChange("email_addr",email); setEmail(e.target.value)}} type="email" className="form-control" placeholder="E-Mail" />
                         </div>
                         <div className="col">
-                            <input value={phone || ""} onChange={e => setPhone(e.target.value)} type="tel" className="form-control" placeholder="Contact Number" />
+                            <input value={phone || ""} onChange={e =>{onInputChange("telephone",phone); setPhone(e.target.value)}} type="tel" className="form-control" placeholder="Contact Number" />
                         </div>
                         <div className="col">
-                            <input value={website || ""} onChange={e => setWebsite(e.target.value)} type="url" className="form-control" placeholder="Website" />
+                            <input value={website || ""} onChange={e =>{onInputChange("web_addr",website); setWebsite(e.target.value)}} type="url" className="form-control" placeholder="Website" />
                         </div>
 
                     </div>

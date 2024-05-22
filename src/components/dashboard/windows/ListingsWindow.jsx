@@ -17,11 +17,13 @@ function ListingsWindow() {
         if(userListings?.length > 0) return;
         console.log("fetching listings...")
 
-        restaurantsApi.fetchListings("aizy")
+        restaurantsApi.fetchListings('"aizy"')
         .then(({data})=>{
           console.log("ListingsFetch results:",data)
-          dispatch(saveUserListings({data:data.data}))
-        })  
+          dispatch(saveUserListings({data:data.getUserListings}))
+        }).catch(error=>{
+          console.log("FTCHING LISTINGS ERROR:",error);
+        })
     },{cacheTime:"Infinity"})
 
 

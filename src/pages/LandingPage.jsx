@@ -27,7 +27,7 @@ function LandingPage() {
         const {data} = await _public.all();
         console.log("all restaurants", data.getRestaurants)
         dispatch(saveRestaurants({data:data.getRestaurants.featured}));
-        // dispatch(saveTopRated({data:result.data.top_rated}));
+        dispatch(saveTopRated({data:data.getRestaurants.top_rated}));
  
     }, {cacheTime:"Infinity"})
 

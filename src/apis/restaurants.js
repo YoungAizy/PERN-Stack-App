@@ -2,7 +2,7 @@ import { ApolloClient, InMemoryCache, gql, createHttpLink } from '@apollo/client
 import { setContext } from '@apollo/client/link/context';
 
 const httpLink = createHttpLink({
-    uri: process.env.REACT_APP_GRAPHGQL_API_KEY
+    uri: process.env.REACT_APP_GRAPHGQL_API
 });
 const authLink = setContext((_, { headers }) => {
 console.log("Header in AppSync ", headers);

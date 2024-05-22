@@ -1,13 +1,14 @@
 import axios from 'axios';
-// import jwtDecode from 'jwt-decode';
+import interceptor from '../utils/interceptor';
 
 const tokens = localStorage.getItem("tokens");
 const databinder = axios.create({
-    baseURL: `${process.env.REACT_APP_API_GATEWAY_URL}/api/v1/auth`,
+    baseURL: `${process.env.REACT_APP_AUTH_API}/api/v1/auth`,
     withCredentials: true,
     headers: {Authorization: "Bearer " + tokens?.AccessToken || ""}
 });
 
+interceptor(databinder,tokens?.AccessToken);
 const authApi = {
     async createUser(payload) {
         const result = await databinder.post('/registration',payload);
@@ -25,23 +26,11 @@ const authApi = {
         const result = await databinder.post('/login',payload);
         return result;
     },
-    async getUser() {
-        const result = await databinder.get('/account');
-        return result;
-    },
     async updateUser(payload) {
         // databinder.defaults.headers.common['Authorization'] = "Bearer " + accessToken;
         console.log(payload);
         console.log("header", databinder.head());
-        // databinder.interceptors.request.use(async req=>{
-        //     const decoded = jwtDecode(accessToken);
-        //     if(decoded.exp < Date.now()/1000){
-        //         return req;
-        //     }
-        //     const accessTokens = await databinder.post('/token/refresh');
-        //     localStorage.setItem("tokens", JSON.stringify(accessTokens));
-        //     accessToken = accessTokens.AccessToken;
-        // });
+        
         const result = await databinder.patch('/update',payload);
         return result;
     },
@@ -66,9 +55,14 @@ const authApi = {
         const result = await databinder.delete('/delete');
         return result;
     },
+    async refreshToken(){
+        const accessTokens = await databinder.post('/token/refresh');
+        this.setAccessToken(accessTokens.AccessToken);
+        return accessTokens;
+    },
     setAccessToken(accessToken){
         databinder.defaults.headers.common['Authorization'] = "Bearer " + accessToken;
-        console.log("auth tokens set")
+        console.log("auth tokens set");
     },
     getInstance(){
         return databinder;

@@ -7,7 +7,7 @@ const AuthRoutesHeader = ({height = "100vh", ...props}) => {
   const [showModal, setShowModal] = useState(false);
   const history = useHistory()
   return (
-    <div style={{ background: `url(${BackgroundBowl})`, height: height, position: "relative",backgroundColor:"rgba(0,0,0,.4)",backgroundBlendMode:"hard-light" }}>
+    <div style={{ background: `url(${BackgroundBowl})`, height: height, position: "relative",backgroundColor:"rgba(0,0,0,.4)",backgroundBlendMode:"hard-light", minHeight: '100vh' }}>
         <NavBar LoggedIn={false} setShow={setShowModal} history={history} {...props }/>
         <LoginModal onClose={() => setShowModal(false) } show={showModal} />
         {props.children}

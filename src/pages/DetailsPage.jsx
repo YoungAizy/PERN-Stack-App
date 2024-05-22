@@ -56,15 +56,14 @@ const DetailsPage = () => {
         if(selected.description) return;
         let data;
         if(selected.name){
-            console.log("K", selected);
+
             ({ data } = await _public.singlePartial(id));
         }else{
-            console.log("HPJ");
             ({ data } = await _public.singleAll(id));
         }
-        console.log("Returned data:", data)
-        dispatch(addSelectedData({data:data.restaurant}));
-        dispatch(saveSelectedRestaurantReviews({data:data.reviews}));
+        const {reviews, ...rest} = data.getRestaurant;
+        dispatch(addSelectedData({data:rest}));
+        dispatch(saveSelectedRestaurantReviews({data:reviews}));
 
     }
    

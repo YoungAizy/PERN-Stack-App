@@ -11,38 +11,42 @@ const AddRestaurant = () => {
     const [location, setLocation] = useState("");
     const [price, setPrice] = useState("Price Range");
     const [about, setAbout] = useState("");
-    const [picture, setPicture] = useState("");
+    const [picture, setPicture] = useState({image:null,mimetype:null});
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState();
     const [website, setWebsite] = useState("");
     const [city, setCity] = useState("");
+    const [schema, setSchema] = useState({});
     const [invalid, setInvalid] = useState(false);
+    const [isTransmitting, setIsTransmitting] = useState(false);
     const [isSuccessful, setIsSuccessful] = useState();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const notification = document.getElementById('popup-notification');
-        const form = new FormData()
+        const form ={name, str_sub: location, city ,price_range:price, created_by:"aizy" }
         if (name && location && city && price) {
             setInvalid(false);
-            form.append('image', picture);
-            form.append('data',
-                JSON.stringify(restaurantSchema(name, location, price, about, "aizy", null, null, null, null, city)));
+            const merged = {...form, ...schema}
+            console.log("MERGED:",merged)
+            setIsTransmitting(true);
 
-            const {data}=  await restaurantApi.post(form);
+            const {data}=  await restaurantApi.post(merged);
             console.log("BACK",data);
 
             
-            if (data.data) {
-            dispatch(addToUserListings({data: data.data}))
-            setAbout("");
-            setPhone("");
-            setName("")
-            setLocation("")
-            setPrice("Price Range");
-            setWebsite("")
-            setCity("")
-            setEmail("")
+            if (data.createRestaurant) {
+                dispatch(addToUserListings({data: data.createRestaurant}))
+                setAbout("");
+                setPhone("");
+                setName("")
+                setLocation("");
+                setPrice("Price Range");
+                setPicture("");
+                setWebsite("");
+                setCity("");
+                setEmail("");
+                setIsTransmitting(false);
                 if (data.successful)
                     setIsSuccessful(true);
                 else
@@ -58,9 +62,21 @@ const AddRestaurant = () => {
 
     const getPictureData = (target) => {
         const file = target.files[0];
+        console.log("Picture file data:", file);
         const reader = new FileReader();
-        reader.onload = (e) => setPicture(file);
+        reader.onload = (e) => {
+            setPicture(e.target.result);
+        }
         reader.readAsDataURL(file);
+    }
+
+    const onInputChange = (state, value)=>{
+        if(value === "" && schema[state]) setSchema(prevState=>{
+            const copyState = prevState;
+            delete copyState[state]
+            return copyState;
+        });
+        setSchema(prevState=>({...prevState, [state]: value}));
     }
 
     return (
@@ -105,7 +121,8 @@ const AddRestaurant = () => {
                         <div className="row mb-2">
                             <div className="col-7">
                                 <textarea className="form-control" placeholder="Write about you restaurant..." rows="2"
-                                    value={about} onChange={e => setAbout(e.target.value)}></textarea>
+                                    value={about} onChange={e =>{onInputChange("description", e.target.value); setAbout(e.target.value)}}>
+                                </textarea>
                             </div>
                             <div style={{ paddingLeft: "0" }} className="col-4 mb-3">
                                 <label htmlFor="formFile">Choose a shop image</label>
@@ -116,19 +133,19 @@ const AddRestaurant = () => {
                         </div>
                         <div className="row">
                             <div className="col">
-                                <input value={email || ""} onChange={e => setEmail(e.target.value)} type="email" className="form-control" placeholder="E-Mail" />
+                                <input value={email || ""} onChange={e =>{onInputChange("email_addr", e.target.value); setEmail(e.target.value)}} type="email" className="form-control" placeholder="E-Mail" />
                             </div>
                             <div className="col">
-                                <input value={phone || ""} onChange={e => setPhone(e.target.value)} type="tel" className="form-control" placeholder="Contact Number" />
+                                <input value={phone || ""} onChange={e =>{onInputChange("telephone", e.target.value); setPhone(e.target.value)}} type="tel" className="form-control" placeholder="Contact Number" />
                             </div>
                             <div className="col">
-                                <input value={website || ""} onChange={e => setWebsite(e.target.value)} type="url" className="form-control" placeholder="Website" />
+                                <input value={website || ""} onChange={e =>{onInputChange("web_addr", e.target.value); setWebsite(e.target.value)}} type="url" className="form-control" placeholder="Website" />
                             </div>
 
                         </div>
                         <div style={{ height: "fit-content" }} className="d-grid gap-2 col-3 mx-auto mt-4">
                             
-                            <button id='add-btn' className="btn bg-primary" style={{ color:"white" }} type="submit" onClick={handleSubmit} >
+                            <button id='add-btn' className="btn bg-primary" style={{ color:"white" }} type="submit" onClick={handleSubmit} disabled={isTransmitting}>
                                 Add
                             </button>
                         </div>

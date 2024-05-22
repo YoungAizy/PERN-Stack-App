@@ -10,7 +10,6 @@ import { saveRestaurants, saveTopRated} from '../store/actions/restaurantActions
 import {useQuery} from 'react-query';
 import { _public } from '../apis/restaurants'
 
-
 function LandingPage() {
     const restaurants = useSelector(state => state.restaurants.All);
     const topRatedRestaurants = useSelector(state => state.restaurants.TopRated);
@@ -21,15 +20,14 @@ function LandingPage() {
     const [searchResults, setSearchResults] = useState(false);
     const [status, setStatus] = useState();
     const [showLoginModal, setShowLoginModal] = useState(false);
-    
-   
+
     useQuery('restaurants', async()=>{
         if(restaurants.length > 0) return;
 
-        const result = await _public.all();
-        console.log("all restaurants",result)
-        dispatch(saveRestaurants({data:result.data.restaurants}));
-        dispatch(saveTopRated({data:result.data.top_rated}));
+        const {data} = await _public.all();
+        console.log("all restaurants", data.getRestaurants)
+        dispatch(saveRestaurants({data:data.getRestaurants.featured}));
+        // dispatch(saveTopRated({data:result.data.top_rated}));
  
     }, {cacheTime:"Infinity"})
 

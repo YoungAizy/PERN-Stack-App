@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import requestBody from '../../utils/requestBody';
 import authApi from '../../apis/auth';
 import { userRequests } from '../../utils/requestTypes';
 
 const LogoutBtn = ()=>{
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
     const history = useHistory();
     
     const onLogout = async e=>{
         e.preventDefault();
-
+        setIsLoggingOut(true);
         const tokens = JSON.parse(localStorage.getItem("tokens"));
         const refreshToken = tokens.RefreshToken;
 
@@ -22,11 +23,12 @@ const LogoutBtn = ()=>{
         } catch (error) {
             console.log("Signout Error:", error);
         }
+        setIsLoggingOut(false);
     }
 
     return (
         <nav className='position-absolute start-0 ms-3 z-3 top-0 mt-4'>
-            <button className='btn' style={{backgroundColor:"crimson", color:"white"}} onClick={onLogout} >Logout</button>
+            <button className='btn' style={{backgroundColor:"crimson", color:"white"}} onClick={onLogout} disabled={isLoggingOut}>Logout</button>
             </nav>
     )
 }

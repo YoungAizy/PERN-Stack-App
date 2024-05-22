@@ -14,10 +14,10 @@ const tabs = {display:'contents'}
 
 // TODO: wrap component with useMemo to prevent re-rendering each time a different page is selected
 
-const SidePanel = ({ onPageChanged, active, setActive })=>{
+const SidePanel = ({ onPageChanged, active, setActive, User })=>{
     const history = useHistory();
     const tokens = useTokens();
-    const [loggingOut, setLoggingOut] = useState(true);
+    const [loggingOut, setLoggingOut] = useState(false);
 
     const onTabChange = (tab,qs)=>{
         setActive(tab);
@@ -47,8 +47,8 @@ const SidePanel = ({ onPageChanged, active, setActive })=>{
             history.push('/');
         } catch (error) {
             console.log("Error while signing out", error);
-            setLoggingOut(false);
         }
+        setLoggingOut(false);
 
     }
 
@@ -63,7 +63,7 @@ const SidePanel = ({ onPageChanged, active, setActive })=>{
             </div>
             <div className='align-self-center text-center'>
                 <img src={DefaultImage} alt="hello" style={imageStyle} className='rounded-circle' width={120} height={120}/>
-                <h4 className='pt-1' style={nameStyle}>Ayanda Marotya</h4>
+                <h4 className='pt-1' style={nameStyle}>{User.fullName}</h4>
             </div>
             <div id='sidepanel' style={tabs}>
                 <button className={`d-block btn rounded-pill mt-3 ${active === pageList[1] ? 'btn-secondary' : 'btn-bg' }`}
@@ -83,4 +83,4 @@ const SidePanel = ({ onPageChanged, active, setActive })=>{
     )
 }
 
-export default SidePanel;
+export default React.memo(SidePanel);

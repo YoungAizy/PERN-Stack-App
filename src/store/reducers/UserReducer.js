@@ -5,10 +5,15 @@ const defaultState = {
         email: "",
         password: ""
     },
-    user: {},
+    user: {
+        account: localStorage.getItem("user_type") || null,
+        username: sessionStorage.getItem("username") || null,
+        fullName: sessionStorage.getItem("name") || null,
+        imgUrl: sessionStorage.getItem("img") || null
+    },//username, full name, account, img_url
     tokens:{
         accessToken: (localStorage.getItem("tokens") && JSON.parse(localStorage.getItem("tokens"))["AccessToken"]) || null,
-        refreshToken: null,
+        refreshToken:(localStorage.getItem("tokens") && JSON.parse(localStorage.getItem("tokens"))["RefreshToken"]) || null,
     }
 }
 
@@ -19,7 +24,7 @@ const UserReducer = (state = defaultState, action)=>{
         case USER_TYPES.DELETE_VERIFICATION_DETAILS:
             return {...state, verification: {}};
         case USER_TYPES.SAVE_USER_DETAILS:
-            return {...state, user: action.payload.data};
+            return {...state, user: { ...state.user, ...action.payload.data}};
         case USER_TYPES.SAVE_TOKENS:
             return {...state, tokens: action.payload.data};
         default:

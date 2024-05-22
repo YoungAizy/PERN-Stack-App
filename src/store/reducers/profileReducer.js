@@ -1,6 +1,8 @@
 import { PROFILE } from "../actionTypes";
 
-const initialState = { profile: {} }
+const initialState = { profile: {
+    username: sessionStorage.getItem("username") || null,
+} }
 
 const profileReducer = (state= initialState, action)=>{
     switch (action.type) {

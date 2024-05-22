@@ -51,7 +51,7 @@ const RestaurantCard = ({listing})=>{
                     <div className="">
                         <div className="card-body">
                             <h4 className="card-title" >{listing.name}</h4>       
-                            <p className="card-text"> {listing["str/sub"]} </p>
+                            <p className="card-text"> {listing["str_sub"]} </p>
                             <p >Price Range: {"$".repeat(listing.price_range)}</p>
                             {/* <p className="card-text"><RenderRating restaurant={restaurant} /> </p> */}
                         </div>

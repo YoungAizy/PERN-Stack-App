@@ -21,7 +21,7 @@ const RestaurantCard = ({restaurant}) => {
     const dispatch = useDispatch();
     const history = useHistory();
 
-    const location = restaurant["str/sub"] + ", " + restaurant.city;
+    const location = restaurant["str_sub"] + ", " + restaurant.city;
     const imgSrc = restaurant.img_url;
 
     const cardClicked = e =>{

@@ -4,12 +4,20 @@ const Avatar = ({ initials, bg_color, imgId,setPictureData}) => {
   const [picture, setPicture] = useState(null);
 
   const getPictureData = (file) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setPicture(e.target.result);
-      setPictureData(file);
+    console.log("Picture Data:", file);
+    // const mimetype = file.type;
+    if(file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        console.log("File data:",e)
+        setPicture(e.target.result);
+        setPictureData(file);
+      }
+      reader.readAsDataURL(file);
+    }else{
+      setPicture(null);
+      setPictureData(null);
     }
-    reader.readAsDataURL(file);
 }
 
   return (

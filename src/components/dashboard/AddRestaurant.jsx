@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import UploadNotification from '../UploadNotification'
 import { useDispatch } from 'react-redux';
 import { _protected as restaurantApi } from '../../apis/restaurants';
-import { restaurantSchema } from '../../utils/requestObjects';
 import { addToUserListings} from '../../store/actions/restaurantActions';
 
 const AddRestaurant = () => {
@@ -27,6 +26,7 @@ const AddRestaurant = () => {
         const form ={name, str_sub: location, city ,price_range:price, created_by:"aizy" }
         if (name && location && city && price) {
             setInvalid(false);
+            if(picture.image) form.file = picture;
             const merged = {...form, ...schema}
             console.log("MERGED:",merged)
             setIsTransmitting(true);
@@ -63,11 +63,15 @@ const AddRestaurant = () => {
     const getPictureData = (target) => {
         const file = target.files[0];
         console.log("Picture file data:", file);
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            setPicture(e.target.result);
+        if(file){
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                setPicture({image:e.target.result, mimetype: file.type});
+            }
+            reader.readAsDataURL(file);
+        }else{
+            setPicture({image:null, mimetype:null});
         }
-        reader.readAsDataURL(file);
     }
 
     const onInputChange = (state, value)=>{

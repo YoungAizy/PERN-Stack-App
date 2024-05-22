@@ -9,9 +9,9 @@ import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import useQuery from '../../hooks/useQuery';
 import useCheckType from '../../hooks/useCheckType';
 import { deleteVerification } from '../../store/actions/userActions';
-import useTokens from '../../hooks/useTokens';
+import useTokens from '../../hooks/useStorage';
 
-const VerifyEmail = ({onPageChange, setBackgroundHeight, dispatch}) => {
+const VerifyEmail = ({setBackgroundHeight, dispatch}) => {
     const reduxDispatch = useDispatch()
     const verificationParams = useSelector(state=> state.user.verification);
     const email = verificationParams?.email;
@@ -75,8 +75,7 @@ const VerifyEmail = ({onPageChange, setBackgroundHeight, dispatch}) => {
             const {data} = await authApi.verifyEmailChange(body);
             console.log("verified",data)
             if(data.accessTokens){
-                cleanup();
-                tokens.saveAcessTokens(data.accessTokens);
+                tokens.saveAuth(data.accessTokens,data.idToken,data.fullName);
                 checkUserType(localStorage.getItem("user_type"));
             }
             
@@ -89,7 +88,7 @@ const VerifyEmail = ({onPageChange, setBackgroundHeight, dispatch}) => {
         setBackgroundHeight('fit-content');
         dispatch({type:"Done", step: "step2"});
         dispatch({type:"Active", step: "step3"});
-        onPageChange(3);
+        history.push({search:"?page=3"});
     }
     
     const btnClick = async e =>{

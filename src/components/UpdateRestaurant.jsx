@@ -95,19 +95,23 @@ function UpdateRestaurant(props) {
         file && showUpdateImgBtn(true);
       
         const img = document.getElementById("input-img");
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            setPicture(state=>{
-                return {
-                    ...state,
-                    file:{
-                        image: e.target.result, mimetype: file.type
+        if(file){
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                setPicture(state=>{
+                    return {
+                        ...state,
+                        file:{
+                            image: e.target.result, mimetype: file.type
+                        }
                     }
-                }
-            });
-            img.src = e.target.result;
+                });
+                img.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }else{
+            setPicture({img:null,file:{mimetype:null,image:null}})
         }
-        reader.readAsDataURL(file);
     }
 
     const onInputChange = (state, value)=>{

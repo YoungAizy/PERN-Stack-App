@@ -23,7 +23,7 @@ export default function SearchRestaurant({ onSearch, setRestaurants, setSearchRe
     }
 
     return (
-        <div style={{ marginTop: ".5rem" }} className="container mb-4">
+        <div style={{ marginTop: "1rem" }} className="container mb-4">
             <form action="">
                 <div className="row mobi-search">
                     <div className="col">

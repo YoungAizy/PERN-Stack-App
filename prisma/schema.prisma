@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["relationJoins"] // 1. Enable feature
+  output   = "./generated"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model reviews_rating_summary {
+  restaurant_public_id String   @id @db.Uuid
+  food_sum             Int      @default(0)
+  service_sum          Int      @default(0)
+  location_sum         Int      @default(0)
+  rating_count         Int      @default(0)
+  updated_at           DateTime @default(now()) @db.Timestamptz(6)
+  listing              listings? @relation(fields: [restaurant_public_id], references: [restaurant])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model listings {
+  id             BigInt            @id @default(autoincrement())
+  restaurant     String  @map("public_id")    @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  created_by     String            @db.Uuid
+  name           String            @db.VarChar(80)
+  description    String
+  price          Int     @map("price_range")  @db.SmallInt
+  location       String  @map("str_sub")      @db.VarChar(150)
+  city           String            @db.VarChar(100)
+  country        String            @db.VarChar(5)
+  phone          Int?    @map("telephone")
+  phone_ext      String? @map("tel_ext")      @db.VarChar(5)
+  email          String? @map("email_addr")   @db.VarChar(40)
+  img_id         String            @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  website        String?           @db.VarChar(30)
+  created_at     DateTime          @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime          @default(now()) @db.Timestamptz(6)
+  status         restaurant_status @default(active)
+  removal_reason String?
+  removed_at     DateTime?         @default(now()) @db.Timestamptz(6)
+  ratings        reviews_rating_summary? 
+}
+
+enum restaurant_status {
+  active
+  hidden
+  removed
+}

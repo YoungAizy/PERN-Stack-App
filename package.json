@@ -6,26 +6,45 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "nodemon main.js"
+    "dev:seed": "node ./prisma/seed.js",
+    "start": "nodemon main.js",
+    "docker:start": "docker compose up",
+    "docker:stop": "docker compose down",
+    "docker:restart": "docker compose down && docker compose up",
+    "docker:flush": "docker volume rm db_postgres_data",
+    "docker:logs": "docker compose logs -f"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@apollo/server": "^5.2.0",
+    "@as-integrations/express5": "^1.1.2",
     "@aws-sdk/client-s3": "^3.474.0",
     "@aws-sdk/s3-request-presigner": "^3.474.0",
+    "@graphql-tools/graphql-file-loader": "^8.1.9",
+    "@graphql-tools/load": "^8.1.8",
+    "@graphql-tools/schema": "^10.0.31",
+    "@prisma/client": "^6.19.1",
+    "amqplib": "^0.10.9",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
+    "date-fns": "^3.0.6",
     "dotenv": "^16.3.1",
-    "express": "^4.18.2",
+    "express": "^5.0.0",
+    "graphql": "^16.12.0",
+    "graphql-fields": "^2.0.3",
     "helmet": "^6.0.1",
     "hpp": "^0.2.3",
+    "joi": "^18.0.2",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
-    "pg": "^8.6.0",
-    "uuid": "^9.0.1"
+    "prisma": "^6.19.1"
   },
   "devDependencies": {
+    "@faker-js/faker": "^9.9.0",
+    "jest": "^30.4.2",
+    "jest-mock-extended": "^4.0.1",
     "nodemon": "^3.0.2"
   }
 }

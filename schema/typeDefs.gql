@@ -1,0 +1,120 @@
+schema {
+    query: Query
+    mutation: Mutation
+}
+# Query is only for fetching data
+type Query {
+    healthCheck: String!
+    # Public Routes
+    getRestaurant(id: String!): Restaurant!
+    listingsCount(filter: String): Int!
+    getRestaurants(
+        limit: Int = 10,
+        page: Int = 1,
+        ratings: Boolean = true,
+    ): LandingPage!
+    searchRestaurants(
+        query: String!,
+        limit: Int = 10,
+        page: Int = 1,
+        orderBy: OrderByInput
+    ): SearchResults!
+    # Private Routes
+    getUserListings(
+        created_by: String!,
+        limit: Int = 4,
+        page: Int = 1
+    ): [Restaurant]!
+}
+
+type Mutation {
+    createRestaurant(input: RestaurantInput!): Restaurant
+    updateRestaurant(updateInput: updateRestaurantInput, id: String!, user_id: String!): Restaurant!
+    # updateImage(id: Int!,img_id: String!, file: AWSJSON!): imgUpdateResponse!
+    # @aws_cognito_user_pools(cognito_groups: ["Restaurateurs","Reviewers"])
+    deleteRestaurant(id: String!, user_id: String!): Int
+}
+
+type imgUpdateResponse {
+    img_url: String!
+}
+# type File {
+#     image: String!
+#     mimetype: String!
+# }
+input RestaurantInput {
+    name: String!
+    str_sub: String!
+    city: String!
+    price_range: Int!
+    # file: AWSJSON
+    description: String
+    email_addr: String
+    web_addr: String
+    telephone: Int
+    tel_ext: String
+    created_by: String!
+    country: String!
+}
+
+input updateRestaurantInput {
+    name: String
+    str_sub: String
+    city: String
+    price_range: Int
+    description: String
+    email_addr: String
+    web_addr: String
+    telephone: Int
+    tel_ext: String
+}
+
+type Rating {
+    food_sum: Int
+    service_sum: Int
+    location_sum: Int
+    rating_count: Int
+}
+type Restaurant {
+    restaurant: String
+    name: String
+    location: String
+    city: String
+    price: Int
+    img_id: String
+    img_url: String
+    description: String
+    email_addr: String
+    web_addr: String
+    telephone: Int
+    tel_ext: String
+    created_by: Int
+    total_reviews: Int
+    avg_rating: Float
+    ratings: Rating
+}
+type SearchResults{
+    data: [Restaurant]!
+    totalCount: Int!
+}
+
+enum OrderByField {
+    NAME
+    PRICE
+}
+
+enum OrderByDirection {
+    ASC 
+    DESC
+}
+
+input OrderByInput {
+    field: OrderByField!
+    direction: OrderByDirection!
+}
+
+type LandingPage{
+    featured(query_type: String!): [Restaurant!]!
+    best_rated(query_type: String!): [Restaurant]!
+    listings: [Restaurant]!
+}

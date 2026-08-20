@@ -7,3 +7,6 @@ notes.txt
 **/key.pub
 **/structure
 **/private
+prisma/generated
+/events
+/repositories

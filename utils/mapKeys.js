@@ -9,3 +9,17 @@ export const mapNewkeys = (object)=>{
       );
     return updatedObject;
 }
+
+export const internalColumns = {
+    name: "name",
+    description:"description",
+    price:"price_range",
+    location: "str_sub",
+    city: "city",
+    country: "country",
+    phone:"telephone",
+    phone_ext:"tel_ext",
+    email:"email_addr",
+    website:"web_addr",
+    restaurant: "public_id"
+}
